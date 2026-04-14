@@ -271,13 +271,8 @@ function goToNextFeaturedSlide() {
   animateToSlide(nextIndex);
 }
 
-return ( {
-    const nextIndex =
-      activeFeaturedIndex === 0
-        ? featuredGallery.length - 1
-        : activeFeaturedIndex - 1;
+return ( 
 
-    animate
 <main
       style={{
         minHeight: "100vh",
