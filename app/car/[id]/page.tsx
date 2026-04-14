@@ -130,7 +130,8 @@ function getHDMColor(score: number) {
 
 export default function CarDetailPage() {
   const params = useParams();
-  const id = String(params.id);
+  const rawId = params?.id;
+  const id = Array.isArray(rawId) ? rawId[0] : String(rawId ?? "");
 
   const vehicle = useMemo(
     () => sourceVehicles.find((item) => item.id === id),
@@ -139,13 +140,18 @@ export default function CarDetailPage() {
 
   const [index, setIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
+  const [screen, setScreen] = useState({
+    isMobile: false,
+    isTablet: false,
+  });
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 760);
-      setIsTablet(window.innerWidth < 980);
+      const width = window.innerWidth;
+      setScreen({
+        isMobile: width < 768,
+        isTablet: width < 1100,
+      });
     };
 
     handleResize();
@@ -153,11 +159,13 @@ export default function CarDetailPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const { isMobile, isTablet } = screen;
+
   if (!vehicle) {
     return (
       <main
         style={{
-          padding: "40px",
+          padding: isMobile ? "28px 18px" : "40px",
           fontFamily: inter.style.fontFamily,
           background: "#f4f7fb",
           minHeight: "100vh",
@@ -170,14 +178,18 @@ export default function CarDetailPage() {
             textDecoration: "none",
             fontWeight: 700,
             fontFamily: montserrat.style.fontFamily,
+            fontSize: isMobile ? "14px" : "15px",
           }}
         >
           ← Volver
         </Link>
+
         <h1
           style={{
             marginTop: "18px",
             fontFamily: montserrat.style.fontFamily,
+            fontSize: isMobile ? "28px" : "36px",
+            lineHeight: 1.05,
           }}
         >
           Auto no encontrado
@@ -186,10 +198,18 @@ export default function CarDetailPage() {
     );
   }
 
-  const gallery = vehicle.gallery || [vehicle.image];
+  const gallery = vehicle.gallery?.length ? vehicle.gallery : [vehicle.image];
   const score = getHDMScore(vehicle);
   const scoreLabel = getHDMLabel(score);
   const scoreTone = getHDMColor(score);
+
+  const prevImage = () => {
+    setIndex((prev) => (prev === 0 ? gallery.length - 1 : prev - 1));
+  };
+
+  const nextImage = () => {
+    setIndex((prev) => (prev === gallery.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <main
@@ -198,17 +218,21 @@ export default function CarDetailPage() {
         background: "#f4f7fb",
         color: "#0b1622",
         fontFamily: inter.style.fontFamily,
-        padding: "28px 20px 60px",
+        padding: isMobile ? "18px 14px 40px" : isTablet ? "24px 18px 50px" : "28px 20px 60px",
       }}
     >
-      <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1220px", margin: "0 auto" }}>
         <Link
           href="/"
           style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
             color: "#7a4d00",
             textDecoration: "none",
-            fontWeight: 700,
+            fontWeight: 800,
             fontFamily: montserrat.style.fontFamily,
+            fontSize: isMobile ? "13px" : "14px",
           }}
         >
           ← Volver al inventario
@@ -216,19 +240,21 @@ export default function CarDetailPage() {
 
         <div
           style={{
-            marginTop: "18px",
+            marginTop: isMobile ? "14px" : "18px",
             display: "grid",
-            gridTemplateColumns: isTablet ? "1fr" : "1.15fr 0.85fr",
-            gap: "24px",
+            gridTemplateColumns: isTablet ? "1fr" : "minmax(0, 1.12fr) minmax(360px, 0.88fr)",
+            gap: isMobile ? "16px" : "24px",
+            alignItems: "start",
           }}
         >
           <div
             style={{
-              borderRadius: "28px",
+              borderRadius: isMobile ? "22px" : "28px",
               background: "#ffffff",
               border: "1px solid rgba(216,138,0,0.10)",
               boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
-              padding: isMobile ? "16px" : "22px",
+              padding: isMobile ? "12px" : isTablet ? "16px" : "22px",
+              overflow: "hidden",
             }}
           >
             <div style={{ position: "relative" }}>
@@ -238,28 +264,40 @@ export default function CarDetailPage() {
                 onClick={() => setIsLightboxOpen(true)}
                 style={{
                   width: "100%",
-                  height: isMobile ? "260px" : "520px",
+                  height: isMobile ? "250px" : isTablet ? "420px" : "520px",
                   objectFit: "cover",
-                  borderRadius: "22px",
+                  borderRadius: isMobile ? "16px" : "22px",
                   cursor: "zoom-in",
+                  display: "block",
                 }}
               />
 
               {gallery.length > 1 && (
                 <>
                   <button
-                    onClick={() =>
-                      setIndex(index === 0 ? gallery.length - 1 : index - 1)
-                    }
-                    style={detailArrowLeft}
+                    onClick={prevImage}
+                    aria-label="Imagen anterior"
+                    style={{
+                      ...detailArrowLeft,
+                      width: isMobile ? "38px" : "42px",
+                      height: isMobile ? "38px" : "42px",
+                      fontSize: isMobile ? "18px" : "20px",
+                      left: isMobile ? "8px" : "12px",
+                    }}
                   >
                     ‹
                   </button>
+
                   <button
-                    onClick={() =>
-                      setIndex(index === gallery.length - 1 ? 0 : index + 1)
-                    }
-                    style={detailArrowRight}
+                    onClick={nextImage}
+                    aria-label="Imagen siguiente"
+                    style={{
+                      ...detailArrowRight,
+                      width: isMobile ? "38px" : "42px",
+                      height: isMobile ? "38px" : "42px",
+                      fontSize: isMobile ? "18px" : "20px",
+                      right: isMobile ? "8px" : "12px",
+                    }}
                   >
                     ›
                   </button>
@@ -270,50 +308,62 @@ export default function CarDetailPage() {
             <div
               style={{
                 display: "flex",
-                gap: "10px",
+                gap: isMobile ? "8px" : "10px",
                 overflowX: "auto",
                 paddingTop: "12px",
                 scrollbarWidth: "thin",
+                WebkitOverflowScrolling: "touch",
                 scrollBehavior: "smooth",
               }}
             >
               {gallery.map((img, i) => (
-                <img
+                <button
                   key={i}
-                  src={img}
-                  alt={`${vehicle.name} ${i + 1}`}
                   onClick={() => setIndex(i)}
+                  aria-label={`Abrir imagen ${i + 1}`}
                   style={{
-                    width: isMobile ? "72px" : "86px",
-                    height: isMobile ? "72px" : "86px",
-                    minWidth: isMobile ? "72px" : "86px",
-                    objectFit: "cover",
-                    borderRadius: "14px",
+                    padding: 0,
+                    border: "none",
+                    background: "transparent",
                     cursor: "pointer",
-                    border:
-                      i === index
-                        ? "2px solid #7a4d00"
-                        : "1px solid rgba(216,138,0,0.10)",
+                    flex: "0 0 auto",
                   }}
-                />
+                >
+                  <img
+                    src={img}
+                    alt={`${vehicle.name} ${i + 1}`}
+                    style={{
+                      width: isMobile ? "68px" : isTablet ? "78px" : "86px",
+                      height: isMobile ? "68px" : isTablet ? "78px" : "86px",
+                      minWidth: isMobile ? "68px" : isTablet ? "78px" : "86px",
+                      objectFit: "cover",
+                      borderRadius: isMobile ? "12px" : "14px",
+                      display: "block",
+                      border:
+                        i === index
+                          ? "2px solid #7a4d00"
+                          : "1px solid rgba(216,138,0,0.10)",
+                    }}
+                  />
+                </button>
               ))}
             </div>
           </div>
 
           <div
             style={{
-              borderRadius: "28px",
+              borderRadius: isMobile ? "22px" : "28px",
               background: "#ffffff",
               border: "1px solid rgba(216,138,0,0.10)",
               boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
-              padding: isMobile ? "18px" : "24px",
+              padding: isMobile ? "18px 16px" : isTablet ? "22px 18px" : "24px",
             }}
           >
             <div
               style={{
                 color: "#8a5a00",
                 textTransform: "uppercase",
-                fontSize: "12px",
+                fontSize: isMobile ? "11px" : "12px",
                 letterSpacing: "0.2em",
                 marginBottom: "8px",
                 fontFamily: montserrat.style.fontFamily,
@@ -325,9 +375,10 @@ export default function CarDetailPage() {
             <h1
               style={{
                 margin: 0,
-                fontSize: isMobile ? "28px" : "34px",
-                lineHeight: 1.05,
+                fontSize: isMobile ? "28px" : isTablet ? "32px" : "36px",
+                lineHeight: 1.04,
                 fontFamily: montserrat.style.fontFamily,
+                wordBreak: "break-word",
               }}
             >
               {vehicle.name}
@@ -335,10 +386,11 @@ export default function CarDetailPage() {
 
             <div
               style={{
-                fontSize: isMobile ? "28px" : "34px",
+                fontSize: isMobile ? "28px" : isTablet ? "32px" : "36px",
                 fontWeight: 900,
-                marginTop: "18px",
+                marginTop: "16px",
                 fontFamily: montserrat.style.fontFamily,
+                lineHeight: 1,
               }}
             >
               {vehicle.priceText}
@@ -347,27 +399,37 @@ export default function CarDetailPage() {
             <div
               style={{
                 display: "inline-flex",
+                flexWrap: "wrap",
+                gap: "6px",
                 marginTop: "14px",
-                padding: "10px 14px",
+                padding: isMobile ? "10px 12px" : "10px 14px",
                 borderRadius: "999px",
                 background: scoreTone.bg,
                 color: scoreTone.text,
                 border: "1px solid rgba(216,138,0,0.10)",
                 fontWeight: 800,
                 fontFamily: montserrat.style.fontFamily,
+                fontSize: isMobile ? "13px" : "14px",
               }}
             >
               {scoreLabel} - {score}
             </div>
 
-            <p style={{ color: "#5b6b7f", lineHeight: 1.8, marginTop: "18px" }}>
+            <p
+              style={{
+                color: "#5b6b7f",
+                lineHeight: 1.8,
+                marginTop: "18px",
+                fontSize: isMobile ? "14px" : "15px",
+              }}
+            >
               {vehicle.details}
             </p>
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+                gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(2, minmax(0, 1fr))",
                 gap: "12px",
                 marginTop: "18px",
               }}
@@ -381,10 +443,19 @@ export default function CarDetailPage() {
             </div>
 
             <a
-              href={`${PRIMARY_WHATSAPP_URL}?text=Hola, me interesa el ${vehicle.name}`}
+              href={`${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
+                `Hola, me interesa el ${vehicle.name}`
+              )}`}
               target="_blank"
               rel="noreferrer"
-              style={whatsAppButtonStyle}
+              style={{
+                ...whatsAppButtonStyle,
+                width: isMobile ? "100%" : "auto",
+                textAlign: "center" as const,
+                marginTop: "22px",
+                fontSize: isMobile ? "14px" : "15px",
+                padding: isMobile ? "15px 16px" : "14px 18px",
+              }}
             >
               Contactar por WhatsApp
             </a>
@@ -393,7 +464,8 @@ export default function CarDetailPage() {
               style={{
                 marginTop: "14px",
                 color: "#7a4d00",
-                fontSize: "13px",
+                fontSize: isMobile ? "12px" : "13px",
+                wordBreak: "break-word",
               }}
             >
               WhatsApp principal: {PRIMARY_WHATSAPP}
@@ -408,15 +480,26 @@ export default function CarDetailPage() {
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(7,16,24,0.9)",
+            background: "rgba(7,16,24,0.92)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
-            padding: "24px",
+            padding: isMobile ? "16px" : "24px",
           }}
         >
-          <button onClick={() => setIsLightboxOpen(false)} style={closeLightboxStyle}>
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            aria-label="Cerrar"
+            style={{
+              ...closeLightboxStyle,
+              top: isMobile ? "12px" : "18px",
+              right: isMobile ? "12px" : "18px",
+              width: isMobile ? "40px" : "44px",
+              height: isMobile ? "40px" : "44px",
+              fontSize: isMobile ? "20px" : "22px",
+            }}
+          >
             ×
           </button>
 
@@ -425,18 +508,33 @@ export default function CarDetailPage() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIndex(index === 0 ? gallery.length - 1 : index - 1);
+                  prevImage();
                 }}
-                style={detailLightboxArrowLeft}
+                aria-label="Imagen anterior"
+                style={{
+                  ...detailLightboxArrowLeft,
+                  left: isMobile ? "10px" : "18px",
+                  width: isMobile ? "40px" : "48px",
+                  height: isMobile ? "40px" : "48px",
+                  fontSize: isMobile ? "20px" : "24px",
+                }}
               >
                 ‹
               </button>
+
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  setIndex(index === gallery.length - 1 ? 0 : index + 1);
+                  nextImage();
                 }}
-                style={detailLightboxArrowRight}
+                aria-label="Imagen siguiente"
+                style={{
+                  ...detailLightboxArrowRight,
+                  right: isMobile ? "10px" : "18px",
+                  width: isMobile ? "40px" : "48px",
+                  height: isMobile ? "40px" : "48px",
+                  fontSize: isMobile ? "20px" : "24px",
+                }}
               >
                 ›
               </button>
@@ -448,10 +546,11 @@ export default function CarDetailPage() {
             alt={vehicle.name}
             onClick={(e) => e.stopPropagation()}
             style={{
-              maxWidth: "92vw",
-              maxHeight: "88vh",
-              borderRadius: "18px",
+              maxWidth: "94vw",
+              maxHeight: isMobile ? "78vh" : "88vh",
+              borderRadius: isMobile ? "14px" : "18px",
               objectFit: "contain",
+              display: "block",
             }}
           />
         </div>
@@ -461,6 +560,8 @@ export default function CarDetailPage() {
 }
 
 function InfoBox({ label, value }: { label: string; value: string }) {
+  const isLong = value.length > 14;
+
   return (
     <div
       style={{
@@ -468,6 +569,7 @@ function InfoBox({ label, value }: { label: string; value: string }) {
         borderRadius: "16px",
         border: "1px solid rgba(216,138,0,0.10)",
         background: "#fffdf8",
+        minWidth: 0,
       }}
     >
       <div
@@ -480,14 +582,23 @@ function InfoBox({ label, value }: { label: string; value: string }) {
       >
         {label}
       </div>
-      <div style={{ fontWeight: 800 }}>{value}</div>
+
+      <div
+        style={{
+          fontWeight: 800,
+          fontSize: isLong ? "14px" : "15px",
+          lineHeight: 1.3,
+          wordBreak: "break-word",
+        }}
+      >
+        {value}
+      </div>
     </div>
   );
 }
 
 const whatsAppButtonStyle = {
   display: "inline-block",
-  marginTop: "22px",
   padding: "14px 18px",
   borderRadius: "999px",
   textDecoration: "none",
@@ -512,6 +623,10 @@ const detailArrowLeft = {
   fontSize: "20px",
   fontWeight: 800,
   cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backdropFilter: "blur(8px)",
 };
 
 const detailArrowRight = {
@@ -534,6 +649,10 @@ const detailLightboxArrowLeft = {
   fontSize: "24px",
   fontWeight: 800,
   cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backdropFilter: "blur(8px)",
 };
 
 const detailLightboxArrowRight = {
@@ -555,4 +674,8 @@ const closeLightboxStyle = {
   fontSize: "22px",
   fontWeight: 800,
   cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backdropFilter: "blur(8px)",
 };
