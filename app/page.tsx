@@ -24,7 +24,6 @@ const SECONDARY_WHATSAPP = "+1 760 620 6390";
 const PRIMARY_WHATSAPP_URL = "https://wa.me/17606411996";
 
 export default function Home() {
-
   const moodScale = [
     {
       key: "good_option",
@@ -65,8 +64,9 @@ export default function Home() {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 760);
-      setIsTablet(window.innerWidth < 980);
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width < 1100);
     };
 
     const handleScroll = () => {
@@ -116,7 +116,8 @@ export default function Home() {
     if (year >= 2014) return 70;
     return 60;
   }
-function getHistoryScore({
+
+  function getHistoryScore({
     titleStatus,
     serviceRecords,
     accidents,
@@ -229,8 +230,11 @@ function getHistoryScore({
   const featuredVehicle = vehicles[0];
   const bestVehicle = [...vehicles].sort((a, b) => b.score - a.score)[0];
 
-  const featuredGallery =
-    featuredVehicle?.gallery || [featuredVehicle?.image];
+  const featuredGallery = featuredVehicle?.gallery?.length
+    ? featuredVehicle.gallery
+    : featuredVehicle
+    ? [featuredVehicle.image]
+    : [];
 
   const activeFeaturedImage =
     featuredGallery?.[activeFeaturedIndex] || featuredVehicle?.image;
@@ -254,25 +258,25 @@ function getHistoryScore({
   }
 
   function goToPrevFeaturedSlide() {
-  const nextIndex =
-    activeFeaturedIndex === 0
-      ? featuredGallery.length - 1
-      : activeFeaturedIndex - 1;
+    const nextIndex =
+      activeFeaturedIndex === 0
+        ? featuredGallery.length - 1
+        : activeFeaturedIndex - 1;
 
-  animateToSlide(nextIndex);
-}
+    animateToSlide(nextIndex);
+  }
 
-function goToNextFeaturedSlide() {
-  const nextIndex =
-    activeFeaturedIndex === featuredGallery.length - 1
-      ? 0
-      : activeFeaturedIndex + 1;
+  function goToNextFeaturedSlide() {
+    const nextIndex =
+      activeFeaturedIndex === featuredGallery.length - 1
+        ? 0
+        : activeFeaturedIndex + 1;
 
-  animateToSlide(nextIndex);
-}
+    animateToSlide(nextIndex);
+  }
 
-return ( 
-   <main
+  return (
+    <main
       style={{
         minHeight: "100vh",
         background: "#f4f7fb",
@@ -300,7 +304,7 @@ return (
           style={{
             maxWidth: "1240px",
             margin: "0 auto",
-            padding: "16px 20px 12px",
+            padding: isMobile ? "12px 14px 10px" : "16px 20px 12px",
           }}
         >
           <div
@@ -308,7 +312,7 @@ return (
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              gap: "16px",
+              gap: isMobile ? "12px" : "16px",
               flexWrap: "wrap",
             }}
           >
@@ -316,27 +320,19 @@ return (
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "14px",
-
+                gap: isMobile ? "10px" : "14px",
                 width: isTablet ? "100%" : "auto",
                 justifyContent: isTablet ? "center" : "flex-start",
                 textAlign: isTablet ? "center" : "left",
+                flexDirection: isMobile ? "column" : "row",
               }}
             >
               <img
                 src="/logo.png"
                 alt="HI DESERT MOTORS"
                 style={{
-                  width: isScrolled
-                    ? "120px"
-                    : isMobile
-                    ? "150px"
-                    : "220px",
-                  height: isScrolled
-                    ? "120px"
-                    : isMobile
-                    ? "150px"
-                    : "220px",
+                  width: isScrolled ? "110px" : isMobile ? "120px" : "220px",
+                  height: isScrolled ? "110px" : isMobile ? "120px" : "220px",
                   objectFit: "contain",
                   transition: "all 0.35s ease",
                   filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.12))",
@@ -349,7 +345,7 @@ return (
                 <div>
                   <div
                     style={{
-                      fontSize: isScrolled ? "18px" : "26px",
+                      fontSize: isScrolled ? "18px" : isTablet ? "22px" : "26px",
                       fontWeight: 800,
                       letterSpacing: "0.02em",
                       transition: "all 0.3s ease",
@@ -370,16 +366,17 @@ return (
                 gap: "10px",
                 flexWrap: "wrap",
                 alignItems: "center",
-                width: isMobile ? "100%" : "auto",
-                justifyContent: isMobile ? "center" : "flex-end",
+                width: isTablet ? "100%" : "auto",
+                justifyContent: "center",
               }}
             >
               <a
                 href="#inventario"
                 style={{
                   ...primaryButtonStyle,
-                  padding: isScrolled ? "10px 14px" : "12px 18px",
-                  fontSize: isScrolled ? "13px" : "15px",
+                  padding: isScrolled ? "10px 14px" : isMobile ? "11px 14px" : "12px 18px",
+                  fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
+                  textAlign: "center",
                 }}
               >
                 Ver inventario
@@ -389,8 +386,9 @@ return (
                 href="#opiniones"
                 style={{
                   ...ghostButtonStyle,
-                  padding: isScrolled ? "10px 14px" : "12px 18px",
-                  fontSize: isScrolled ? "13px" : "15px",
+                  padding: isScrolled ? "10px 14px" : isMobile ? "11px 14px" : "12px 18px",
+                  fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
+                  textAlign: "center",
                 }}
               >
                 Opiniones
@@ -400,14 +398,18 @@ return (
                 href={PRIMARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="WhatsApp"
                 style={{
                   ...whatsAppIconButtonStyle,
-                  width: isScrolled ? "42px" : "50px",
-                  height: isScrolled ? "42px" : "50px",
+                  width: isScrolled ? "42px" : isMobile ? "44px" : "50px",
+                  height: isScrolled ? "42px" : isMobile ? "44px" : "50px",
                 }}
               >
-                <svg viewBox="0 0 32 32" style={{ width: 20, fill: "#071018" }}>
-                  <path d="M19.11 17.21..." />
+                <svg
+                  viewBox="0 0 32 32"
+                  style={{ width: 20, height: 20, fill: "#071018" }}
+                >
+                  <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
                 </svg>
               </a>
             </div>
@@ -419,19 +421,18 @@ return (
         style={{
           maxWidth: "1240px",
           margin: "0 auto",
-          padding: "28px 20px 18px",
+          padding: isMobile ? "18px 14px 14px" : "28px 20px 18px",
           display: "grid",
           gridTemplateColumns: isTablet ? "1fr" : "1.2fr 0.8fr",
-          gap: "22px",
+          gap: isMobile ? "16px" : "22px",
         }}
       >
-
-<div
+        <div
           style={{
-            borderRadius: "30px",
+            borderRadius: isMobile ? "22px" : "30px",
             border: "1px solid rgba(216,138,0,0.10)",
             background: "#ffffff",
-            padding: isMobile ? "22px" : "32px",
+            padding: isMobile ? "18px" : "32px",
             boxShadow: "0 18px 48px rgba(216,138,0,0.06)",
           }}
         >
@@ -439,8 +440,8 @@ return (
 
           <h1
             style={{
-              fontSize: isMobile ? "34px" : "clamp(26px, 6vw, 40px)",
-              lineHeight: 0.95,
+              fontSize: isMobile ? "30px" : "clamp(26px, 6vw, 40px)",
+              lineHeight: 0.98,
               margin: "0 0 16px 0",
               fontWeight: 900,
               letterSpacing: "-0.04em",
@@ -455,7 +456,7 @@ return (
           <p
             style={{
               color: "#5b6b7f",
-              fontSize: isMobile ? "16px" : "18px",
+              fontSize: isMobile ? "15px" : "18px",
               lineHeight: 1.6,
               maxWidth: "650px",
               marginBottom: "26px",
@@ -466,95 +467,257 @@ return (
           </p>
 
           <div style={meterWrapStyle}>
-            <div style={meterHeaderStyle}>
+            <div
+              style={{
+                ...meterHeaderStyle,
+                flexDirection: isMobile ? "column" : "row",
+                alignItems: isMobile ? "flex-start" : "center",
+                gap: isMobile ? "8px" : "12px",
+              }}
+            >
               <span>Nivel general del inventario</span>
               <strong style={{ color: "#b97400" }}>
                 {inventoryLevel.label} - {inventoryScore}
               </strong>
             </div>
 
-            <div style={iconScaleWrapStyle}>
+            <div
+              style={{
+                ...iconScaleWrapStyle,
+                gap: isMobile ? "10px" : "14px",
+                justifyContent: isMobile ? "flex-start" : "space-between",
+              }}
+            >
               {moodScale.map((item) => (
-                <div key={item.key} style={scaleItemStyle}>
+                <div
+                  key={item.key}
+                  style={{
+                    ...scaleItemStyle,
+                    minWidth: isMobile ? "84px" : "90px",
+                  }}
+                >
                   <div
                     style={{
                       ...scaleIconFrameStyle,
+                      width: isMobile ? "56px" : "64px",
+                      height: isMobile ? "56px" : "64px",
                       border:
                         item.key === inventoryLevel.key
                           ? "2px solid #0b1622"
                           : "1px solid rgba(216,138,0,0.10)",
                     }}
                   >
-                    <img src={item.icon} style={scaleIconStyle} />
+                    <img src={item.icon} alt={item.label} style={scaleIconStyle} />
                   </div>
-                  <div style={scaleLabelStyle}>{item.label}</div>
+                  <div
+                    style={{
+                      ...scaleLabelStyle,
+                      fontSize: isMobile ? "11px" : "12px",
+                    }}
+                  >
+                    {item.label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
+
+          {bestVehicle && (
+            <div
+              style={{
+                marginTop: "18px",
+                padding: isMobile ? "14px" : "16px",
+                borderRadius: "18px",
+                background: "#fff8ea",
+                border: "1px solid rgba(216,138,0,0.10)",
+                color: "#7a4d00",
+                fontSize: isMobile ? "13px" : "14px",
+                lineHeight: 1.6,
+              }}
+            >
+              Mejor evaluado del inventario: <strong>{bestVehicle.name}</strong> con{" "}
+              <strong>{bestVehicle.score}</strong> puntos.
+            </div>
+          )}
         </div>
 
         {featuredVehicle && (
           <div
             style={{
-              borderRadius: "30px",
+              borderRadius: isMobile ? "22px" : "30px",
               border: "1px solid rgba(216,138,0,0.10)",
               background: "#ffffff",
-              padding: "24px",
+              padding: isMobile ? "16px" : "24px",
               boxShadow: "0 18px 48px rgba(216,138,0,0.06)",
             }}
           >
-            <div style={{ fontSize: 13, marginBottom: 8 }}>
+            <div
+              style={{
+                fontSize: 13,
+                marginBottom: 8,
+                color: "#8a5a00",
+                fontFamily: montserrat.style.fontFamily,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+              }}
+            >
               Auto destacado
             </div>
 
-            <div style={{ fontSize: 22, fontWeight: 800 }}>
+            <div
+              style={{
+                fontSize: isMobile ? 20 : 22,
+                fontWeight: 800,
+                lineHeight: 1.15,
+                fontFamily: montserrat.style.fontFamily,
+              }}
+            >
               {featuredVehicle.name}
             </div>
 
             <div style={{ position: "relative", marginTop: 14 }}>
               <img
                 src={activeFeaturedImage}
+                alt={featuredVehicle.name}
                 style={{
                   width: "100%",
-                  height: 300,
+                  height: isMobile ? 240 : isTablet ? 280 : 300,
                   objectFit: "cover",
                   borderRadius: 20,
                   opacity: isImageVisible ? 1 : 0.4,
                   transition: "0.25s",
+                  display: "block",
+                  cursor: "zoom-in",
                 }}
                 onClick={() => setIsLightboxOpen(true)}
               />
 
               {featuredGallery.length > 1 && (
                 <>
-                  <button onClick={goToPrevFeaturedSlide}>
+                  <button
+                    onClick={goToPrevFeaturedSlide}
+                    aria-label="Imagen anterior"
+                    style={{
+                      ...featuredArrowStyle,
+                      left: "10px",
+                    }}
+                  >
                     ‹
                   </button>
-                  <button onClick={goToNextFeaturedSlide}>
+                  <button
+                    onClick={goToNextFeaturedSlide}
+                    aria-label="Imagen siguiente"
+                    style={{
+                      ...featuredArrowStyle,
+                      right: "10px",
+                    }}
+                  >
                     ›
                   </button>
                 </>
               )}
             </div>
 
-            <div style={{ marginTop: 12 }}>
+            {featuredGallery.length > 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  gap: "8px",
+                  marginTop: "12px",
+                  overflowX: "auto",
+                  WebkitOverflowScrolling: "touch",
+                  paddingBottom: "2px",
+                }}
+              >
+                {featuredGallery.map((img: string, index: number) => (
+                  <button
+                    key={index}
+                    onClick={() => goToFeaturedSlide(index)}
+                    aria-label={`Ir a imagen ${index + 1}`}
+                    style={{
+                      padding: 0,
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      flex: "0 0 auto",
+                    }}
+                  >
+                    <img
+                      src={img}
+                      alt={`${featuredVehicle.name} ${index + 1}`}
+                      style={{
+                        width: isMobile ? "62px" : "72px",
+                        height: isMobile ? "62px" : "72px",
+                        minWidth: isMobile ? "62px" : "72px",
+                        objectFit: "cover",
+                        borderRadius: "12px",
+                        border:
+                          index === activeFeaturedIndex
+                            ? "2px solid #7a4d00"
+                            : "1px solid rgba(216,138,0,0.12)",
+                        display: "block",
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div
+              style={{
+                marginTop: 14,
+                fontSize: isMobile ? 24 : 28,
+                fontWeight: 900,
+                fontFamily: montserrat.style.fontFamily,
+              }}
+            >
               {featuredVehicle.priceText}
             </div>
 
-            <Link href={`/car/${featuredVehicle.id}`}>
-              Ver detalles
-            </Link>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+                marginTop: "16px",
+              }}
+            >
+              <Link
+                href={`/car/${featuredVehicle.id}`}
+                style={{
+                  ...primaryButtonStyle,
+                  width: isMobile ? "100%" : "auto",
+                  textAlign: "center",
+                }}
+              >
+                Ver detalles
+              </Link>
+
+              <a
+                href={`${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
+                  `Hola, me interesa el ${featuredVehicle.name}`
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  ...ghostButtonStyle,
+                  width: isMobile ? "100%" : "auto",
+                  textAlign: "center",
+                }}
+              >
+                Pedir información
+              </a>
+            </div>
           </div>
         )}
       </section>
 
-<section
+      <section
         id="inventario"
         style={{
           maxWidth: "1240px",
           margin: "0 auto",
-          padding: "18px 20px 24px",
+          padding: isMobile ? "10px 14px 22px" : "18px 20px 24px",
         }}
       >
         <div style={{ marginBottom: "18px" }}>
@@ -573,9 +736,10 @@ return (
 
           <h2
             style={{
-              fontSize: isMobile ? "30px" : "36px",
+              fontSize: isMobile ? "28px" : "36px",
               margin: 0,
               fontWeight: 900,
+              lineHeight: 1.05,
               fontFamily: montserrat.style.fontFamily,
             }}
           >
@@ -586,7 +750,9 @@ return (
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "18px",
           }}
         >
@@ -594,7 +760,7 @@ return (
             <article
               key={vehicle.id}
               style={{
-                borderRadius: "26px",
+                borderRadius: isMobile ? "22px" : "26px",
                 overflow: "hidden",
                 border: "1px solid rgba(216,138,0,0.10)",
                 background: "#ffffff",
@@ -607,8 +773,9 @@ return (
                   alt={vehicle.name}
                   style={{
                     width: "100%",
-                    height: "220px",
+                    height: isMobile ? "210px" : "220px",
                     objectFit: "cover",
+                    display: "block",
                   }}
                 />
 
@@ -631,19 +798,20 @@ return (
                 </div>
               </div>
 
-              <div style={{ padding: "20px" }}>
+              <div style={{ padding: isMobile ? "16px" : "20px" }}>
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "12px",
                     alignItems: "start",
+                    flexDirection: isMobile ? "column" : "row",
                   }}
                 >
                   <h3
                     style={{
                       margin: 0,
-                      fontSize: "22px",
+                      fontSize: isMobile ? "20px" : "22px",
                       lineHeight: 1.1,
                       fontFamily: montserrat.style.fontFamily,
                     }}
@@ -656,6 +824,7 @@ return (
                       color: "#0b1622",
                       fontWeight: 900,
                       whiteSpace: "nowrap",
+                      fontSize: isMobile ? "20px" : "inherit",
                       fontFamily: montserrat.style.fontFamily,
                     }}
                   >
@@ -663,7 +832,6 @@ return (
                   </div>
                 </div>
 
-                {/* 🔥 SCORE HDM */}
                 <div
                   style={{
                     display: "flex",
@@ -709,11 +877,10 @@ return (
                   {vehicle.details}
                 </p>
 
-                {/* 🔥 DATOS */}
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
+                    gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(2, 1fr)",
                     gap: "8px",
                     marginTop: "14px",
                     fontSize: "13px",
@@ -726,24 +893,37 @@ return (
                   <div>Dueños: {vehicle.owners}</div>
                 </div>
 
-                {/* 🔥 BOTONES */}
                 <div
                   style={{
                     display: "flex",
                     gap: "10px",
                     marginTop: "18px",
                     flexWrap: "wrap",
+                    flexDirection: isMobile ? "column" : "row",
                   }}
                 >
-                  <Link href={`/car/${vehicle.id}`} style={primaryButtonStyle}>
+                  <Link
+                    href={`/car/${vehicle.id}`}
+                    style={{
+                      ...primaryButtonStyle,
+                      width: isMobile ? "100%" : "auto",
+                      textAlign: "center",
+                    }}
+                  >
                     Ver detalles
                   </Link>
 
                   <a
-                    href={`https://wa.me/17606411996?text=Hola, me interesa el ${vehicle.name}`}
+                    href={`${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
+                      `Hola, me interesa el ${vehicle.name}`
+                    )}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={ghostButtonStyle}
+                    style={{
+                      ...ghostButtonStyle,
+                      width: isMobile ? "100%" : "auto",
+                      textAlign: "center",
+                    }}
                   >
                     Pedir información
                   </a>
@@ -754,12 +934,12 @@ return (
         </div>
       </section>
 
-<section
+      <section
         id="opiniones"
         style={{
           maxWidth: "1240px",
           margin: "0 auto",
-          padding: "8px 20px 60px",
+          padding: isMobile ? "4px 14px 40px" : "8px 20px 60px",
         }}
       >
         <div style={{ marginBottom: "18px" }}>
@@ -778,9 +958,10 @@ return (
 
           <h2
             style={{
-              fontSize: isMobile ? "30px" : "36px",
+              fontSize: isMobile ? "28px" : "36px",
               margin: 0,
               fontWeight: 900,
+              lineHeight: 1.05,
               fontFamily: montserrat.style.fontFamily,
             }}
           >
@@ -791,12 +972,21 @@ return (
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : "repeat(auto-fit, minmax(260px, 1fr))",
             gap: "18px",
           }}
         >
           {reviews.map((review, index) => (
-            <article key={index} style={reviewCardStyle}>
+            <article
+              key={index}
+              style={{
+                ...reviewCardStyle,
+                padding: isMobile ? "18px" : "22px",
+                borderRadius: isMobile ? "20px" : "24px",
+              }}
+            >
               <div style={pillStyle}>{review.mood}</div>
 
               <p
@@ -804,6 +994,7 @@ return (
                   color: "#1b2c42",
                   lineHeight: 1.7,
                   margin: "14px 0 18px",
+                  fontSize: isMobile ? "14px" : "15px",
                 }}
               >
                 "{review.text}"
@@ -817,7 +1008,6 @@ return (
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer
         style={{
           borderTop: "1px solid rgba(245,197,66,0.10)",
@@ -831,7 +1021,7 @@ return (
           style={{
             maxWidth: "1240px",
             margin: "0 auto",
-            padding: "34px 20px 40px",
+            padding: isMobile ? "26px 14px 30px" : "34px 20px 40px",
             display: "grid",
             gridTemplateColumns: isTablet ? "1fr" : "1.1fr 0.9fr",
             gap: "24px",
@@ -845,14 +1035,16 @@ return (
               alignItems: "center",
               flexWrap: "wrap",
               justifyContent: isTablet ? "center" : "flex-start",
+              textAlign: isTablet ? "center" : "left",
+              flexDirection: isMobile ? "column" : "row",
             }}
           >
             <img
               src="/logo.png"
               alt="HI DESERT MOTORS"
               style={{
-                width: "120px",
-                height: "120px",
+                width: isMobile ? "96px" : "120px",
+                height: isMobile ? "96px" : "120px",
                 objectFit: "contain",
               }}
             />
@@ -861,7 +1053,7 @@ return (
               <div
                 style={{
                   fontWeight: 900,
-                  fontSize: "22px",
+                  fontSize: isMobile ? "20px" : "22px",
                   marginBottom: "8px",
                   fontFamily: montserrat.style.fontFamily,
                 }}
@@ -869,7 +1061,13 @@ return (
                 HI DESERT MOTORS
               </div>
 
-              <div style={{ color: "#c9d2df", lineHeight: 1.8 }}>
+              <div
+                style={{
+                  color: "#c9d2df",
+                  lineHeight: 1.8,
+                  fontSize: isMobile ? "14px" : "15px",
+                }}
+              >
                 Vehículos usados seleccionados con una evaluación clara.
                 <br />
                 Hesperia, California
@@ -879,7 +1077,7 @@ return (
 
           <div
             style={{
-              padding: "22px",
+              padding: isMobile ? "18px" : "22px",
               borderRadius: "24px",
               background: "rgba(255,255,255,0.04)",
             }}
@@ -891,6 +1089,7 @@ return (
                 textTransform: "uppercase",
                 marginBottom: "14px",
                 fontFamily: montserrat.style.fontFamily,
+                textAlign: isMobile ? "center" : "left",
               }}
             >
               Contacto
@@ -907,6 +1106,7 @@ return (
               <a
                 href="https://wa.me/17606411996"
                 target="_blank"
+                rel="noreferrer"
                 style={footerContactRowStyle}
               >
                 {PRIMARY_WHATSAPP}
@@ -915,6 +1115,7 @@ return (
               <a
                 href="https://wa.me/17606206390"
                 target="_blank"
+                rel="noreferrer"
                 style={footerContactRowStyle}
               >
                 {SECONDARY_WHATSAPP}
@@ -924,26 +1125,37 @@ return (
         </div>
       </footer>
 
-      {/* LIGHTBOX */}
       {isLightboxOpen && featuredVehicle && (
         <div
           onClick={() => setIsLightboxOpen(false)}
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(7,16,24,0.9)",
+            background: "rgba(7,16,24,0.92)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
+            padding: isMobile ? "16px" : "24px",
           }}
         >
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            aria-label="Cerrar"
+            style={closeLightboxStyle}
+          >
+            ×
+          </button>
+
           <img
             src={activeFeaturedImage}
+            alt={featuredVehicle.name}
+            onClick={(e) => e.stopPropagation()}
             style={{
-              maxWidth: "90vw",
-              maxHeight: "90vh",
-              borderRadius: "20px",
+              maxWidth: "94vw",
+              maxHeight: "88vh",
+              borderRadius: isMobile ? "16px" : "20px",
+              display: "block",
             }}
           />
         </div>
@@ -959,9 +1171,13 @@ const reviewCardStyle = {
   borderRadius: "24px",
   border: "1px solid rgba(216,138,0,0.10)",
   background: "#ffffff",
+  boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
 };
 
 const primaryButtonStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   padding: "12px 18px",
   borderRadius: "999px",
   border: "none",
@@ -969,21 +1185,143 @@ const primaryButtonStyle = {
   color: "#071018",
   fontWeight: 800,
   textDecoration: "none",
+  fontFamily: montserrat.style.fontFamily,
+  boxShadow: "0 10px 24px rgba(216,138,0,0.20)",
 };
 
 const ghostButtonStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
   padding: "12px 18px",
   borderRadius: "999px",
   border: "1px solid rgba(216,138,0,0.18)",
   background: "#fffaf0",
   color: "#5a3900",
   textDecoration: "none",
+  fontWeight: 700,
+  fontFamily: montserrat.style.fontFamily,
 };
 
 const footerContactRowStyle = {
-  padding: "10px",
+  display: "block",
+  padding: "12px 14px",
   borderRadius: "12px",
   background: "rgba(255,255,255,0.05)",
   color: "#fff",
   textDecoration: "none",
+  wordBreak: "break-word" as const,
+};
+
+const pillStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "8px 12px",
+  borderRadius: "999px",
+  background: "#fff7e6",
+  color: "#8a5a00",
+  border: "1px solid rgba(216,138,0,0.12)",
+  fontSize: "12px",
+  fontWeight: 800,
+  marginBottom: "16px",
+  fontFamily: montserrat.style.fontFamily,
+};
+
+const meterWrapStyle = {
+  padding: "16px",
+  borderRadius: "22px",
+  background: "#fffdf8",
+  border: "1px solid rgba(216,138,0,0.10)",
+};
+
+const meterHeaderStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  fontSize: "14px",
+  color: "#7a4d00",
+  marginBottom: "16px",
+  fontWeight: 700,
+};
+
+const iconScaleWrapStyle = {
+  display: "flex",
+  flexWrap: "wrap" as const,
+};
+
+const scaleItemStyle = {
+  display: "flex",
+  flexDirection: "column" as const,
+  alignItems: "center",
+  gap: "8px",
+  textAlign: "center" as const,
+};
+
+const scaleIconFrameStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "18px",
+  background: "#ffffff",
+  boxShadow: "0 8px 20px rgba(216,138,0,0.06)",
+};
+
+const scaleIconStyle = {
+  width: "64%",
+  height: "64%",
+  objectFit: "contain" as const,
+};
+
+const scaleLabelStyle = {
+  color: "#6c5030",
+  lineHeight: 1.3,
+  fontWeight: 700,
+};
+
+const whatsAppIconButtonStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "999px",
+  textDecoration: "none",
+  background: "linear-gradient(135deg,#f5c542,#d88a00)",
+  boxShadow: "0 10px 24px rgba(216,138,0,0.22)",
+  flexShrink: 0,
+};
+
+const featuredArrowStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  transform: "translateY(-50%)",
+  width: "40px",
+  height: "40px",
+  borderRadius: "999px",
+  border: "1px solid rgba(255,255,255,0.18)",
+  background: "rgba(7,16,24,0.45)",
+  color: "#ffffff",
+  fontSize: "22px",
+  fontWeight: 800,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backdropFilter: "blur(6px)",
+};
+
+const closeLightboxStyle = {
+  position: "absolute" as const,
+  top: "16px",
+  right: "16px",
+  width: "42px",
+  height: "42px",
+  borderRadius: "999px",
+  border: "1px solid rgba(255,255,255,0.18)",
+  background: "rgba(255,255,255,0.08)",
+  color: "#ffffff",
+  fontSize: "22px",
+  fontWeight: 800,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
