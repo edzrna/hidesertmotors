@@ -254,6 +254,24 @@ function getHistoryScore({
   }
 
   function goToPrevFeaturedSlide() {
+  const nextIndex =
+    activeFeaturedIndex === 0
+      ? featuredGallery.length - 1
+      : activeFeaturedIndex - 1;
+
+  animateToSlide(nextIndex);
+}
+
+function goToNextFeaturedSlide() {
+  const nextIndex =
+    activeFeaturedIndex === featuredGallery.length - 1
+      ? 0
+      : activeFeaturedIndex + 1;
+
+  animateToSlide(nextIndex);
+}
+
+return ( {
     const nextIndex =
       activeFeaturedIndex === 0
         ? featuredGallery.length - 1
@@ -305,6 +323,7 @@ function getHistoryScore({
                 display: "flex",
                 alignItems: "center",
                 gap: "14px",
+
                 width: isTablet ? "100%" : "auto",
                 justifyContent: isTablet ? "center" : "flex-start",
                 textAlign: isTablet ? "center" : "left",
