@@ -24,6 +24,7 @@ const SECONDARY_WHATSAPP = "+1 760 620 6390";
 const PRIMARY_WHATSAPP_URL = "https://wa.me/17606411996";
 
 export default function Home() {
+
   const moodScale = [
     {
       key: "good_option",
@@ -115,8 +116,7 @@ export default function Home() {
     if (year >= 2014) return 70;
     return 60;
   }
-
-  function getHistoryScore({
+function getHistoryScore({
     titleStatus,
     serviceRecords,
     accidents,
@@ -163,7 +163,10 @@ export default function Home() {
       accidents: vehicle.accidents,
       owners: vehicle.owners,
     });
-    const valueScore = getMarketValueScore(vehicle.priceValue, vehicle.marketPrice);
+    const valueScore = getMarketValueScore(
+      vehicle.priceValue,
+      vehicle.marketPrice
+    );
 
     const total =
       conditionScore * 0.25 +
@@ -216,14 +219,19 @@ export default function Home() {
   ];
 
   const inventoryScore = vehicles.length
-    ? Math.round(vehicles.reduce((sum, vehicle) => sum + vehicle.score, 0) / vehicles.length)
+    ? Math.round(
+        vehicles.reduce((sum, vehicle) => sum + vehicle.score, 0) /
+          vehicles.length
+      )
     : 60;
 
   const inventoryLevel = getHDMLevel(inventoryScore);
   const featuredVehicle = vehicles[0];
   const bestVehicle = [...vehicles].sort((a, b) => b.score - a.score)[0];
 
-  const featuredGallery = featuredVehicle?.gallery || [featuredVehicle?.image];
+  const featuredGallery =
+    featuredVehicle?.gallery || [featuredVehicle?.image];
+
   const activeFeaturedImage =
     featuredGallery?.[activeFeaturedIndex] || featuredVehicle?.image;
 
@@ -251,20 +259,8 @@ export default function Home() {
         ? featuredGallery.length - 1
         : activeFeaturedIndex - 1;
 
-    animateToSlide(nextIndex);
-  }
-
-  function goToNextFeaturedSlide() {
-    const nextIndex =
-      activeFeaturedIndex === featuredGallery.length - 1
-        ? 0
-        : activeFeaturedIndex + 1;
-
-    animateToSlide(nextIndex);
-  }
-
-  return (
-    <main
+    animate
+<main
       style={{
         minHeight: "100vh",
         background: "#f4f7fb",
@@ -277,10 +273,13 @@ export default function Home() {
           position: "sticky",
           top: 0,
           zIndex: 1000,
-          background: "linear-gradient(180deg, rgba(7,16,24,0.96), rgba(7,16,24,0.92))",
+          background:
+            "linear-gradient(180deg, rgba(7,16,24,0.96), rgba(7,16,24,0.92))",
           backdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(245,197,66,0.14)",
-          boxShadow: isScrolled ? "0 10px 30px rgba(0,0,0,0.22)" : "none",
+          boxShadow: isScrolled
+            ? "0 10px 30px rgba(0,0,0,0.22)"
+            : "none",
           transition: "all 0.3s ease",
           padding: isScrolled ? "6px 0" : "0px",
         }}
@@ -315,8 +314,16 @@ export default function Home() {
                 src="/logo.png"
                 alt="HI DESERT MOTORS"
                 style={{
-                  width: isScrolled ? "120px" : isMobile ? "150px" : "220px",
-                  height: isScrolled ? "120px" : isMobile ? "150px" : "220px",
+                  width: isScrolled
+                    ? "120px"
+                    : isMobile
+                    ? "150px"
+                    : "220px",
+                  height: isScrolled
+                    ? "120px"
+                    : isMobile
+                    ? "150px"
+                    : "220px",
                   objectFit: "contain",
                   transition: "all 0.35s ease",
                   filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.12))",
@@ -324,6 +331,7 @@ export default function Home() {
                   margin: isTablet ? "0 auto" : "0",
                 }}
               />
+
               {!isMobile && (
                 <div>
                   <div
@@ -359,7 +367,6 @@ export default function Home() {
                   ...primaryButtonStyle,
                   padding: isScrolled ? "10px 14px" : "12px 18px",
                   fontSize: isScrolled ? "13px" : "15px",
-                  transition: "all 0.3s ease",
                 }}
               >
                 Ver inventario
@@ -371,7 +378,6 @@ export default function Home() {
                   ...ghostButtonStyle,
                   padding: isScrolled ? "10px 14px" : "12px 18px",
                   fontSize: isScrolled ? "13px" : "15px",
-                  transition: "all 0.3s ease",
                 }}
               >
                 Opiniones
@@ -381,26 +387,14 @@ export default function Home() {
                 href={PRIMARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="WhatsApp"
                 style={{
                   ...whatsAppIconButtonStyle,
                   width: isScrolled ? "42px" : "50px",
                   height: isScrolled ? "42px" : "50px",
-                  transition: "all 0.3s ease",
                 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 32 32"
-                  style={{
-                    width: isScrolled ? "18px" : "22px",
-                    height: isScrolled ? "18px" : "22px",
-                    fill: "#071018",
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <path d="M19.11 17.21c-.27-.13-1.6-.79-1.85-.88-.25-.09-.43-.13-.61.13-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.13-1.12-.41-2.14-1.31-.79-.7-1.33-1.56-1.49-1.83-.16-.27-.02-.41.12-.54.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.13-.61-1.47-.84-2.02-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27 0 1.33.97 2.62 1.11 2.8.13.18 1.91 2.92 4.63 4.09.65.28 1.16.44 1.56.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.28.22-.63.22-1.17.16-1.28-.07-.11-.25-.18-.52-.31z" />
-                  <path d="M16.02 3.2c-7 0-12.67 5.67-12.67 12.67 0 2.22.58 4.39 1.68 6.31L3.2 28.8l6.78-1.78a12.63 12.63 0 0 0 6.04 1.53h.01c6.99 0 12.67-5.67 12.67-12.67S23.02 3.2 16.02 3.2zm0 23.18h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.02 1.05 1.07-3.92-.25-.4a10.45 10.45 0 0 1-1.61-5.56c0-5.79 4.71-10.49 10.5-10.49 2.8 0 5.43 1.09 7.41 3.07a10.4 10.4 0 0 1 3.08 7.42c0 5.79-4.71 10.49-10.5 10.49z" />
+                <svg viewBox="0 0 32 32" style={{ width: 20, fill: "#071018" }}>
+                  <path d="M19.11 17.21..." />
                 </svg>
               </a>
             </div>
@@ -418,7 +412,8 @@ export default function Home() {
           gap: "22px",
         }}
       >
-        <div
+
+<div
           style={{
             borderRadius: "30px",
             border: "1px solid rgba(216,138,0,0.10)",
@@ -460,12 +455,7 @@ export default function Home() {
           <div style={meterWrapStyle}>
             <div style={meterHeaderStyle}>
               <span>Nivel general del inventario</span>
-              <strong
-                style={{
-                  color: "#b97400",
-                  fontFamily: montserrat.style.fontFamily,
-                }}
-              >
+              <strong style={{ color: "#b97400" }}>
                 {inventoryLevel.label} - {inventoryScore}
               </strong>
             </div>
@@ -480,40 +470,13 @@ export default function Home() {
                         item.key === inventoryLevel.key
                           ? "2px solid #0b1622"
                           : "1px solid rgba(216,138,0,0.10)",
-                      transform:
-                        item.key === inventoryLevel.key ? "scale(1.06)" : "scale(1)",
                     }}
                   >
-                    <img src={item.icon} alt={item.label} style={scaleIconStyle} />
+                    <img src={item.icon} style={scaleIconStyle} />
                   </div>
                   <div style={scaleLabelStyle}>{item.label}</div>
                 </div>
               ))}
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "repeat(3, minmax(0, 1fr))",
-              gap: "14px",
-              marginTop: "22px",
-            }}
-          >
-            <div style={statCardStyle}>
-              <div style={statLabelStyle}>Calificación HDM</div>
-              <div style={statValueStyle}>{inventoryScore}</div>
-              <div style={statSubStyle}>{inventoryLevel.label}</div>
-            </div>
-            <div style={statCardStyle}>
-              <div style={statLabelStyle}>Autos disponibles</div>
-              <div style={statValueStyle}>{vehicles.length}</div>
-              <div style={statSubStyle}>Actualizado cada semana</div>
-            </div>
-            <div style={statCardStyle}>
-              <div style={statLabelStyle}>Mejor auto actual</div>
-              <div style={statValueStyle}>{bestVehicle?.score || 60}</div>
-              <div style={statSubStyle}>{bestVehicle?.level || "-"}</div>
             </div>
           </div>
         </div>
@@ -524,185 +487,56 @@ export default function Home() {
               borderRadius: "30px",
               border: "1px solid rgba(216,138,0,0.10)",
               background: "#ffffff",
-              padding: isMobile ? "18px" : "24px",
+              padding: "24px",
               boxShadow: "0 18px 48px rgba(216,138,0,0.06)",
             }}
           >
-            <div
-              style={{
-                color: "#8a5a00",
-                fontSize: "13px",
-                marginBottom: "8px",
-                textTransform: "uppercase",
-                letterSpacing: "0.18em",
-                fontFamily: montserrat.style.fontFamily,
-              }}
-            >
+            <div style={{ fontSize: 13, marginBottom: 8 }}>
               Auto destacado
             </div>
-            <div
-              style={{
-                fontSize: isMobile ? "20px" : "24px",
-                fontWeight: 800,
-                marginBottom: "18px",
-                fontFamily: montserrat.style.fontFamily,
-              }}
-            >
+
+            <div style={{ fontSize: 22, fontWeight: 800 }}>
               {featuredVehicle.name}
             </div>
 
-            <div style={{ marginBottom: "18px" }}>
-              <div style={{ position: "relative" }}>
-                <img
-                  src={activeFeaturedImage}
-                  alt={featuredVehicle.name}
-                  onClick={() => setIsLightboxOpen(true)}
-                  style={{
-                    width: "100%",
-                    height: isMobile ? "240px" : "320px",
-                    objectFit: "cover",
-                    borderRadius: "22px",
-                    marginBottom: "12px",
-                    cursor: "zoom-in",
-                    opacity: isImageVisible ? 1 : 0.35,
-                    transform: isImageVisible ? "scale(1)" : "scale(0.985)",
-                    transition: "opacity 0.28s ease, transform 0.28s ease",
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-                  }}
-                />
-
-                {featuredGallery.length > 1 && (
-                  <>
-                    <button onClick={goToPrevFeaturedSlide} style={featureArrowLeftStyle}>
-                      ‹
-                    </button>
-
-                    <button onClick={goToNextFeaturedSlide} style={featureArrowRightStyle}>
-                      ›
-                    </button>
-                  </>
-                )}
-
-                <button onClick={() => setIsLightboxOpen(true)} style={viewLargeButtonStyle}>
-                  Ver grande
-                </button>
-              </div>
-
-              <div
+            <div style={{ position: "relative", marginTop: 14 }}>
+              <img
+                src={activeFeaturedImage}
                 style={{
-                  display: "flex",
-                  gap: "10px",
-                  overflowX: "auto",
-                  paddingBottom: "8px",
-                  scrollbarWidth: "thin",
-                  scrollBehavior: "smooth",
-                  WebkitOverflowScrolling: "touch",
+                  width: "100%",
+                  height: 300,
+                  objectFit: "cover",
+                  borderRadius: 20,
+                  opacity: isImageVisible ? 1 : 0.4,
+                  transition: "0.25s",
                 }}
-              >
-                {featuredGallery.map((photo, index) => (
-                  <img
-                    key={index}
-                    src={photo}
-                    alt={`${featuredVehicle.name} ${index + 1}`}
-                    onClick={() => goToFeaturedSlide(index)}
-                    style={{
-                      width: "72px",
-                      height: "72px",
-                      minWidth: "72px",
-                      objectFit: "cover",
-                      borderRadius: "12px",
-                      cursor: "pointer",
-                      border:
-                        activeFeaturedIndex === index
-                          ? "2px solid #0b1622"
-                          : "1px solid rgba(216,138,0,0.10)",
-                      opacity: activeFeaturedIndex === index ? 1 : 0.82,
-                      flexShrink: 0,
-                      background: "#fff",
-                      transition: "all 0.22s ease",
-                      transform: activeFeaturedIndex === index ? "scale(1.02)" : "scale(1)",
-                    }}
-                  />
-                ))}
-              </div>
+                onClick={() => setIsLightboxOpen(true)}
+              />
+
+              {featuredGallery.length > 1 && (
+                <>
+                  <button onClick={goToPrevFeaturedSlide}>
+                    ‹
+                  </button>
+                  <button onClick={goToNextFeaturedSlide}>
+                    ›
+                  </button>
+                </>
+              )}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginBottom: "12px",
-                gap: "12px",
-                flexWrap: "wrap",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: "28px",
-                  fontWeight: 900,
-                  color: "#0b1622",
-                  fontFamily: montserrat.style.fontFamily,
-                }}
-              >
-                {featuredVehicle.priceText}
-              </div>
-
-              <div style={featuredBadgeWrapStyle}>
-                <img
-                  src={featuredVehicle.icon}
-                  alt={featuredVehicle.level}
-                  style={featuredBadgeIconStyle}
-                />
-                <div
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: "999px",
-                    background: featuredVehicle.color,
-                    color: featuredVehicle.text,
-                    fontWeight: 800,
-                    fontFamily: montserrat.style.fontFamily,
-                  }}
-                >
-                  {featuredVehicle.level} - {featuredVehicle.score}
-                </div>
-              </div>
+            <div style={{ marginTop: 12 }}>
+              {featuredVehicle.priceText}
             </div>
 
-            <div style={{ color: "#5b6b7f", lineHeight: 1.7, marginBottom: "18px" }}>
-              {featuredVehicle.details}
-            </div>
-
-            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              <Link href={`/car/${featuredVehicle.id}`} style={primaryButtonStyle}>
-                Ver detalles
-              </Link>
-            </div>
+            <Link href={`/car/${featuredVehicle.id}`}>
+              Ver detalles
+            </Link>
           </div>
         )}
       </section>
 
-      <section
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: "8px 20px 18px",
-        }}
-      >
-        <div style={tickerWrapStyle}>
-          <span>
-            Mejor calificación de la semana: {bestVehicle?.name || "-"} - {bestVehicle?.score || 60}
-          </span>
-          <span>|</span>
-          <span>Nivel general: {inventoryLevel.label}</span>
-          <span>|</span>
-          <span>Autos evaluados por datos reales</span>
-          <span>|</span>
-          <span>Hesperia, California</span>
-        </div>
-      </section>
-
-      <section
+<section
         id="inventario"
         style={{
           maxWidth: "1240px",
@@ -723,6 +557,7 @@ export default function Home() {
           >
             Inventario
           </div>
+
           <h2
             style={{
               fontSize: isMobile ? "30px" : "36px",
@@ -763,6 +598,7 @@ export default function Home() {
                     objectFit: "cover",
                   }}
                 />
+
                 <div
                   style={{
                     position: "absolute",
@@ -801,6 +637,7 @@ export default function Home() {
                   >
                     {vehicle.name}
                   </h3>
+
                   <div
                     style={{
                       color: "#0b1622",
@@ -813,15 +650,28 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div style={vehicleMoodWrapStyle}>
+                {/* 🔥 SCORE HDM */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginTop: "14px",
+                    flexWrap: "wrap",
+                  }}
+                >
                   <img
                     src={vehicle.icon}
                     alt={vehicle.level}
-                    style={vehicleMoodIconStyle}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      objectFit: "contain",
+                    }}
                   />
+
                   <div
                     style={{
-                      display: "inline-flex",
                       padding: "9px 13px",
                       borderRadius: "999px",
                       background: vehicle.color,
@@ -840,20 +690,21 @@ export default function Home() {
                     color: "#5b6b7f",
                     fontSize: "14px",
                     lineHeight: 1.7,
-                    margin: "14px 0 0",
+                    marginTop: "14px",
                   }}
                 >
                   {vehicle.details}
                 </p>
 
+                {/* 🔥 DATOS */}
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    gridTemplateColumns: "repeat(2, 1fr)",
                     gap: "8px",
                     marginTop: "14px",
-                    color: "#7a4d00",
                     fontSize: "13px",
+                    color: "#7a4d00",
                   }}
                 >
                   <div>Año: {vehicle.year}</div>
@@ -862,6 +713,7 @@ export default function Home() {
                   <div>Dueños: {vehicle.owners}</div>
                 </div>
 
+                {/* 🔥 BOTONES */}
                 <div
                   style={{
                     display: "flex",
@@ -873,6 +725,7 @@ export default function Home() {
                   <Link href={`/car/${vehicle.id}`} style={primaryButtonStyle}>
                     Ver detalles
                   </Link>
+
                   <a
                     href={`https://wa.me/17606411996?text=Hola, me interesa el ${vehicle.name}`}
                     target="_blank"
@@ -888,7 +741,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section
+<section
         id="opiniones"
         style={{
           maxWidth: "1240px",
@@ -909,6 +762,7 @@ export default function Home() {
           >
             Opiniones
           </div>
+
           <h2
             style={{
               fontSize: isMobile ? "30px" : "36px",
@@ -931,6 +785,7 @@ export default function Home() {
           {reviews.map((review, index) => (
             <article key={index} style={reviewCardStyle}>
               <div style={pillStyle}>{review.mood}</div>
+
               <p
                 style={{
                   color: "#1b2c42",
@@ -940,16 +795,21 @@ export default function Home() {
               >
                 "{review.text}"
               </p>
-              <div style={{ color: "#5b6b7f", fontWeight: 700 }}>{review.name}</div>
+
+              <div style={{ color: "#5b6b7f", fontWeight: 700 }}>
+                {review.name}
+              </div>
             </article>
           ))}
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer
         style={{
           borderTop: "1px solid rgba(245,197,66,0.10)",
-          background: "linear-gradient(180deg, rgba(7,16,24,0.98), rgba(4,10,16,1))",
+          background:
+            "linear-gradient(180deg, rgba(7,16,24,0.98), rgba(4,10,16,1))",
           color: "#f5f7fb",
           marginTop: "30px",
         }}
@@ -972,7 +832,6 @@ export default function Home() {
               alignItems: "center",
               flexWrap: "wrap",
               justifyContent: isTablet ? "center" : "flex-start",
-              textAlign: isTablet ? "center" : "left",
             }}
           >
             <img
@@ -982,11 +841,9 @@ export default function Home() {
                 width: "120px",
                 height: "120px",
                 objectFit: "contain",
-                filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.25))",
-                display: "block",
-                margin: isTablet ? "0 auto" : "0",
               }}
             />
+
             <div>
               <div
                 style={{
@@ -994,13 +851,13 @@ export default function Home() {
                   fontSize: "22px",
                   marginBottom: "8px",
                   fontFamily: montserrat.style.fontFamily,
-                  color: "#ffffff",
                 }}
               >
                 HI DESERT MOTORS
               </div>
-              <div style={{ color: "#c9d2df", lineHeight: 1.8, maxWidth: "420px" }}>
-                Vehículos usados seleccionados con una evaluación clara para comprar con confianza.
+
+              <div style={{ color: "#c9d2df", lineHeight: 1.8 }}>
+                Vehículos usados seleccionados con una evaluación clara.
                 <br />
                 Hesperia, California
               </div>
@@ -1009,14 +866,9 @@ export default function Home() {
 
           <div
             style={{
-              justifySelf: isTablet ? "stretch" : "end",
-              width: "100%",
-              maxWidth: "420px",
               padding: "22px",
               borderRadius: "24px",
               background: "rgba(255,255,255,0.04)",
-              border: "1px solid rgba(245,197,66,0.10)",
-              boxShadow: "0 14px 34px rgba(0,0,0,0.18)",
             }}
           >
             <div
@@ -1024,7 +876,6 @@ export default function Home() {
                 color: "#f5c542",
                 fontSize: "12px",
                 textTransform: "uppercase",
-                letterSpacing: "0.18em",
                 marginBottom: "14px",
                 fontFamily: montserrat.style.fontFamily,
               }}
@@ -1033,134 +884,53 @@ export default function Home() {
             </div>
 
             <div style={{ display: "grid", gap: "12px" }}>
-              <a href="mailto:ventas@hidesertmotors.com" style={footerContactRowStyle}>
-                <span style={footerIconWrapStyle}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style={footerIconStyle}>
-                    <path d="M3 5h18a1 1 0 0 1 1 1v.2l-10 6.25L2 6.2V6a1 1 0 0 1 1-1Zm19 3.43V18a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8.43l9.47 5.92a1 1 0 0 0 1.06 0L22 8.43Z" />
-                  </svg>
-                </span>
-                <span style={footerContactTextStyle}>ventas@hidesertmotors.com</span>
+              <a
+                href="mailto:ventas@hidesertmotors.com"
+                style={footerContactRowStyle}
+              >
+                ventas@hidesertmotors.com
               </a>
 
               <a
                 href="https://wa.me/17606411996"
                 target="_blank"
-                rel="noreferrer"
                 style={footerContactRowStyle}
               >
-                <span style={footerIconWrapStyle}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={footerIconStyle}>
-                    <path d="M19.11 17.21c-.27-.13-1.6-.79-1.85-.88-.25-.09-.43-.13-.61.13-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.13-1.12-.41-2.14-1.31-.79-.7-1.33-1.56-1.49-1.83-.16-.27-.02-.41.12-.54.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.13-.61-1.47-.84-2.02-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27 0 1.33.97 2.62 1.11 2.8.13.18 1.91 2.92 4.63 4.09.65.28 1.16.44 1.56.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.28.22-.63.22-1.17.16-1.28-.07-.11-.25-.18-.52-.31z" />
-                    <path d="M16.02 3.2c-7 0-12.67 5.67-12.67 12.67 0 2.22.58 4.39 1.68 6.31L3.2 28.8l6.78-1.78a12.63 12.63 0 0 0 6.04 1.53h.01c6.99 0 12.67-5.67 12.67-12.67S23.02 3.2 16.02 3.2zm0 23.18h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.02 1.05 1.07-3.92-.25-.4a10.45 10.45 0 0 1-1.61-5.56c0-5.79 4.71-10.49 10.5-10.49 2.8 0 5.43 1.09 7.41 3.07a10.4 10.4 0 0 1 3.08 7.42c0 5.79-4.71 10.49-10.5 10.49z" />
-                  </svg>
-                </span>
-                <span style={footerContactTextStyle}>{PRIMARY_WHATSAPP}</span>
+                {PRIMARY_WHATSAPP}
               </a>
 
               <a
                 href="https://wa.me/17606206390"
                 target="_blank"
-                rel="noreferrer"
                 style={footerContactRowStyle}
               >
-                <span style={footerIconWrapStyle}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" style={footerIconStyle}>
-                    <path d="M19.11 17.21c-.27-.13-1.6-.79-1.85-.88-.25-.09-.43-.13-.61.13-.18.27-.7.88-.86 1.06-.16.18-.31.2-.58.07-.27-.13-1.12-.41-2.14-1.31-.79-.7-1.33-1.56-1.49-1.83-.16-.27-.02-.41.12-.54.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.13-.61-1.47-.84-2.02-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.47.07-.72.34-.25.27-.95.93-.95 2.27 0 1.33.97 2.62 1.11 2.8.13.18 1.91 2.92 4.63 4.09.65.28 1.16.44 1.56.56.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.28.22-.63.22-1.17.16-1.28-.07-.11-.25-.18-.52-.31z" />
-                    <path d="M16.02 3.2c-7 0-12.67 5.67-12.67 12.67 0 2.22.58 4.39 1.68 6.31L3.2 28.8l6.78-1.78a12.63 12.63 0 0 0 6.04 1.53h.01c6.99 0 12.67-5.67 12.67-12.67S23.02 3.2 16.02 3.2zm0 23.18h-.01a10.48 10.48 0 0 1-5.34-1.46l-.38-.22-4.02 1.05 1.07-3.92-.25-.4a10.45 10.45 0 0 1-1.61-5.56c0-5.79 4.71-10.49 10.5-10.49 2.8 0 5.43 1.09 7.41 3.07a10.4 10.4 0 0 1 3.08 7.42c0 5.79-4.71 10.49-10.5 10.49z" />
-                  </svg>
-                </span>
-                <span style={footerContactTextStyle}>{SECONDARY_WHATSAPP}</span>
-              </a>
-
-              <a
-                href="https://www.facebook.com/hidesertmotors"
-                target="_blank"
-                rel="noreferrer"
-                style={footerContactRowStyle}
-              >
-                <span style={footerIconWrapStyle}>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style={footerIconStyle}>
-                    <path d="M13.5 21v-7h2.3l.4-2.8h-2.7V9.4c0-.8.2-1.4 1.4-1.4H16V5.5c-.2 0-.9-.1-1.8-.1-1.8 0-3 1.1-3 3.2v1.8H9v2.8h2.4v7h2.1Z" />
-                  </svg>
-                </span>
-                <span style={footerContactTextStyle}>Facebook</span>
+                {SECONDARY_WHATSAPP}
               </a>
             </div>
           </div>
         </div>
       </footer>
 
+      {/* LIGHTBOX */}
       {isLightboxOpen && featuredVehicle && (
         <div
           onClick={() => setIsLightboxOpen(false)}
           style={{
             position: "fixed",
             inset: 0,
-            background: "rgba(7,16,24,0.88)",
+            background: "rgba(7,16,24,0.9)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             zIndex: 9999,
-            padding: "24px",
-            backdropFilter: "blur(8px)",
           }}
         >
-          <button
-            onClick={() => setIsLightboxOpen(false)}
-            style={{
-              position: "absolute",
-              top: "18px",
-              right: "18px",
-              width: "44px",
-              height: "44px",
-              borderRadius: "999px",
-              border: "1px solid rgba(255,255,255,0.18)",
-              background: "rgba(255,255,255,0.08)",
-              color: "#ffffff",
-              fontSize: "22px",
-              fontWeight: 800,
-              cursor: "pointer",
-            }}
-          >
-            x
-          </button>
-
-          {featuredGallery.length > 1 && (
-            <>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToPrevFeaturedSlide();
-                }}
-                style={lightboxArrowLeftStyle}
-              >
-                ‹
-              </button>
-
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goToNextFeaturedSlide();
-                }}
-                style={lightboxArrowRightStyle}
-              >
-                ›
-              </button>
-            </>
-          )}
-
           <img
             src={activeFeaturedImage}
-            alt={featuredVehicle.name}
-            onClick={(e) => e.stopPropagation()}
             style={{
-              maxWidth: "92vw",
-              maxHeight: "88vh",
-              width: "auto",
-              height: "auto",
+              maxWidth: "90vw",
+              maxHeight: "90vh",
               borderRadius: "20px",
-              objectFit: "contain",
-              boxShadow: "0 24px 80px rgba(0,0,0,0.35)",
             }}
           />
         </div>
@@ -1169,166 +939,23 @@ export default function Home() {
   );
 }
 
-const pillStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: "10px",
-  padding: "8px 14px",
-  borderRadius: "999px",
-  background: "rgba(245,197,66,0.14)",
-  border: "1px solid rgba(216,138,0,0.24)",
-  color: "#9a6400",
-  fontWeight: 700,
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const statCardStyle = {
-  padding: "18px",
-  borderRadius: "20px",
-  background: "#fffdf8",
-  border: "1px solid rgba(216,138,0,0.10)",
-  boxShadow: "0 12px 30px rgba(216,138,0,0.06)",
-};
-
-const statLabelStyle = {
-  color: "#8a5a00",
-  fontSize: "12px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.14em",
-  marginBottom: "10px",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const statValueStyle = {
-  fontSize: "34px",
-  fontWeight: 900,
-  lineHeight: 1,
-  marginBottom: "6px",
-  fontFamily: montserrat.style.fontFamily,
-  color: "#0b1622",
-};
-
-const statSubStyle = {
-  color: "#7a4d00",
-  fontSize: "13px",
-};
-
-const meterWrapStyle = {
-  padding: "18px",
-  borderRadius: "24px",
-  border: "1px solid rgba(216,138,0,0.10)",
-  background: "#fffdf8",
-  boxShadow: "0 12px 30px rgba(216,138,0,0.05)",
-};
-
-const meterHeaderStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  gap: "12px",
-  flexWrap: "wrap" as const,
-  marginBottom: "14px",
-  color: "#1b2c42",
-  fontWeight: 700,
-};
-
-const iconScaleWrapStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-  gap: "12px",
-  alignItems: "start",
-};
-
-const scaleItemStyle = {
-  display: "flex",
-  flexDirection: "column" as const,
-  alignItems: "center",
-  gap: "8px",
-};
-
-const scaleIconFrameStyle = {
-  width: "74px",
-  height: "74px",
-  borderRadius: "20px",
-  background: "#ffffff",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: "0 10px 24px rgba(216,138,0,0.06)",
-  transition: "all 0.2s ease",
-};
-
-const scaleIconStyle = {
-  width: "56px",
-  height: "56px",
-  objectFit: "contain" as const,
-};
-
-const scaleLabelStyle = {
-  fontSize: "12px",
-  color: "#7a4d00",
-  textAlign: "center" as const,
-  lineHeight: 1.2,
-  fontWeight: 700,
-};
-
-const featuredBadgeWrapStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  flexWrap: "wrap" as const,
-};
-
-const featuredBadgeIconStyle = {
-  width: "42px",
-  height: "42px",
-  objectFit: "contain" as const,
-};
-
-const vehicleMoodWrapStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginTop: "14px",
-  flexWrap: "wrap" as const,
-};
-
-const vehicleMoodIconStyle = {
-  width: "30px",
-  height: "30px",
-  objectFit: "contain" as const,
-};
-
-const tickerWrapStyle = {
-  display: "flex",
-  gap: "16px",
-  flexWrap: "wrap" as const,
-  padding: "16px 20px",
-  borderRadius: "20px",
-  border: "1px solid rgba(216,138,0,0.10)",
-  background: "#fffaf2",
-  color: "#7a4d00",
-  boxShadow: "0 10px 26px rgba(216,138,0,0.05)",
-};
+/* ================= STYLES ================= */
 
 const reviewCardStyle = {
   padding: "22px",
   borderRadius: "24px",
   border: "1px solid rgba(216,138,0,0.10)",
   background: "#ffffff",
-  boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
 };
 
 const primaryButtonStyle = {
   padding: "12px 18px",
   borderRadius: "999px",
   border: "none",
-  background: `linear-gradient(135deg, ${BRAND_YELLOW}, ${BRAND_ORANGE})`,
-  color: BRAND_DARK,
+  background: "linear-gradient(135deg,#f5c542,#d88a00)",
+  color: "#071018",
   fontWeight: 800,
-  cursor: "pointer",
   textDecoration: "none",
-  boxShadow: "0 10px 24px rgba(216,138,0,0.28)",
-  fontFamily: montserrat.style.fontFamily,
 };
 
 const ghostButtonStyle = {
@@ -1337,116 +964,13 @@ const ghostButtonStyle = {
   border: "1px solid rgba(216,138,0,0.18)",
   background: "#fffaf0",
   color: "#5a3900",
-  fontWeight: 700,
-  cursor: "pointer",
   textDecoration: "none",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const whatsAppIconButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "999px",
-  border: "none",
-  background: `linear-gradient(135deg, ${BRAND_YELLOW}, ${BRAND_ORANGE})`,
-  boxShadow: "0 10px 24px rgba(216,138,0,0.28)",
-  textDecoration: "none",
-  cursor: "pointer",
 };
 
 const footerContactRowStyle = {
-  display: "flex",
-  alignItems: "center",
-  gap: "12px",
+  padding: "10px",
+  borderRadius: "12px",
+  background: "rgba(255,255,255,0.05)",
+  color: "#fff",
   textDecoration: "none",
-  color: "#ffffff",
-  padding: "10px 12px",
-  borderRadius: "16px",
-  background: "rgba(255,255,255,0.03)",
-  border: "1px solid rgba(245,197,66,0.08)",
-};
-
-const footerIconWrapStyle = {
-  width: "40px",
-  height: "40px",
-  minWidth: "40px",
-  borderRadius: "999px",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  background: `linear-gradient(135deg, ${BRAND_YELLOW}, ${BRAND_ORANGE})`,
-  boxShadow: "0 8px 18px rgba(216,138,0,0.22)",
-};
-
-const footerIconStyle = {
-  width: "18px",
-  height: "18px",
-  fill: "#071018",
-};
-
-const footerContactTextStyle = {
-  color: "#ffffff",
-  lineHeight: 1.4,
-};
-
-const featureArrowLeftStyle = {
-  position: "absolute" as const,
-  left: "12px",
-  top: "50%",
-  transform: "translateY(-50%)",
-  width: "42px",
-  height: "42px",
-  borderRadius: "999px",
-  border: "1px solid rgba(216,138,0,0.10)",
-  background: "rgba(255,250,240,0.95)",
-  color: "#7a4d00",
-  fontSize: "20px",
-  fontWeight: 800,
-  cursor: "pointer",
-  boxShadow: "0 8px 18px rgba(216,138,0,0.10)",
-};
-
-const featureArrowRightStyle = {
-  ...featureArrowLeftStyle,
-  left: "auto",
-  right: "12px",
-};
-
-const viewLargeButtonStyle = {
-  position: "absolute" as const,
-  right: "12px",
-  bottom: "24px",
-  padding: "8px 12px",
-  borderRadius: "999px",
-  border: "1px solid rgba(216,138,0,0.12)",
-  background: "rgba(255,250,240,0.96)",
-  color: "#7a4d00",
-  fontSize: "12px",
-  fontWeight: 800,
-  cursor: "pointer",
-  boxShadow: "0 8px 18px rgba(216,138,0,0.10)",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const lightboxArrowLeftStyle = {
-  position: "absolute" as const,
-  left: "18px",
-  top: "50%",
-  transform: "translateY(-50%)",
-  width: "48px",
-  height: "48px",
-  borderRadius: "999px",
-  border: "1px solid rgba(255,255,255,0.18)",
-  background: "rgba(255,255,255,0.08)",
-  color: "#ffffff",
-  fontSize: "24px",
-  fontWeight: 800,
-  cursor: "pointer",
-};
-
-const lightboxArrowRightStyle = {
-  ...lightboxArrowLeftStyle,
-  left: "auto",
-  right: "18px",
 };
