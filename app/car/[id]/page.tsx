@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { vehicles as sourceVehicles } from "@/data/vehicles";
@@ -145,6 +145,10 @@ export default function CarDetailPage() {
     isTablet: false,
   });
 
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const thumbsRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -160,6 +164,26 @@ export default function CarDetailPage() {
   }, []);
 
   const { isMobile, isTablet } = screen;
+
+  useEffect(() => {
+    setIndex(0);
+  }, [id]);
+
+  useEffect(() => {
+    if (!thumbsRef.current) return;
+
+    const activeThumb = thumbsRef.current.querySelector(
+      `[data-thumb-index="${index}"]`
+    ) as HTMLElement | null;
+
+    if (activeThumb) {
+      activeThumb.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [index]);
 
   if (!vehicle) {
     return (
@@ -211,6 +235,27 @@ export default function CarDetailPage() {
     setIndex((prev) => (prev === gallery.length - 1 ? 0 : prev + 1));
   };
 
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
+    touchStartX.current = e.changedTouches[0].clientX;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
+    touchEndX.current = e.changedTouches[0].clientX;
+
+    if (touchStartX.current === null || touchEndX.current === null) return;
+
+    const delta = touchStartX.current - touchEndX.current;
+
+    if (delta > 40) {
+      nextImage();
+    } else if (delta < -40) {
+      prevImage();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  }
+
   return (
     <main
       style={{
@@ -218,7 +263,11 @@ export default function CarDetailPage() {
         background: "#f4f7fb",
         color: "#0b1622",
         fontFamily: inter.style.fontFamily,
-        padding: isMobile ? "18px 14px 40px" : isTablet ? "24px 18px 50px" : "28px 20px 60px",
+        padding: isMobile
+          ? "18px 14px 40px"
+          : isTablet
+          ? "24px 18px 50px"
+          : "28px 20px 60px",
       }}
     >
       <div style={{ maxWidth: "1220px", margin: "0 auto" }}>
@@ -242,7 +291,9 @@ export default function CarDetailPage() {
           style={{
             marginTop: isMobile ? "14px" : "18px",
             display: "grid",
-            gridTemplateColumns: isTablet ? "1fr" : "minmax(0, 1.12fr) minmax(360px, 0.88fr)",
+            gridTemplateColumns: isTablet
+              ? "1fr"
+              : "minmax(0, 1.08fr) minmax(340px, 0.92fr)",
             gap: isMobile ? "16px" : "24px",
             alignItems: "start",
           }}
@@ -257,7 +308,11 @@ export default function CarDetailPage() {
               overflow: "hidden",
             }}
           >
-            <div style={{ position: "relative" }}>
+            <div
+              style={{ position: "relative" }}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               <img
                 src={gallery[index]}
                 alt={vehicle.name}
@@ -269,6 +324,7 @@ export default function CarDetailPage() {
                   borderRadius: isMobile ? "16px" : "22px",
                   cursor: "zoom-in",
                   display: "block",
+                  touchAction: "pan-y",
                 }}
               />
 
@@ -306,6 +362,7 @@ export default function CarDetailPage() {
             </div>
 
             <div
+              ref={thumbsRef}
               style={{
                 display: "flex",
                 gap: isMobile ? "8px" : "10px",
@@ -314,11 +371,14 @@ export default function CarDetailPage() {
                 scrollbarWidth: "thin",
                 WebkitOverflowScrolling: "touch",
                 scrollBehavior: "smooth",
+                scrollSnapType: "x mandatory",
+                paddingBottom: "2px",
               }}
             >
               {gallery.map((img, i) => (
                 <button
                   key={i}
+                  data-thumb-index={i}
                   onClick={() => setIndex(i)}
                   aria-label={`Abrir imagen ${i + 1}`}
                   style={{
@@ -327,6 +387,7 @@ export default function CarDetailPage() {
                     background: "transparent",
                     cursor: "pointer",
                     flex: "0 0 auto",
+                    scrollSnapAlign: "start",
                   }}
                 >
                   <img
@@ -357,6 +418,8 @@ export default function CarDetailPage() {
               border: "1px solid rgba(216,138,0,0.10)",
               boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
               padding: isMobile ? "18px 16px" : isTablet ? "22px 18px" : "24px",
+              position: isTablet ? "static" : "sticky",
+              top: isTablet ? "auto" : "24px",
             }}
           >
             <div
@@ -429,7 +492,9 @@ export default function CarDetailPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(2, minmax(0, 1fr))",
+                gridTemplateColumns: isMobile
+                  ? "1fr 1fr"
+                  : "repeat(2, minmax(0, 1fr))",
                 gap: "12px",
                 marginTop: "18px",
               }}
