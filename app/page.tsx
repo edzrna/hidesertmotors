@@ -272,8 +272,7 @@ function goToNextFeaturedSlide() {
 }
 
 return ( 
-
-<main
+   <main
       style={{
         minHeight: "100vh",
         background: "#f4f7fb",
