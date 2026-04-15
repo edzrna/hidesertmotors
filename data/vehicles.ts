@@ -37,7 +37,7 @@ export const vehicles = [
     condition: "bueno",
     titleStatus: "clean",
     serviceRecords: false,
-    accidents: 0,
+    accidents: 1,
     owners: 2,
     image: "/cars/silverado-2022-1.jpg",
     gallery: [
