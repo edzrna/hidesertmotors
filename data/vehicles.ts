@@ -8,7 +8,7 @@ export const vehicles = [
     year: 2024,
     miles: 9900,
     condition: "excelente",
-    titleStatus: "clean",
+    titleStatus: "salvage",
     serviceRecords: true,
     accidents: 0,
     owners: 1,
