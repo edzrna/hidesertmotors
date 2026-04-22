@@ -40,7 +40,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 0,
     owners: 2,
-    sold: false,
+    sold: true,
     image: "/cars/silverado-2022-1.jpg",
     gallery: [
       "/cars/silverado-2022-1.jpg",
@@ -144,7 +144,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 1,
     owners: 2,
-    sold: false,
+    sold: true,
     image: "/cars/e350-2014-1.jpg",
     gallery: [
       "/cars/e350-2014-1.jpg",
