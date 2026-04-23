@@ -290,4 +290,35 @@ export const vehicles = [
     "Hybrid | Interior moderno con doble pantalla digital | Pantalla central táctil | Cámara de reversa | Controles en volante | Automático | Excelente en gasolina | Todo pagado | Título limpio | Todo en orden",
   tag: "Hybrid",
 },
+
+  {
+  id: "explorer-2017",
+  name: "2017 Ford Explorer",
+  priceText: "$11,500",
+  priceValue: 11500,
+  marketPrice: 14000,
+  year: 2017,
+  miles: 110000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/explorer-2017-1.jpg",
+  gallery: [
+    "/cars/explorer-2017-1.jpg",
+    "/cars/explorer-2017-2.jpg",
+    "/cars/explorer-2017-3.jpg",
+    "/cars/explorer-2017-4.jpg",
+    "/cars/explorer-2017-5.jpg",
+    "/cars/explorer-2017-6.jpg",
+    "/cars/explorer-2017-7.jpg",
+    "/cars/explorer-2017-8.jpg",
+  ],
+  details:
+    "SUV amplia | Interior en piel | Pantalla central | Cámara de reversa | Controles en volante | Automática | Muy cómoda para familia | Título limpio | Todo en orden",
+  tag: "SUV",
+},
+  
 ];
