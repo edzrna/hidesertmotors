@@ -19,8 +19,8 @@ const inter = Inter({
 const BRAND_YELLOW = "#f5c542";
 const BRAND_ORANGE = "#d88a00";
 const BRAND_DARK = "#071018";
-const PRIMARY_WHATSAPP = "+1 760 641 1996";
-const PRIMARY_WHATSAPP_URL = "https://wa.me/17606411996";
+const PRIMARY_WHATSAPP = "+1 760 620 6390";
+const PRIMARY_WHATSAPP_URL = "https://wa.me/17606206390";
 
 type Vehicle = (typeof sourceVehicles)[number];
 
