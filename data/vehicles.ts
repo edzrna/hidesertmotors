@@ -27,6 +27,35 @@ export const vehicles = [
     details: "V8 5.0 | Automático | Frenos y mejoras performance | Filtros de alto flujo",
     tag: "Destacado",
   },
+
+{
+  id: "gmc-canyon-at4x-2024",
+  name: "2024 GMC Canyon AT4X",
+  priceText: "$42,500",
+  priceValue: 42500,
+  marketPrice: 48000,
+  year: 2024,
+  miles: 12800,
+  condition: "excelente",
+  titleStatus: "salvage",
+  serviceRecords: true,
+  accidents: 0,
+  owners: 1,
+  sold: false,
+  image: "/cars/canyon-at4x-1.jpg",
+  gallery: [
+    "/cars/canyon-at4x-1.jpg",
+    "/cars/canyon-at4x-2.jpg",
+    "/cars/canyon-at4x-3.jpg",
+    "/cars/canyon-at4x-4.jpg",
+    "/cars/canyon-at4x-5.jpg",
+    "/cars/canyon-at4x-6.jpg",
+  ],
+  details:
+    "AT4X Off-Road | 4x4 | Suspensión off-road premium | Interior moderno | Pantalla grande | Cámara | Automática | Solo 12k millas | Todo pagado | Lista para uso diario o aventura",
+  tag: "Destacado",
+},
+  
   {
     id: "silverado-2022-170k",
     name: "2022 Chevrolet Silverado 4x4",
