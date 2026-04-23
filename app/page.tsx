@@ -1,5 +1,6 @@
 "use client";
 
+import AIChat from "@/components/AIChat";
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { vehicles as rawVehicles } from "@/data/vehicles";
@@ -1518,6 +1519,7 @@ export default function Home() {
           />
         </div>
       )}
+      <AIChat />
     </main>
   );
 }
