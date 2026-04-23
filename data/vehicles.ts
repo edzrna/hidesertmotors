@@ -269,7 +269,7 @@ export const vehicles = [
   priceValue: 18000,
   marketPrice: 22000,
   year: 2023,
-  miles: 0,
+  miles: 175000,
   condition: "excelente",
   titleStatus: "clean",
   serviceRecords: false,
