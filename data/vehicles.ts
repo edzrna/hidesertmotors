@@ -349,5 +349,33 @@ export const vehicles = [
     "SUV amplia | Interior en piel | Pantalla central | Cámara de reversa | Controles en volante | Automática | Muy cómoda para familia | Título limpio | Todo en orden",
   tag: "SUV",
 },
+
+  {
+  id: "tacoma-2013-trd",
+  name: "2013 Toyota Tacoma TRD Sport",
+  priceText: "$13,500",
+  priceValue: 13500,
+  marketPrice: 15000,
+  year: 2013,
+  miles: 220000,
+  condition: "bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/tacoma-2013-1.jpg",
+  gallery: [
+    "/cars/tacoma-2013-1.jpg",
+    "/cars/tacoma-2013-2.jpg",
+    "/cars/tacoma-2013-3.jpg",
+    "/cars/tacoma-2013-4.jpg",
+    "/cars/tacoma-2013-5.jpg",
+    "/cars/tacoma-2013-6.jpg",
+  ],
+  details:
+    "TRD Sport | 4 cilindros | Automática | Doble cabina | Pantalla | Controles en volante | Estribos laterales | Cama amplia | Título limpio | Toyota confiable para trabajo o diario",
+  tag: "Truck",
+},
   
 ];
