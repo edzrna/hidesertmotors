@@ -261,4 +261,33 @@ export const vehicles = [
     details: "4 cilindros | Automático | Aire frío | Eléctrico | Excelente para uso diario",
     tag: "Económico",
   },
+
+  {
+  id: "prius-toyota-2023",
+  name: "2023 Toyota Prius",
+  priceText: "$18,000",
+  priceValue: 18000,
+  marketPrice: 22000,
+  year: 2023,
+  miles: 0,
+  condition: "excelente",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 1,
+  sold: false,
+  image: "/cars/prius-2023-1.jpg",
+  gallery: [
+    "/cars/prius-2023-1.jpg",
+    "/cars/prius-2023-2.jpg",
+    "/cars/prius-2023-3.jpg",
+    "/cars/prius-2023-4.jpg",
+    "/cars/prius-2023-5.jpg",
+    "/cars/prius-2023-6.jpg",
+    "/cars/prius-2023-7.jpg",
+  ],
+  details:
+    "Hybrid | Interior moderno con doble pantalla digital | Pantalla central táctil | Cámara de reversa | Controles en volante | Automático | Excelente en gasolina | Todo pagado | Título limpio | Todo en orden",
+  tag: "Hybrid",
+},
 ];
