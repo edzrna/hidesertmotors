@@ -260,7 +260,7 @@ export async function POST(req: Request) {
       .join("\n");
 
     const response = await client.responses.create({
-      model: "gpt-5.4",
+      model: "gpt-4o-mini",
       instructions: buildInventoryContext(language),
       input: conversationText,
     });
@@ -276,10 +276,13 @@ export async function POST(req: Request) {
       language,
     });
   } catch (error) {
-    console.error("Chat API error:", error);
+    console.error("Chat API error:", JSON.stringify(error, null, 2));
 
     return NextResponse.json(
-      { error: "Ocurrió un error al generar la respuesta." },
+      {
+        error: "Ocurrió un error al generar la respuesta.",
+        detail: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
