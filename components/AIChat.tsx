@@ -1,40 +1,51 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
 };
 
-function detectInitialLanguage() {
+function detectInitialLanguage(): "es" | "en" {
   if (typeof window === "undefined") return "es";
   const lang = window.navigator.language.toLowerCase();
   return lang.startsWith("en") ? "en" : "es";
+}
+
+function getInitialAssistantMessage(language: "es" | "en"): ChatMessage {
+  return language === "en"
+    ? {
+        role: "assistant",
+        content:
+          "Hi, I'm the HI DESERT MOTORS assistant. I can help you with availability, prices, titles, mileage, and vehicle details.",
+      }
+    : {
+        role: "assistant",
+        content:
+          "Hola, soy el asistente de HI DESERT MOTORS. Puedo ayudarte con disponibilidad, precios, títulos, millaje y detalles de los vehículos.",
+      };
 }
 
 export default function AIChat() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState<"es" | "en">(detectInitialLanguage());
+  const [language, setLanguage] = useState<"es" | "en">("es");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const initialMessage = useMemo<ChatMessage>(() => {
-    return language === "en"
-      ? {
-          role: "assistant",
-          content:
-            "Hi, I'm the HI DESERT MOTORS assistant. I can help you with availability, prices, titles, mileage, and vehicle details.",
-        }
-      : {
-          role: "assistant",
-          content:
-            "Hola, soy el asistente de HI DESERT MOTORS. Puedo ayudarte con disponibilidad, precios, títulos, millaje y detalles de los vehículos.",
-        };
-  }, [language]);
+  useEffect(() => {
+    const detected = detectInitialLanguage();
+    setLanguage(detected);
+    setMessages([getInitialAssistantMessage(detected)]);
+  }, []);
 
-  const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
+  const placeholder = useMemo(() => {
+    return language === "en"
+      ? "Ask about a vehicle..."
+      : "Pregunta por un vehículo...";
+  }, [language]);
 
   function scrollToBottom() {
     requestAnimationFrame(() => {
@@ -42,17 +53,32 @@ export default function AIChat() {
     });
   }
 
+  function detectMessageLanguage(
+    text: string,
+    currentLanguage: "es" | "en"
+  ): "es" | "en" {
+    const lower = text.toLowerCase();
+
+    const looksEnglish =
+      /\b(the|price|clean|title|available|truck|car|miles|hello|hi|thanks|do you|what|how much)\b/i.test(
+        lower
+      );
+
+    const looksSpanish =
+      /\b(hola|precio|título|titulo|disponible|camioneta|carro|millas|gracias|cuánto|cuanto|quiero|busco)\b/i.test(
+        lower
+      );
+
+    if (looksEnglish) return "en";
+    if (looksSpanish) return "es";
+    return currentLanguage;
+  }
+
   async function sendMessage() {
     const text = input.trim();
     if (!text || loading) return;
 
-    const nextLanguage = /[a-z]/i.test(text) &&
-      /\b(the|price|clean|title|available|truck|car|miles|hello|hi|thanks)\b/i.test(text)
-      ? "en"
-      : /\b(hola|precio|título|titulo|disponible|camioneta|carro|millas|gracias)\b/i.test(text)
-      ? "es"
-      : language;
-
+    const nextLanguage = detectMessageLanguage(text, language);
     if (nextLanguage !== language) {
       setLanguage(nextLanguage);
     }
@@ -63,6 +89,7 @@ export default function AIChat() {
     };
 
     const pendingMessages = [...messages, userMessage];
+
     setMessages(pendingMessages);
     setInput("");
     setLoading(true);
@@ -79,10 +106,13 @@ export default function AIChat() {
         }),
       });
 
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
 
       if (!res.ok) {
-        throw new Error(data?.error || "Request failed");
+        const detail =
+          data?.detail || data?.error || `HTTP ${res.status}: ${res.statusText}`;
+
+        throw new Error(detail);
       }
 
       setMessages([
@@ -96,38 +126,30 @@ export default function AIChat() {
               : "No pude generar una respuesta en este momento."),
         },
       ]);
-
-      scrollToBottom();
     } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Unknown error";
+
       setMessages([
         ...pendingMessages,
         {
           role: "assistant",
           content:
             nextLanguage === "en"
-              ? "Sorry, something went wrong. Please try again in a moment."
-              : "Perdón, ocurrió un error. Inténtalo de nuevo en un momento.",
+              ? `Sorry, something went wrong.\n\n${message}`
+              : `Perdón, ocurrió un error.\n\n${message}`,
         },
       ]);
-
-      scrollToBottom();
     } finally {
       setLoading(false);
+      scrollToBottom();
     }
   }
 
   function resetChat() {
-    setMessages([language === "en"
-      ? {
-          role: "assistant",
-          content:
-            "Hi, I'm the HI DESERT MOTORS assistant. I can help you with availability, prices, titles, mileage, and vehicle details.",
-        }
-      : {
-          role: "assistant",
-          content:
-            "Hola, soy el asistente de HI DESERT MOTORS. Puedo ayudarte con disponibilidad, precios, títulos, millaje y detalles de los vehículos.",
-        }]);
+    setMessages([getInitialAssistantMessage(language)]);
+    setInput("");
+    setLoading(false);
   }
 
   return (
@@ -303,13 +325,11 @@ export default function AIChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") sendMessage();
+                if (e.key === "Enter") {
+                  void sendMessage();
+                }
               }}
-              placeholder={
-                language === "en"
-                  ? "Ask about a vehicle..."
-                  : "Pregunta por un vehículo..."
-              }
+              placeholder={placeholder}
               style={{
                 flex: 1,
                 height: "46px",
@@ -324,7 +344,7 @@ export default function AIChat() {
             />
 
             <button
-              onClick={sendMessage}
+              onClick={() => void sendMessage()}
               disabled={loading}
               style={{
                 minWidth: "52px",
