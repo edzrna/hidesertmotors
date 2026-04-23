@@ -62,6 +62,7 @@ export default function Home() {
   const [isImageVisible, setIsImageVisible] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
 
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
@@ -238,8 +239,8 @@ export default function Home() {
   const featuredGallery = featuredVehicle?.gallery?.length
     ? featuredVehicle.gallery
     : featuredVehicle
-    ? [featuredVehicle.image]
-    : [];
+      ? [featuredVehicle.image]
+      : [];
 
   const activeFeaturedImage =
     featuredGallery?.[activeFeaturedIndex] || featuredVehicle?.image;
@@ -299,6 +300,26 @@ export default function Home() {
 
     touchStartX.current = null;
     touchEndX.current = null;
+  }
+
+  function getVehicleUrl(vehicle: any) {
+    if (typeof window === "undefined") {
+      return `https://www.hidesertmotors.com/car/${vehicle.id}`;
+    }
+
+    return `${window.location.origin}/car/${vehicle.id}`;
+  }
+
+  async function handleCopyVehicleLink(vehicle: any) {
+    try {
+      const url = getVehicleUrl(vehicle);
+      await navigator.clipboard.writeText(url);
+      setShareMessage(`Link copiado: ${vehicle.name}`);
+      window.setTimeout(() => setShareMessage(""), 2200);
+    } catch {
+      setShareMessage("No se pudo copiar el link");
+      window.setTimeout(() => setShareMessage(""), 2200);
+    }
   }
 
   return (
@@ -813,6 +834,100 @@ export default function Home() {
                 {featuredVehicle.sold ? "Vendido" : "Pedir información"}
               </a>
             </div>
+
+            {!featuredVehicle.sold && (
+              <>
+                <div
+                  style={{
+                    color: "#8a5a00",
+                    fontSize: "12px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.16em",
+                    marginTop: "16px",
+                    marginBottom: "10px",
+                    fontFamily: montserrat.style.fontFamily,
+                  }}
+                >
+                  Compartir vehículo
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, minmax(0, 1fr))",
+                    gap: "10px",
+                  }}
+                >
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(
+                      `${featuredVehicle.name} - ${featuredVehicle.priceText} ${getVehicleUrl(featuredVehicle)}`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconWhatsApp />
+                    <span>WhatsApp</span>
+                  </a>
+
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                      getVehicleUrl(featuredVehicle)
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconFacebook />
+                    <span>Facebook</span>
+                  </a>
+
+                  <a
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                      `${featuredVehicle.name} - ${featuredVehicle.priceText}`
+                    )}&url=${encodeURIComponent(getVehicleUrl(featuredVehicle))}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconX />
+                    <span>X</span>
+                  </a>
+
+                  <a
+                    href={`https://t.me/share/url?url=${encodeURIComponent(
+                      getVehicleUrl(featuredVehicle)
+                    )}&text=${encodeURIComponent(
+                      `${featuredVehicle.name} - ${featuredVehicle.priceText}`
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconTelegram />
+                    <span>Telegram</span>
+                  </a>
+
+                  <a
+                    href={`fb-messenger://share?link=${encodeURIComponent(
+                      getVehicleUrl(featuredVehicle)
+                    )}`}
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconMessenger />
+                    <span>Messenger</span>
+                  </a>
+
+                  <button
+                    onClick={() => handleCopyVehicleLink(featuredVehicle)}
+                    style={shareNetworkButtonStyle}
+                  >
+                    <ShareIconLink />
+                    <span>Copiar link</span>
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </section>
@@ -1080,6 +1195,46 @@ export default function Home() {
                     {vehicle.sold ? "Vendido" : "Pedir información"}
                   </a>
                 </div>
+
+                {!vehicle.sold && (
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                      gap: "8px",
+                      marginTop: "12px",
+                    }}
+                  >
+                    <a
+                      href={`https://wa.me/?text=${encodeURIComponent(
+                        `${vehicle.name} - ${vehicle.priceText} ${getVehicleUrl(vehicle)}`
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={shareMiniButtonStyle}
+                    >
+                      <ShareIconWhatsApp />
+                    </a>
+
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                        getVehicleUrl(vehicle)
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={shareMiniButtonStyle}
+                    >
+                      <ShareIconFacebook />
+                    </a>
+
+                    <button
+                      onClick={() => handleCopyVehicleLink(vehicle)}
+                      style={shareMiniButtonStyle}
+                    >
+                      <ShareIconLink />
+                    </button>
+                  </div>
+                )}
               </div>
             </article>
           ))}
@@ -1159,6 +1314,29 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {shareMessage && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "18px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "#071018",
+            color: "#ffffff",
+            padding: "12px 16px",
+            borderRadius: "999px",
+            fontSize: "13px",
+            fontWeight: 700,
+            zIndex: 10000,
+            boxShadow: "0 12px 28px rgba(0,0,0,0.28)",
+            maxWidth: "90vw",
+            textAlign: "center",
+          }}
+        >
+          {shareMessage}
+        </div>
+      )}
 
       <footer
         style={{
@@ -1505,3 +1683,89 @@ const closeLightboxStyle = {
   alignItems: "center",
   justifyContent: "center",
 };
+
+const shareNetworkButtonStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "8px",
+  padding: "13px 14px",
+  borderRadius: "14px",
+  border: "1px solid rgba(216,138,0,0.16)",
+  background: "#fffaf0",
+  color: "#5a3900",
+  fontWeight: 800,
+  fontFamily: montserrat.style.fontFamily,
+  textDecoration: "none",
+  cursor: "pointer",
+  fontSize: "14px",
+  boxShadow: "0 8px 18px rgba(216,138,0,0.08)",
+};
+
+const shareMiniButtonStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "42px",
+  borderRadius: "12px",
+  border: "1px solid rgba(216,138,0,0.16)",
+  background: "#fffaf0",
+  color: "#5a3900",
+  textDecoration: "none",
+  cursor: "pointer",
+};
+
+const shareIconStyle = {
+  width: "16px",
+  height: "16px",
+  fill: "#5a3900",
+  flexShrink: 0,
+};
+
+function ShareIconWhatsApp() {
+  return (
+    <svg viewBox="0 0 32 32" style={shareIconStyle}>
+      <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
+    </svg>
+  );
+}
+
+function ShareIconFacebook() {
+  return (
+    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+      <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V4.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.7v8h2.8Z" />
+    </svg>
+  );
+}
+
+function ShareIconX() {
+  return (
+    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+      <path d="M18.9 2H22l-6.77 7.74L23 22h-6.26l-4.9-6.41L6.23 22H3.1l7.24-8.27L1 2h6.42l4.43 5.85L18.9 2Zm-1.1 18h1.73L6.47 3.9H4.61L17.8 20Z" />
+    </svg>
+  );
+}
+
+function ShareIconTelegram() {
+  return (
+    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+      <path d="M21.94 4.67a1.5 1.5 0 0 0-1.66-.23L3.1 12.13c-.79.35-.75 1.49.07 1.78l4.18 1.46 1.58 4.89c.24.74 1.18.95 1.72.38l2.3-2.42 4.52 3.31c.69.51 1.67.13 1.84-.71L22 6.14c.09-.52-.12-1.03-.56-1.47ZM9.63 14.62l8.6-6.84-6.96 8.3-.33 2.95-1.31-4.41Z" />
+    </svg>
+  );
+}
+
+function ShareIconMessenger() {
+  return (
+    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+      <path d="M12 2C6.48 2 2 6.15 2 11.27c0 2.91 1.45 5.5 3.72 7.19V22l3.27-1.8c.95.26 1.96.4 3.01.4 5.52 0 10-4.15 10-9.27S17.52 2 12 2Zm1.01 12.34-2.55-2.72-4.97 2.72 5.46-5.81 2.61 2.72 4.9-2.72-5.45 5.81Z" />
+    </svg>
+  );
+}
+
+function ShareIconLink() {
+  return (
+    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+      <path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l3.59-3.59a3 3 0 0 0-4.24-4.24l-1.88 1.88a1 1 0 1 0 1.41 1.41l1.88-1.88a1 1 0 1 1 1.41 1.41l-3.58 3.6Zm2.82-2.82a1 1 0 0 0-1.41-1.41l-3.59 3.59a3 3 0 1 0 4.24 4.24l1.88-1.88a1 1 0 1 0-1.41-1.41l-1.88 1.88a1 1 0 1 1-1.41-1.41l3.58-3.6Z" />
+    </svg>
+  );
+}
