@@ -20,10 +20,12 @@ const BRAND_YELLOW = "#f5c542";
 const BRAND_ORANGE = "#d88a00";
 const BRAND_DARK = "#071018";
 
-const PRIMARY_WHATSAPP = "+1 760 641 1996";
-const SECONDARY_WHATSAPP = "+1 760 620 6390";
-const PRIMARY_WHATSAPP_URL = "https://wa.me/17606411996";
+const PRIMARY_WHATSAPP = "+1 760 620 6390";
+const SECONDARY_WHATSAPP = "+1 760 641 1996";
+const PRIMARY_WHATSAPP_URL = "https://wa.me/17606206390";
+const SECONDARY_WHATSAPP_URL = "https://wa.me/17606411996";
 const FACEBOOK_URL = "https://facebook.com/hidesertmotors";
+const ENGLISH_PAGE_URL = "/en";
 
 export default function Home() {
   const moodScale = [
@@ -305,17 +307,17 @@ export default function Home() {
 
   function getVehicleUrl(vehicle: any) {
     if (typeof window === "undefined") {
-      return `https://www.hidesertmotors.com/car/${vehicle.id}`;
+      return https://www.hidesertmotors.com/car/${vehicle.id};
     }
 
-    return `${window.location.origin}/car/${vehicle.id}`;
+    return ${window.location.origin}/car/${vehicle.id};
   }
 
   async function handleCopyVehicleLink(vehicle: any) {
     try {
       const url = getVehicleUrl(vehicle);
       await navigator.clipboard.writeText(url);
-      setShareMessage(`Link copiado: ${vehicle.name}`);
+      setShareMessage(Link copiado: ${vehicle.name});
       window.setTimeout(() => setShareMessage(""), 2200);
     } catch {
       setShareMessage("No se pudo copiar el link");
@@ -418,6 +420,37 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
+              <span
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "999px",
+                  background: "linear-gradient(135deg,#f5c542,#d88a00)",
+                  color: "#071018",
+                  fontWeight: 800,
+                  fontFamily: montserrat.style.fontFamily,
+                  fontSize: "13px",
+                }}
+              >
+                ES
+              </span>
+
+              <Link
+                href={ENGLISH_PAGE_URL}
+                style={{
+                  padding: "10px 12px",
+                  borderRadius: "999px",
+                  border: "1px solid rgba(216,138,0,0.18)",
+                  background: "#fffaf0",
+                  color: "#5a3900",
+                  textDecoration: "none",
+                  fontWeight: 800,
+                  fontFamily: montserrat.style.fontFamily,
+                  fontSize: "13px",
+                }}
+              >
+                EN
+              </Link>
+
               <a
                 href="#inventario"
                 style={{
@@ -446,7 +479,7 @@ export default function Home() {
                 href={PRIMARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="WhatsApp"
+                aria-label="WhatsApp principal"
                 style={{
                   ...whatsAppIconButtonStyle,
                   width: isScrolled ? "42px" : isMobile ? "44px" : "50px",
@@ -465,7 +498,7 @@ export default function Home() {
         </section>
       </header>
 
-      <section
+       <section
         style={{
           maxWidth: "1240px",
           margin: "0 auto",
@@ -1049,6 +1082,7 @@ export default function Home() {
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "12px",
+
                     alignItems: "start",
                     flexDirection: isMobile ? "column" : "row",
                   }}
@@ -1445,7 +1479,7 @@ export default function Home() {
               </a>
 
               <a
-                href="https://wa.me/17606411996"
+                href="https://wa.me/17606206390"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp principal"
@@ -1457,7 +1491,7 @@ export default function Home() {
               </a>
 
               <a
-                href="https://wa.me/17606206390"
+                href="https://wa.me/17606411996"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp secundario"
@@ -1519,6 +1553,7 @@ export default function Home() {
           />
         </div>
       )}
+
       <AIChat />
     </main>
   );
@@ -1770,4 +1805,4 @@ function ShareIconLink() {
       <path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l3.59-3.59a3 3 0 0 0-4.24-4.24l-1.88 1.88a1 1 0 1 0 1.41 1.41l1.88-1.88a1 1 0 1 1 1.41 1.41l-3.58 3.6Zm2.82-2.82a1 1 0 0 0-1.41-1.41l-3.59 3.59a3 3 0 1 0 4.24 4.24l1.88-1.88a1 1 0 1 0-1.41-1.41l-1.88 1.88a1 1 0 1 1-1.41-1.41l3.58-3.6Z" />
     </svg>
   );
-}
+}// JavaScript Document
