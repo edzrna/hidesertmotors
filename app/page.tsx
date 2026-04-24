@@ -141,7 +141,6 @@ export default function Home() {
     if (titleStatus === "clean") score += 14;
     if (titleStatus === "rebuilt") score -= 8;
     if (titleStatus === "salvage") score -= 14;
-
     if (serviceRecords) score += 6;
     if (accidents === 1) score -= 6;
     if (accidents >= 2) score -= 12;
@@ -242,8 +241,8 @@ export default function Home() {
   const featuredGallery = featuredVehicle?.gallery?.length
     ? featuredVehicle.gallery
     : featuredVehicle
-      ? [featuredVehicle.image]
-      : [];
+    ? [featuredVehicle.image]
+    : [];
 
   const activeFeaturedImage =
     featuredGallery?.[activeFeaturedIndex] || featuredVehicle?.image;
@@ -307,17 +306,17 @@ export default function Home() {
 
   function getVehicleUrl(vehicle: any) {
     if (typeof window === "undefined") {
-      return https://www.hidesertmotors.com/car/${vehicle.id};
+      return `https://www.hidesertmotors.com/car/${vehicle.id}`;
     }
 
-    return ${window.location.origin}/car/${vehicle.id};
+    return `${window.location.origin}/car/${vehicle.id}`;
   }
 
   async function handleCopyVehicleLink(vehicle: any) {
     try {
       const url = getVehicleUrl(vehicle);
       await navigator.clipboard.writeText(url);
-      setShareMessage(Link copiado: ${vehicle.name});
+      setShareMessage(`Link copiado: ${vehicle.name}`);
       window.setTimeout(() => setShareMessage(""), 2200);
     } catch {
       setShareMessage("No se pudo copiar el link");
@@ -325,7 +324,7 @@ export default function Home() {
     }
   }
 
-  return (
+return (
     <main
       style={{
         minHeight: "100vh",
@@ -343,9 +342,7 @@ export default function Home() {
             "linear-gradient(180deg, rgba(7,16,24,0.96), rgba(7,16,24,0.92))",
           backdropFilter: "blur(14px)",
           borderBottom: "1px solid rgba(245,197,66,0.14)",
-          boxShadow: isScrolled
-            ? "0 10px 30px rgba(0,0,0,0.22)"
-            : "none",
+          boxShadow: isScrolled ? "0 10px 30px rgba(0,0,0,0.22)" : "none",
           transition: "all 0.3s ease",
           padding: isScrolled ? "6px 0" : "0px",
         }}
@@ -420,34 +417,9 @@ export default function Home() {
                 justifyContent: "center",
               }}
             >
-              <span
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: "999px",
-                  background: "linear-gradient(135deg,#f5c542,#d88a00)",
-                  color: "#071018",
-                  fontWeight: 800,
-                  fontFamily: montserrat.style.fontFamily,
-                  fontSize: "13px",
-                }}
-              >
-                ES
-              </span>
+              <span style={activeLanguageButtonStyle}>ES</span>
 
-              <Link
-                href={ENGLISH_PAGE_URL}
-                style={{
-                  padding: "10px 12px",
-                  borderRadius: "999px",
-                  border: "1px solid rgba(216,138,0,0.18)",
-                  background: "#fffaf0",
-                  color: "#5a3900",
-                  textDecoration: "none",
-                  fontWeight: 800,
-                  fontFamily: montserrat.style.fontFamily,
-                  fontSize: "13px",
-                }}
-              >
+              <Link href={ENGLISH_PAGE_URL} style={languageButtonStyle}>
                 EN
               </Link>
 
@@ -455,7 +427,11 @@ export default function Home() {
                 href="#inventario"
                 style={{
                   ...primaryButtonStyle,
-                  padding: isScrolled ? "10px 14px" : isMobile ? "11px 14px" : "12px 18px",
+                  padding: isScrolled
+                    ? "10px 14px"
+                    : isMobile
+                    ? "11px 14px"
+                    : "12px 18px",
                   fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
                   textAlign: "center",
                 }}
@@ -467,7 +443,11 @@ export default function Home() {
                 href="#opiniones"
                 style={{
                   ...ghostButtonStyle,
-                  padding: isScrolled ? "10px 14px" : isMobile ? "11px 14px" : "12px 18px",
+                  padding: isScrolled
+                    ? "10px 14px"
+                    : isMobile
+                    ? "11px 14px"
+                    : "12px 18px",
                   fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
                   textAlign: "center",
                 }}
@@ -486,10 +466,7 @@ export default function Home() {
                   height: isScrolled ? "42px" : isMobile ? "44px" : "50px",
                 }}
               >
-                <svg
-                  viewBox="0 0 32 32"
-                  style={{ width: 20, height: 20, fill: "#071018" }}
-                >
+                <svg viewBox="0 0 32 32" style={{ width: 20, height: 20, fill: "#071018" }}>
                   <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
                 </svg>
               </a>
@@ -498,13 +475,15 @@ export default function Home() {
         </section>
       </header>
 
-       <section
+      <section
         style={{
           maxWidth: "1240px",
           margin: "0 auto",
           padding: isMobile ? "18px 14px 14px" : "28px 20px 18px",
           display: "grid",
-          gridTemplateColumns: isTablet ? "1fr" : "minmax(0,1.2fr) minmax(340px,0.8fr)",
+          gridTemplateColumns: isTablet
+            ? "1fr"
+            : "minmax(0,1.2fr) minmax(340px,0.8fr)",
           gap: isMobile ? "16px" : "22px",
           alignItems: "start",
         }}
@@ -523,7 +502,11 @@ export default function Home() {
 
           <h1
             style={{
-              fontSize: isMobile ? "28px" : isTablet ? "34px" : "clamp(26px, 6vw, 40px)",
+              fontSize: isMobile
+                ? "28px"
+                : isTablet
+                ? "34px"
+                : "clamp(26px, 6vw, 40px)",
               lineHeight: 0.98,
               margin: "0 0 14px 0",
               fontWeight: 900,
@@ -630,8 +613,8 @@ export default function Home() {
                 wordBreak: "break-word",
               }}
             >
-              Mejor evaluado del inventario: <strong>{bestVehicle.name}</strong> con{" "}
-              <strong>{bestVehicle.score}</strong> puntos.
+              Mejor evaluado del inventario: <strong>{bestVehicle.name}</strong>{" "}
+              con <strong>{bestVehicle.score}</strong> puntos.
             </div>
           )}
         </div>
@@ -700,24 +683,7 @@ export default function Home() {
               />
 
               {featuredVehicle.sold && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "12px",
-                    left: "12px",
-                    background: "#ff3b4d",
-                    color: "#fff",
-                    padding: "8px 14px",
-                    borderRadius: "999px",
-                    fontWeight: 900,
-                    fontSize: "12px",
-                    letterSpacing: "0.05em",
-                    boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
-                    fontFamily: montserrat.style.fontFamily,
-                  }}
-                >
-                  VENDIDO
-                </div>
+                <div style={soldBadgeStyle}>VENDIDO</div>
               )}
 
               {featuredGallery.length > 1 && !featuredVehicle.sold && (
@@ -811,18 +777,7 @@ export default function Home() {
             </div>
 
             {featuredVehicle.sold && (
-              <div
-                style={{
-                  marginTop: "10px",
-                  fontSize: "13px",
-                  fontWeight: 800,
-                  color: "#ff3b4d",
-                  letterSpacing: "0.05em",
-                  fontFamily: montserrat.style.fontFamily,
-                }}
-              >
-                ESTE VEHÍCULO YA FUE VENDIDO
-              </div>
+              <div style={soldTextStyle}>ESTE VEHÍCULO YA FUE VENDIDO</div>
             )}
 
             <div
@@ -871,30 +826,22 @@ export default function Home() {
 
             {!featuredVehicle.sold && (
               <>
-                <div
-                  style={{
-                    color: "#8a5a00",
-                    fontSize: "12px",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.16em",
-                    marginTop: "16px",
-                    marginBottom: "10px",
-                    fontFamily: montserrat.style.fontFamily,
-                  }}
-                >
-                  Compartir vehículo
-                </div>
+                <div style={shareTitleStyle}>Compartir vehículo</div>
 
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, minmax(0, 1fr))",
+                    gridTemplateColumns: isMobile
+                      ? "1fr 1fr"
+                      : "repeat(3, minmax(0, 1fr))",
                     gap: "10px",
                   }}
                 >
                   <a
                     href={`https://wa.me/?text=${encodeURIComponent(
-                      `${featuredVehicle.name} - ${featuredVehicle.priceText} ${getVehicleUrl(featuredVehicle)}`
+                      `${featuredVehicle.name} - ${featuredVehicle.priceText} ${getVehicleUrl(
+                        featuredVehicle
+                      )}`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
@@ -928,30 +875,6 @@ export default function Home() {
                     <span>X</span>
                   </a>
 
-                  <a
-                    href={`https://t.me/share/url?url=${encodeURIComponent(
-                      getVehicleUrl(featuredVehicle)
-                    )}&text=${encodeURIComponent(
-                      `${featuredVehicle.name} - ${featuredVehicle.priceText}`
-                    )}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={shareNetworkButtonStyle}
-                  >
-                    <ShareIconTelegram />
-                    <span>Telegram</span>
-                  </a>
-
-                  <a
-                    href={`fb-messenger://share?link=${encodeURIComponent(
-                      getVehicleUrl(featuredVehicle)
-                    )}`}
-                    style={shareNetworkButtonStyle}
-                  >
-                    <ShareIconMessenger />
-                    <span>Messenger</span>
-                  </a>
-
                   <button
                     onClick={() => handleCopyVehicleLink(featuredVehicle)}
                     style={shareNetworkButtonStyle}
@@ -975,18 +898,7 @@ export default function Home() {
         }}
       >
         <div style={{ marginBottom: "18px" }}>
-          <div
-            style={{
-              color: "#8a5a00",
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              fontSize: "12px",
-              marginBottom: "8px",
-              fontFamily: montserrat.style.fontFamily,
-            }}
-          >
-            Inventario
-          </div>
+          <div style={sectionKickerStyle}>Inventario</div>
 
           <h2
             style={{
@@ -1011,16 +923,7 @@ export default function Home() {
           }}
         >
           {vehicles.map((vehicle) => (
-            <article
-              key={vehicle.id}
-              style={{
-                borderRadius: isMobile ? "22px" : "26px",
-                overflow: "hidden",
-                border: "1px solid rgba(216,138,0,0.10)",
-                background: "#ffffff",
-                boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
-              }}
-            >
+            <article key={vehicle.id} style={vehicleCardStyle}>
               <div style={{ position: "relative" }}>
                 <img
                   src={vehicle.image}
@@ -1036,44 +939,9 @@ export default function Home() {
                   }}
                 />
 
-                {vehicle.sold && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "12px",
-                      right: "12px",
-                      background: "#ff3b4d",
-                      color: "#fff",
-                      padding: "8px 14px",
-                      borderRadius: "999px",
-                      fontWeight: 900,
-                      fontSize: "12px",
-                      letterSpacing: "0.05em",
-                      boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
-                      fontFamily: montserrat.style.fontFamily,
-                    }}
-                  >
-                    VENDIDO
-                  </div>
-                )}
+                {vehicle.sold && <div style={soldBadgeRightStyle}>VENDIDO</div>}
 
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "14px",
-                    left: "14px",
-                    padding: "8px 12px",
-                    borderRadius: "999px",
-                    background: "rgba(255,250,240,0.96)",
-                    border: "1px solid rgba(216,138,0,0.14)",
-                    fontSize: "12px",
-                    fontWeight: 800,
-                    color: "#7a4d00",
-                    fontFamily: montserrat.style.fontFamily,
-                  }}
-                >
-                  {vehicle.tag}
-                </div>
+                <div style={tagBadgeStyle}>{vehicle.tag}</div>
               </div>
 
               <div style={{ padding: isMobile ? "16px" : "20px" }}>
@@ -1082,7 +950,6 @@ export default function Home() {
                     display: "flex",
                     justifyContent: "space-between",
                     gap: "12px",
-
                     alignItems: "start",
                     flexDirection: isMobile ? "column" : "row",
                   }}
@@ -1112,18 +979,7 @@ export default function Home() {
                 </div>
 
                 {vehicle.sold && (
-                  <div
-                    style={{
-                      marginTop: "8px",
-                      fontSize: "13px",
-                      fontWeight: 800,
-                      color: "#ff3b4d",
-                      letterSpacing: "0.05em",
-                      fontFamily: montserrat.style.fontFamily,
-                    }}
-                  >
-                    ESTE VEHÍCULO YA FUE VENDIDO
-                  </div>
+                  <div style={soldTextStyle}>ESTE VEHÍCULO YA FUE VENDIDO</div>
                 )}
 
                 <div
@@ -1174,7 +1030,9 @@ export default function Home() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(2, 1fr)",
+                    gridTemplateColumns: isMobile
+                      ? "1fr 1fr"
+                      : "repeat(2, 1fr)",
                     gap: "8px",
                     marginTop: "14px",
                     fontSize: "13px",
@@ -1242,7 +1100,9 @@ export default function Home() {
                   >
                     <a
                       href={`https://wa.me/?text=${encodeURIComponent(
-                        `${vehicle.name} - ${vehicle.priceText} ${getVehicleUrl(vehicle)}`
+                        `${vehicle.name} - ${vehicle.priceText} ${getVehicleUrl(
+                          vehicle
+                        )}`
                       )}`}
                       target="_blank"
                       rel="noreferrer"
@@ -1285,18 +1145,7 @@ export default function Home() {
         }}
       >
         <div style={{ marginBottom: "18px" }}>
-          <div
-            style={{
-              color: "#8a5a00",
-              textTransform: "uppercase",
-              letterSpacing: "0.2em",
-              fontSize: "12px",
-              marginBottom: "8px",
-              fontFamily: montserrat.style.fontFamily,
-            }}
-          >
-            Opiniones
-          </div>
+          <div style={sectionKickerStyle}>Opiniones</div>
 
           <h2
             style={{
@@ -1350,38 +1199,9 @@ export default function Home() {
         </div>
       </section>
 
-      {shareMessage && (
-        <div
-          style={{
-            position: "fixed",
-            bottom: "18px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "#071018",
-            color: "#ffffff",
-            padding: "12px 16px",
-            borderRadius: "999px",
-            fontSize: "13px",
-            fontWeight: 700,
-            zIndex: 10000,
-            boxShadow: "0 12px 28px rgba(0,0,0,0.28)",
-            maxWidth: "90vw",
-            textAlign: "center",
-          }}
-        >
-          {shareMessage}
-        </div>
-      )}
+      {shareMessage && <div style={toastStyle}>{shareMessage}</div>}
 
-      <footer
-        style={{
-          borderTop: "1px solid rgba(245,197,66,0.10)",
-          background:
-            "linear-gradient(180deg, rgba(7,16,24,0.98), rgba(4,10,16,1))",
-          color: "#f5f7fb",
-          marginTop: "30px",
-        }}
-      >
+      <footer style={footerStyle}>
         <div
           style={{
             maxWidth: "1240px",
@@ -1473,33 +1293,27 @@ export default function Home() {
                 aria-label="Email"
                 style={socialIconButtonStyle}
               >
-                <svg viewBox="0 0 24 24" style={footerIconSvgStyle}>
-                  <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v.01L12 13l8-5.99V7H4Zm16 10V9.49l-7.4 5.55a1 1 0 0 1-1.2 0L4 9.49V17h16Z" />
-                </svg>
+                <MailIcon />
               </a>
 
               <a
-                href="https://wa.me/17606206390"
+                href={PRIMARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="WhatsApp principal"
+                aria-label={`WhatsApp principal ${PRIMARY_WHATSAPP}`}
                 style={socialIconButtonStyle}
               >
-                <svg viewBox="0 0 32 32" style={footerIconSvgStyle}>
-                  <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
-                </svg>
+                <FooterWhatsAppIcon />
               </a>
 
               <a
-                href="https://wa.me/17606411996"
+                href={SECONDARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label="WhatsApp secundario"
+                aria-label={`WhatsApp secundario ${SECONDARY_WHATSAPP}`}
                 style={socialIconButtonStyle}
               >
-                <svg viewBox="0 0 32 32" style={footerIconSvgStyle}>
-                  <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
-                </svg>
+                <FooterWhatsAppIcon />
               </a>
 
               <a
@@ -1509,9 +1323,7 @@ export default function Home() {
                 aria-label="Facebook"
                 style={socialIconButtonStyle}
               >
-                <svg viewBox="0 0 24 24" style={footerIconSvgStyle}>
-                  <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V4.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.7v8h2.8Z" />
-                </svg>
+                <ShareIconFacebook footer />
               </a>
             </div>
           </div>
@@ -1561,9 +1373,39 @@ export default function Home() {
 
 /* ================= STYLES ================= */
 
+const activeLanguageButtonStyle = {
+  padding: "10px 12px",
+  borderRadius: "999px",
+  background: "linear-gradient(135deg,#f5c542,#d88a00)",
+  color: "#071018",
+  fontWeight: 800,
+  fontFamily: montserrat.style.fontFamily,
+  fontSize: "13px",
+};
+
+const languageButtonStyle = {
+  padding: "10px 12px",
+  borderRadius: "999px",
+  border: "1px solid rgba(216,138,0,0.18)",
+  background: "#fffaf0",
+  color: "#5a3900",
+  textDecoration: "none",
+  fontWeight: 800,
+  fontFamily: montserrat.style.fontFamily,
+  fontSize: "13px",
+};
+
 const reviewCardStyle = {
   padding: "22px",
   borderRadius: "24px",
+  border: "1px solid rgba(216,138,0,0.10)",
+  background: "#ffffff",
+  boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
+};
+
+const vehicleCardStyle = {
+  borderRadius: "26px",
+  overflow: "hidden",
   border: "1px solid rgba(216,138,0,0.10)",
   background: "#ffffff",
   boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
@@ -1721,6 +1563,16 @@ const closeLightboxStyle = {
   justifyContent: "center",
 };
 
+const shareTitleStyle = {
+  color: "#8a5a00",
+  fontSize: "12px",
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.16em",
+  marginTop: "16px",
+  marginBottom: "10px",
+  fontFamily: montserrat.style.fontFamily,
+};
+
 const shareNetworkButtonStyle = {
   display: "inline-flex",
   alignItems: "center",
@@ -1759,6 +1611,83 @@ const shareIconStyle = {
   flexShrink: 0,
 };
 
+const soldBadgeStyle = {
+  position: "absolute" as const,
+  top: "12px",
+  left: "12px",
+  background: "#ff3b4d",
+  color: "#fff",
+  padding: "8px 14px",
+  borderRadius: "999px",
+  fontWeight: 900,
+  fontSize: "12px",
+  letterSpacing: "0.05em",
+  boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+  fontFamily: montserrat.style.fontFamily,
+};
+
+const soldBadgeRightStyle = {
+  ...soldBadgeStyle,
+  left: "auto",
+  right: "12px",
+};
+
+const soldTextStyle = {
+  marginTop: "8px",
+  fontSize: "13px",
+  fontWeight: 800,
+  color: "#ff3b4d",
+  letterSpacing: "0.05em",
+  fontFamily: montserrat.style.fontFamily,
+};
+
+const tagBadgeStyle = {
+  position: "absolute" as const,
+  top: "14px",
+  left: "14px",
+  padding: "8px 12px",
+  borderRadius: "999px",
+  background: "rgba(255,250,240,0.96)",
+  border: "1px solid rgba(216,138,0,0.14)",
+  fontSize: "12px",
+  fontWeight: 800,
+  color: "#7a4d00",
+  fontFamily: montserrat.style.fontFamily,
+};
+
+const sectionKickerStyle = {
+  color: "#8a5a00",
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.2em",
+  fontSize: "12px",
+  marginBottom: "8px",
+  fontFamily: montserrat.style.fontFamily,
+};
+
+const toastStyle = {
+  position: "fixed" as const,
+  bottom: "18px",
+  left: "50%",
+  transform: "translateX(-50%)",
+  background: "#071018",
+  color: "#ffffff",
+  padding: "12px 16px",
+  borderRadius: "999px",
+  fontSize: "13px",
+  fontWeight: 700,
+  zIndex: 10000,
+  boxShadow: "0 12px 28px rgba(0,0,0,0.28)",
+  maxWidth: "90vw",
+  textAlign: "center" as const,
+};
+
+const footerStyle = {
+  borderTop: "1px solid rgba(245,197,66,0.10)",
+  background: "linear-gradient(180deg, rgba(7,16,24,0.98), rgba(4,10,16,1))",
+  color: "#f5f7fb",
+  marginTop: "30px",
+};
+
 function ShareIconWhatsApp() {
   return (
     <svg viewBox="0 0 32 32" style={shareIconStyle}>
@@ -1767,9 +1696,17 @@ function ShareIconWhatsApp() {
   );
 }
 
-function ShareIconFacebook() {
+function FooterWhatsAppIcon() {
   return (
-    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+    <svg viewBox="0 0 32 32" style={footerIconSvgStyle}>
+      <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
+    </svg>
+  );
+}
+
+function ShareIconFacebook({ footer = false }: { footer?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" style={footer ? footerIconSvgStyle : shareIconStyle}>
       <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V4.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.7v8h2.8Z" />
     </svg>
   );
@@ -1783,26 +1720,18 @@ function ShareIconX() {
   );
 }
 
-function ShareIconTelegram() {
-  return (
-    <svg viewBox="0 0 24 24" style={shareIconStyle}>
-      <path d="M21.94 4.67a1.5 1.5 0 0 0-1.66-.23L3.1 12.13c-.79.35-.75 1.49.07 1.78l4.18 1.46 1.58 4.89c.24.74 1.18.95 1.72.38l2.3-2.42 4.52 3.31c.69.51 1.67.13 1.84-.71L22 6.14c.09-.52-.12-1.03-.56-1.47ZM9.63 14.62l8.6-6.84-6.96 8.3-.33 2.95-1.31-4.41Z" />
-    </svg>
-  );
-}
-
-function ShareIconMessenger() {
-  return (
-    <svg viewBox="0 0 24 24" style={shareIconStyle}>
-      <path d="M12 2C6.48 2 2 6.15 2 11.27c0 2.91 1.45 5.5 3.72 7.19V22l3.27-1.8c.95.26 1.96.4 3.01.4 5.52 0 10-4.15 10-9.27S17.52 2 12 2Zm1.01 12.34-2.55-2.72-4.97 2.72 5.46-5.81 2.61 2.72 4.9-2.72-5.45 5.81Z" />
-    </svg>
-  );
-}
-
 function ShareIconLink() {
   return (
     <svg viewBox="0 0 24 24" style={shareIconStyle}>
       <path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l3.59-3.59a3 3 0 0 0-4.24-4.24l-1.88 1.88a1 1 0 1 0 1.41 1.41l1.88-1.88a1 1 0 1 1 1.41 1.41l-3.58 3.6Zm2.82-2.82a1 1 0 0 0-1.41-1.41l-3.59 3.59a3 3 0 1 0 4.24 4.24l1.88-1.88a1 1 0 1 0-1.41-1.41l-1.88 1.88a1 1 0 1 1-1.41-1.41l3.58-3.6Z" />
     </svg>
   );
-}// JavaScript Document
+}
+
+function MailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" style={footerIconSvgStyle}>
+      <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v.01L12 13l8-5.99V7H4Zm16 10V9.49l-7.4 5.55a1 1 0 0 1-1.2 0L4 9.49V17h16Z" />
+    </svg>
+  );
+}
