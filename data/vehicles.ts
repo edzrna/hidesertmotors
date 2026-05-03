@@ -30,7 +30,7 @@ export const vehicles = [
   {
     id: "mustang-gt-2024",
     name: "2024 Ford Mustang GT Premium",
-    priceText: "$43,000",
+    priceText: "$40,500",
     priceValue: 43000,
     marketPrice: 46000,
     year: 2024,
