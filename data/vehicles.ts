@@ -304,7 +304,7 @@ export const vehicles = [
   serviceRecords: false,
   accidents: 0,
   owners: 1,
-  sold: false,
+  sold: true,
   image: "/cars/prius-2023-1.jpg",
   gallery: [
     "/cars/prius-2023-1.jpg",
