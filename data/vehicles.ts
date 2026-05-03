@@ -111,7 +111,7 @@ export const vehicles = [
   {
     id: "colorado-2022-z71",
     name: "2022 Chevrolet Colorado Z71 4x4",
-    priceText: "$18,500",
+    priceText: "$16,900",
     priceValue: 18500,
     marketPrice: 20000,
     year: 2022,
