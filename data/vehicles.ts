@@ -12,7 +12,7 @@ export const vehicles = [
   serviceRecords: true,
   accidents: 0,
   owners: 1,
-  sold: false,
+  sold: true,
   image: "/cars/canyon-at4x-1.jpg",
   gallery: [
     "/cars/canyon-at4x-1.jpg",
