@@ -1,51 +1,39 @@
 @import "tailwindcss";
 
 /* ============================================================
-   HI DESERT MOTORS — tokens de marca
-   Registrados en @theme para que Tailwind genere utilidades:
-   bg-hdm-dark, text-hdm-amber, border-hdm-line, etc.
+   HI DESERT MOTORS — sistema de diseño
+   Tokens en @theme → Tailwind genera bg-hdm-dark, text-hdm-amber, etc.
    ============================================================ */
 
 @theme {
-  /* Marca */
   --color-hdm-amber: #f5c542;
   --color-hdm-orange: #d88a00;
   --color-hdm-dark: #071018;
   --color-hdm-ink: #0b1622;
 
-  /* Superficies */
   --color-hdm-surface: #ffffff;
   --color-hdm-canvas: #f4f7fb;
   --color-hdm-cream: #fffaf0;
   --color-hdm-sand: #fff7e6;
 
-  /* Texto */
   --color-hdm-muted: #5b6b7f;
   --color-hdm-brown: #7a4d00;
   --color-hdm-brown-soft: #8a5a00;
-
-  /* Estado */
   --color-hdm-sold: #ff3b4d;
 
-  /* Líneas y sombras */
-  --color-hdm-line: rgba(216, 138, 0, 0.12);
-
-  /* Tipografía (conecta con next/font) */
   --font-display: var(--font-montserrat), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
-
-  /* Radios */
-  --radius-hdm: 26px;
-  --radius-hdm-lg: 30px;
 }
 
 :root {
+  --hdm-line: rgba(216, 138, 0, 0.12);
+  --hdm-line-strong: rgba(216, 138, 0, 0.18);
   --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.06);
   --hdm-shadow-lift: 0 28px 60px rgba(216, 138, 0, 0.18);
   --hdm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --hdm-r: 26px;
+  --hdm-r-lg: 30px;
 }
-
-/* Sin auto dark-mode: el diseño es claro por decisión, no por sistema. */
 
 body {
   background: var(--color-hdm-canvas);
@@ -55,9 +43,14 @@ body {
 }
 
 /* ============================================================
-   ESCALA TIPOGRÁFICA FLUIDA
-   Reemplaza los ternarios isMobile/isTablet del componente.
+   CONTENEDOR Y TIPOGRAFÍA
    ============================================================ */
+
+.hdm-shell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding-inline: clamp(14px, 3vw, 20px);
+}
 
 .hdm-h1 {
   font-family: var(--font-display);
@@ -76,16 +69,25 @@ body {
   margin: 0;
 }
 
-.hdm-kicker {
+.hdm-kicker,
+.hdm-eyebrow {
   font-family: var(--font-display);
   font-size: 12px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
   color: var(--color-hdm-brown-soft);
+}
+
+.hdm-kicker {
+  letter-spacing: 0.2em;
   margin-bottom: 8px;
 }
 
-/* Acento en degradado para una sola frase del hero. Con moderación. */
+.hdm-eyebrow {
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+}
+
 .hdm-accent {
   background: linear-gradient(135deg, #ffd85a, var(--color-hdm-orange));
   -webkit-background-clip: text;
@@ -93,58 +95,666 @@ body {
   color: transparent;
 }
 
+.hdm-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--color-hdm-sand);
+  color: var(--color-hdm-brown-soft);
+  border: 1px solid var(--hdm-line);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.hdm-section-head {
+  margin-bottom: 18px;
+}
+
 /* ============================================================
-   HERO OSCURO — sol del desierto alto
-   El resplandor ámbar detrás del texto es la atmósfera del sitio.
+   HEADER
    ============================================================ */
+
+.hdm-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(180deg, rgba(7, 16, 24, 0.96), rgba(7, 16, 24, 0.92));
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(245, 197, 66, 0.14);
+  transition: box-shadow 0.3s ease, padding 0.3s ease;
+  padding-block: 14px;
+}
+
+.hdm-header.is-scrolled {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+  padding-block: 8px;
+}
+
+.hdm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.hdm-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hdm-logo {
+  width: clamp(92px, 16vw, 160px);
+  height: auto;
+  object-fit: contain;
+  transition: width 0.35s var(--hdm-ease);
+  filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.35));
+}
+
+.hdm-header.is-scrolled .hdm-logo {
+  width: clamp(72px, 12vw, 104px);
+}
+
+.hdm-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+}
+
+.hdm-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.hdm-lang {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  color: #5a3900;
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  transition: background 0.25s ease;
+}
+
+.hdm-lang:hover {
+  background: #ffffff;
+}
+
+.hdm-lang--active {
+  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
+  color: var(--color-hdm-dark);
+  border-color: transparent;
+}
+
+.hdm-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
+  box-shadow: 0 10px 24px rgba(216, 138, 0, 0.22);
+  transition: transform 0.25s var(--hdm-ease);
+}
+
+.hdm-wa:hover {
+  transform: scale(1.08);
+}
+
+.hdm-wa svg {
+  width: 20px;
+  height: 20px;
+  fill: var(--color-hdm-dark);
+}
+
+@media (max-width: 720px) {
+  .hdm-header-inner {
+    justify-content: center;
+    text-align: center;
+  }
+  .hdm-brand {
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+  .hdm-nav {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   BLOQUE SUPERIOR: hero + destacado
+   ============================================================ */
+
+.hdm-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(340px, 0.85fr);
+  gap: 22px;
+  align-items: start;
+  padding-block: clamp(18px, 4vw, 32px) 18px;
+}
+
+@media (max-width: 1100px) {
+  .hdm-top {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Hero oscuro: sol del desierto alto --- */
 
 .hdm-hero {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   background: var(--color-hdm-dark);
   color: #ffffff;
-  border-radius: var(--radius-hdm-lg);
-  padding: clamp(20px, 5vw, 40px);
-  isolation: isolate;
+  border-radius: var(--hdm-r-lg);
+  padding: clamp(20px, 4vw, 38px);
 }
 
 .hdm-hero::before {
   content: "";
   position: absolute;
-  inset: -40% -20% auto -20%;
-  height: 90%;
+  inset: -45% -20% auto -20%;
+  height: 95%;
   z-index: -1;
-  background: radial-gradient(
-    60% 60% at 70% 30%,
-    rgba(245, 197, 66, 0.28),
-    transparent 70%
-  );
+  background: radial-gradient(60% 60% at 72% 28%, rgba(245, 197, 66, 0.3), transparent 70%);
   animation: hdm-glow 9s ease-in-out infinite alternate;
 }
 
 @keyframes hdm-glow {
   from {
-    opacity: 0.65;
-    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.6;
+    transform: scale(1);
   }
   to {
     opacity: 1;
-    transform: translate3d(-3%, 2%, 0) scale(1.08);
+    transform: translate3d(-3%, 2%, 0) scale(1.1);
   }
 }
 
-.hdm-hero p {
+.hdm-hero .hdm-pill {
+  background: rgba(245, 197, 66, 0.12);
+  border-color: rgba(245, 197, 66, 0.24);
+  color: var(--color-hdm-amber);
+  margin-bottom: 18px;
+}
+
+.hdm-hero-lead {
   color: #b9c6d6;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.6;
+  max-width: 620px;
+  margin: 0 0 24px;
+}
+
+/* --- Medidor de inventario --- */
+
+.hdm-meter {
+  border-radius: 22px;
+  padding: clamp(16px, 3vw, 20px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(245, 197, 66, 0.16);
+}
+
+.hdm-meter-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.hdm-meter-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #93a4b8;
+}
+
+.hdm-meter-level {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  color: var(--color-hdm-amber);
+  line-height: 1.1;
+  margin-top: 4px;
+}
+
+.hdm-scale {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 520px) {
+  .hdm-scale {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 10px;
+  }
+}
+
+.hdm-scale-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  min-width: 0;
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+
+.hdm-scale-item.is-current {
+  opacity: 1;
+}
+
+.hdm-scale-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(48px, 10vw, 60px);
+  aspect-ratio: 1;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+}
+
+.hdm-scale-item.is-current .hdm-scale-frame {
+  border-color: var(--color-hdm-amber);
+  background: rgba(245, 197, 66, 0.12);
+}
+
+.hdm-scale-frame img {
+  width: 64%;
+  height: 64%;
+  object-fit: contain;
+}
+
+.hdm-scale-label {
+  font-size: clamp(11px, 1.6vw, 12px);
+  line-height: 1.3;
+  font-weight: 700;
+  color: #c9d5e3;
+}
+
+.hdm-note {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(245, 197, 66, 0.08);
+  border: 1px solid rgba(245, 197, 66, 0.16);
+  color: #e7d7b4;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.hdm-note strong {
+  color: var(--color-hdm-amber);
+}
+
+/* ============================================================
+   MEDIDOR HDM — elemento firma
+   Uso: <svg class="hdm-ring" style={{ "--score": 87 }}>
+   ============================================================ */
+
+.hdm-ring {
+  --size: 128px;
+  width: var(--size);
+  height: var(--size);
+  flex-shrink: 0;
+}
+
+.hdm-ring--sm {
+  --size: 76px;
+}
+
+.hdm-ring-rot {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.hdm-ring-track {
+  fill: none;
+  stroke: rgba(216, 138, 0, 0.16);
+  stroke-width: 7;
+}
+
+.hdm-ring--dark .hdm-ring-track {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.hdm-ring-fill {
+  fill: none;
+  stroke: url(#hdmRingGradient);
+  stroke-width: 7;
+  stroke-linecap: round;
+  stroke-dasharray: 276.46; /* 2πr con r=44 */
+  stroke-dashoffset: 276.46;
+  transition: stroke-dashoffset 1.3s var(--hdm-ease);
+}
+
+/* score 60–100 normalizado a 0–1 */
+.hdm-ring.is-visible .hdm-ring-fill {
+  stroke-dashoffset: calc(276.46 - 276.46 * ((var(--score) - 60) / 40));
+}
+
+.hdm-ring-value {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 32px;
+  fill: var(--color-hdm-ink);
+}
+
+.hdm-ring--dark .hdm-ring-value {
+  fill: #ffffff;
+}
+
+/* ============================================================
+   AUTO DESTACADO
+   ============================================================ */
+
+.hdm-panel {
+  border-radius: var(--hdm-r-lg);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  padding: clamp(16px, 3vw, 24px);
+  box-shadow: var(--hdm-shadow-soft);
+  overflow: hidden;
+}
+
+.hdm-featured-title {
+  font-family: var(--font-display);
+  font-size: clamp(19px, 3vw, 24px);
+  font-weight: 800;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+}
+
+.hdm-stage {
+  position: relative;
+  margin-top: 14px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.hdm-stage img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  cursor: zoom-in;
+  touch-action: pan-y;
+  transition: opacity 0.25s ease;
+}
+
+.hdm-stage.is-fading img {
+  opacity: 0.35;
+}
+
+.hdm-stage.is-sold img {
+  filter: grayscale(100%) brightness(0.7);
+  cursor: default;
+}
+
+.hdm-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(7, 16, 24, 0.5);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+}
+
+.hdm-arrow:hover {
+  background: rgba(7, 16, 24, 0.78);
+}
+
+.hdm-arrow--prev {
+  left: 10px;
+}
+
+.hdm-arrow--next {
+  right: 10px;
+}
+
+.hdm-thumbs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hdm-thumb {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.hdm-thumb img {
+  width: clamp(60px, 14vw, 76px);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  display: block;
+  opacity: 0.62;
+  transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+
+.hdm-thumb:hover img {
+  opacity: 1;
+}
+
+.hdm-thumb.is-active img {
+  opacity: 1;
+  border-color: var(--color-hdm-orange);
+}
+
+.hdm-price {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 4vw, 30px);
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 16px;
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.hdm-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s var(--hdm-ease), box-shadow 0.25s var(--hdm-ease);
+}
+
+.hdm-btn--primary {
+  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
+  color: var(--color-hdm-dark);
+  box-shadow: 0 10px 24px rgba(216, 138, 0, 0.2);
+}
+
+.hdm-btn--ghost {
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line-strong);
+  color: #5a3900;
+  font-weight: 700;
+}
+
+.hdm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(216, 138, 0, 0.26);
+}
+
+.hdm-btn:active {
+  transform: translateY(0);
+}
+
+/* Destello que cruza el botón primario */
+.hdm-btn--primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s var(--hdm-ease);
+}
+
+.hdm-btn--primary:hover::after {
+  left: 110%;
+}
+
+.hdm-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+.hdm-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.hdm-actions .hdm-btn {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 520px) {
+  .hdm-actions {
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
+   COMPARTIR
+   ============================================================ */
+
+.hdm-share-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--color-hdm-brown-soft);
+  margin: 20px 0 10px;
+}
+
+.hdm-share-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.hdm-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(216, 138, 0, 0.16);
+  background: var(--color-hdm-cream);
+  color: #5a3900;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s var(--hdm-ease);
+}
+
+.hdm-share-btn:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
+}
+
+.hdm-share-mini {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.hdm-share-mini .hdm-share-btn {
+  padding: 11px;
+}
+
+.hdm-share-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: #5a3900;
+  flex-shrink: 0;
 }
 
 /* ============================================================
    TARJETAS DE VEHÍCULO
    ============================================================ */
 
+.hdm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+}
+
 .hdm-card {
-  border-radius: var(--radius-hdm);
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--hdm-r);
   overflow: hidden;
-  border: 1px solid var(--color-hdm-line);
+  border: 1px solid var(--hdm-line);
   background: var(--color-hdm-surface);
   box-shadow: var(--hdm-shadow-soft);
   transition: transform 0.35s var(--hdm-ease), box-shadow 0.35s var(--hdm-ease);
@@ -173,13 +783,12 @@ body {
   transform: scale(1.06);
 }
 
-/* Degradado al pie de la foto: el badge se lee sobre cualquier imagen. */
 .hdm-card-media::after {
   content: "";
   position: absolute;
   inset: auto 0 0 0;
   height: 45%;
-  background: linear-gradient(to top, rgba(7, 16, 24, 0.55), transparent);
+  background: linear-gradient(to top, rgba(7, 16, 24, 0.5), transparent);
   pointer-events: none;
 }
 
@@ -196,114 +805,326 @@ body {
   transform: none;
 }
 
-/* ============================================================
-   MEDIDOR HDM — el elemento firma
-   Anillo SVG que se llena al entrar en pantalla.
-   Uso: <circle class="hdm-ring-fill" style={{ '--score': 87 }} />
-   ============================================================ */
-
-.hdm-ring {
-  --size: 96px;
-  width: var(--size);
-  height: var(--size);
-  transform: rotate(-90deg);
-  flex-shrink: 0;
+.hdm-card-body {
+  padding: clamp(16px, 3vw, 20px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
-.hdm-ring-track {
-  fill: none;
-  stroke: rgba(216, 138, 0, 0.14);
-  stroke-width: 8;
+.hdm-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.hdm-ring-fill {
-  fill: none;
-  stroke: url(#hdmGradient);
-  stroke-width: 8;
-  stroke-linecap: round;
-  /* circunferencia con r=44 → 276.46 */
-  stroke-dasharray: 276.46;
-  stroke-dashoffset: 276.46;
-  transition: stroke-dashoffset 1.2s var(--hdm-ease);
-}
-
-.hdm-ring.is-visible .hdm-ring-fill {
-  /* score va de 60 a 100 → normalizado a 0–1 */
-  stroke-dashoffset: calc(276.46 - 276.46 * ((var(--score) - 60) / 40));
-}
-
-.hdm-ring-value {
+.hdm-card-title {
+  margin: 0;
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 26px;
-  fill: var(--color-hdm-ink);
-}
-
-/* ============================================================
-   BOTONES
-   ============================================================ */
-
-.hdm-btn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 20px;
-  border-radius: 999px;
-  border: none;
-  font-family: var(--font-display);
+  font-size: clamp(19px, 2.4vw, 22px);
   font-weight: 800;
-  text-decoration: none;
-  cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.25s var(--hdm-ease), box-shadow 0.25s var(--hdm-ease);
+  line-height: 1.1;
 }
 
-.hdm-btn--primary {
-  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
-  color: var(--color-hdm-dark);
-  box-shadow: 0 10px 24px rgba(216, 138, 0, 0.2);
+.hdm-card-price {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
-.hdm-btn--ghost {
-  background: var(--color-hdm-cream);
-  border: 1px solid rgba(216, 138, 0, 0.18);
-  color: #5a3900;
+.hdm-score-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-score-level {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+  line-height: 1.2;
+}
+
+.hdm-score-caption {
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+  margin-top: 3px;
+}
+
+.hdm-card-text {
+  color: var(--color-hdm-muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-top: 14px;
+}
+
+.hdm-specs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--color-hdm-brown);
+}
+
+.hdm-specs div {
+  min-width: 0;
+}
+
+.hdm-specs dt {
+  display: inline;
+  opacity: 0.7;
+}
+
+.hdm-specs dd {
+  display: inline;
+  margin: 0;
   font-weight: 700;
 }
 
-.hdm-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(216, 138, 0, 0.28);
+.hdm-card .hdm-actions {
+  margin-top: auto;
+  padding-top: 18px;
 }
 
-.hdm-btn:active {
-  transform: translateY(0);
-}
+/* --- Insignias sobre la foto --- */
 
-/* Destello que cruza el botón primario al pasar el cursor. */
-.hdm-btn--primary::after {
-  content: "";
+.hdm-tag,
+.hdm-badge-sold {
   position: absolute;
-  inset: 0 auto 0 -60%;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  transform: skewX(-20deg);
-  transition: left 0.55s var(--hdm-ease);
+  top: 14px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  z-index: 2;
 }
 
-.hdm-btn--primary:hover::after {
-  left: 110%;
+.hdm-tag {
+  left: 14px;
+  background: rgba(255, 250, 240, 0.96);
+  border: 1px solid rgba(216, 138, 0, 0.14);
+  color: var(--color-hdm-brown);
 }
 
-.hdm-btn[aria-disabled="true"] {
-  opacity: 0.5;
-  pointer-events: none;
+.hdm-badge-sold {
+  right: 14px;
+  background: var(--color-hdm-sold);
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.hdm-sold-text {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-hdm-sold);
+  letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   OPINIONES
+   ============================================================ */
+
+.hdm-review {
+  padding: clamp(18px, 3vw, 22px);
+  border-radius: 24px;
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  margin: 0;
+}
+
+.hdm-review blockquote {
+  color: #1b2c42;
+  line-height: 1.7;
+  margin: 14px 0 18px;
+  font-size: 15px;
+}
+
+.hdm-review figcaption {
+  color: var(--color-hdm-muted);
+  font-weight: 700;
+}
+
+/* ============================================================
+   PIE
+   ============================================================ */
+
+.hdm-footer {
+  border-top: 1px solid rgba(245, 197, 66, 0.1);
+  background: linear-gradient(180deg, rgba(7, 16, 24, 0.98), #040a10);
+  color: #f5f7fb;
+  margin-top: 30px;
+  padding-block: clamp(26px, 5vw, 40px);
+}
+
+.hdm-footer-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 24px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .hdm-footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .hdm-footer-brand {
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hdm-social {
+    justify-content: center;
+  }
+}
+
+.hdm-footer-brand {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hdm-footer-name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.hdm-footer-text {
+  color: #c9d2df;
+  line-height: 1.8;
+  font-size: 15px;
+}
+
+.hdm-contact-card {
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.hdm-contact-card .hdm-eyebrow {
+  color: var(--color-hdm-amber);
+  margin-bottom: 14px;
+}
+
+.hdm-social {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hdm-social a {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background 0.25s ease, transform 0.25s var(--hdm-ease);
+}
+
+.hdm-social a:hover {
+  background: rgba(245, 197, 66, 0.18);
+  transform: translateY(-3px);
+}
+
+.hdm-social svg {
+  width: 22px;
+  height: 22px;
+  fill: #f5f7fb;
+}
+
+/* ============================================================
+   LIGHTBOX Y AVISO
+   ============================================================ */
+
+.hdm-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 24px);
+  background: rgba(7, 16, 24, 0.92);
+  animation: hdm-fade 0.25s ease;
+}
+
+.hdm-lightbox img {
+  max-width: 94vw;
+  max-height: 88vh;
+  border-radius: 20px;
+  display: block;
+}
+
+.hdm-lightbox-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hdm-toast {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-hdm-dark);
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  z-index: 10000;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+  max-width: 90vw;
+  text-align: center;
+  animation: hdm-toast-in 0.3s var(--hdm-ease);
+}
+
+@keyframes hdm-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes hdm-toast-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 14px);
+  }
 }
 
 /* ============================================================
    APARICIÓN AL HACER SCROLL
-   Añade la clase con IntersectionObserver.
    ============================================================ */
 
 .hdm-reveal {
@@ -324,7 +1145,13 @@ body {
 :focus-visible {
   outline: 3px solid var(--color-hdm-orange);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
+}
+
+.hdm-hero :focus-visible,
+.hdm-footer :focus-visible,
+.hdm-lightbox :focus-visible {
+  outline-color: var(--color-hdm-amber);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -334,6 +1161,9 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  }
+  .hdm-reveal {
+    opacity: 1;
+    transform: none;
   }
 }
