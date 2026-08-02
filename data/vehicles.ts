@@ -95,7 +95,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 0,
     owners: 2,
-    sold: false,
+    sold: true,
     image: "/cars/f250-2016-1.jpg",
     gallery: [
       "/cars/f250-2016-1.jpg",
@@ -147,7 +147,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 0,
     owners: 3,
-    sold: false,
+    sold: true,
     image: "/cars/suburban-2015-1.jpg",
     gallery: [
       "/cars/suburban-2015-1.jpg",
@@ -199,7 +199,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 1,
     owners: 2,
-    sold: false,
+    sold: true,
     image: "/cars/versa-2015-1.jpg",
     gallery: [
       "/cars/versa-2015-1.jpg",
@@ -225,7 +225,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 1,
     owners: 2,
-    sold: false,
+   sold: true,
     image: "/cars/civic-hybrid-2013-1.jpg",
     gallery: [
       "/cars/civic-hybrid-2013-1.jpg",
@@ -251,7 +251,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 0,
     owners: 2,
-    sold: false,
+    sold: true,
     image: "/cars/regal-2017-1.jpg",
     gallery: [
       "/cars/regal-2017-1.jpg",
@@ -277,7 +277,7 @@ export const vehicles = [
     serviceRecords: false,
     accidents: 0,
     owners: 1,
-    sold: false,
+    sold: true,
     image: "/cars/corolla-2003-1.jpg",
     gallery: [
       "/cars/corolla-2003-1.jpg",
@@ -333,7 +333,7 @@ export const vehicles = [
   serviceRecords: false,
   accidents: 0,
   owners: 2,
-  sold: false,
+  sold: true,
   image: "/cars/explorer-2017-1.jpg",
   gallery: [
     "/cars/explorer-2017-1.jpg",
@@ -363,7 +363,7 @@ export const vehicles = [
   serviceRecords: false,
   accidents: 0,
   owners: 2,
-  sold: false,
+  sold: true,
   image: "/cars/tacoma-2013-1.jpg",
   gallery: [
     "/cars/tacoma-2013-1.jpg",
