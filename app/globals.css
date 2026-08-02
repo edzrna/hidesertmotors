@@ -1,26 +1,339 @@
 @import "tailwindcss";
 
+/* ============================================================
+   HI DESERT MOTORS — tokens de marca
+   Registrados en @theme para que Tailwind genere utilidades:
+   bg-hdm-dark, text-hdm-amber, border-hdm-line, etc.
+   ============================================================ */
+
+@theme {
+  /* Marca */
+  --color-hdm-amber: #f5c542;
+  --color-hdm-orange: #d88a00;
+  --color-hdm-dark: #071018;
+  --color-hdm-ink: #0b1622;
+
+  /* Superficies */
+  --color-hdm-surface: #ffffff;
+  --color-hdm-canvas: #f4f7fb;
+  --color-hdm-cream: #fffaf0;
+  --color-hdm-sand: #fff7e6;
+
+  /* Texto */
+  --color-hdm-muted: #5b6b7f;
+  --color-hdm-brown: #7a4d00;
+  --color-hdm-brown-soft: #8a5a00;
+
+  /* Estado */
+  --color-hdm-sold: #ff3b4d;
+
+  /* Líneas y sombras */
+  --color-hdm-line: rgba(216, 138, 0, 0.12);
+
+  /* Tipografía (conecta con next/font) */
+  --font-display: var(--font-montserrat), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Radios */
+  --radius-hdm: 26px;
+  --radius-hdm-lg: 30px;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.06);
+  --hdm-shadow-lift: 0 28px 60px rgba(216, 138, 0, 0.18);
+  --hdm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Sin auto dark-mode: el diseño es claro por decisión, no por sistema. */
+
+body {
+  background: var(--color-hdm-canvas);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ============================================================
+   ESCALA TIPOGRÁFICA FLUIDA
+   Reemplaza los ternarios isMobile/isTablet del componente.
+   ============================================================ */
+
+.hdm-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 7vw, 52px);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  margin: 0 0 14px;
+}
+
+.hdm-h2 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 36px);
+  font-weight: 900;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.hdm-kicker {
+  font-family: var(--font-display);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-hdm-brown-soft);
+  margin-bottom: 8px;
+}
+
+/* Acento en degradado para una sola frase del hero. Con moderación. */
+.hdm-accent {
+  background: linear-gradient(135deg, #ffd85a, var(--color-hdm-orange));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   HERO OSCURO — sol del desierto alto
+   El resplandor ámbar detrás del texto es la atmósfera del sitio.
+   ============================================================ */
+
+.hdm-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-hdm-dark);
+  color: #ffffff;
+  border-radius: var(--radius-hdm-lg);
+  padding: clamp(20px, 5vw, 40px);
+  isolation: isolate;
+}
+
+.hdm-hero::before {
+  content: "";
+  position: absolute;
+  inset: -40% -20% auto -20%;
+  height: 90%;
+  z-index: -1;
+  background: radial-gradient(
+    60% 60% at 70% 30%,
+    rgba(245, 197, 66, 0.28),
+    transparent 70%
+  );
+  animation: hdm-glow 9s ease-in-out infinite alternate;
+}
+
+@keyframes hdm-glow {
+  from {
+    opacity: 0.65;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(-3%, 2%, 0) scale(1.08);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.hdm-hero p {
+  color: #b9c6d6;
+}
+
+/* ============================================================
+   TARJETAS DE VEHÍCULO
+   ============================================================ */
+
+.hdm-card {
+  border-radius: var(--radius-hdm);
+  overflow: hidden;
+  border: 1px solid var(--color-hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  transition: transform 0.35s var(--hdm-ease), box-shadow 0.35s var(--hdm-ease);
+}
+
+.hdm-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--hdm-shadow-lift);
+}
+
+.hdm-card-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+}
+
+.hdm-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s var(--hdm-ease);
+}
+
+.hdm-card:hover .hdm-card-media img {
+  transform: scale(1.06);
+}
+
+/* Degradado al pie de la foto: el badge se lee sobre cualquier imagen. */
+.hdm-card-media::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(7, 16, 24, 0.55), transparent);
+  pointer-events: none;
+}
+
+.hdm-card--sold img {
+  filter: grayscale(100%) brightness(0.7);
+}
+
+.hdm-card--sold:hover {
+  transform: none;
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.hdm-card--sold:hover .hdm-card-media img {
+  transform: none;
+}
+
+/* ============================================================
+   MEDIDOR HDM — el elemento firma
+   Anillo SVG que se llena al entrar en pantalla.
+   Uso: <circle class="hdm-ring-fill" style={{ '--score': 87 }} />
+   ============================================================ */
+
+.hdm-ring {
+  --size: 96px;
+  width: var(--size);
+  height: var(--size);
+  transform: rotate(-90deg);
+  flex-shrink: 0;
+}
+
+.hdm-ring-track {
+  fill: none;
+  stroke: rgba(216, 138, 0, 0.14);
+  stroke-width: 8;
+}
+
+.hdm-ring-fill {
+  fill: none;
+  stroke: url(#hdmGradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  /* circunferencia con r=44 → 276.46 */
+  stroke-dasharray: 276.46;
+  stroke-dashoffset: 276.46;
+  transition: stroke-dashoffset 1.2s var(--hdm-ease);
+}
+
+.hdm-ring.is-visible .hdm-ring-fill {
+  /* score va de 60 a 100 → normalizado a 0–1 */
+  stroke-dashoffset: calc(276.46 - 276.46 * ((var(--score) - 60) / 40));
+}
+
+.hdm-ring-value {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 26px;
+  fill: var(--color-hdm-ink);
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+
+.hdm-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.25s var(--hdm-ease), box-shadow 0.25s var(--hdm-ease);
+}
+
+.hdm-btn--primary {
+  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
+  color: var(--color-hdm-dark);
+  box-shadow: 0 10px 24px rgba(216, 138, 0, 0.2);
+}
+
+.hdm-btn--ghost {
+  background: var(--color-hdm-cream);
+  border: 1px solid rgba(216, 138, 0, 0.18);
+  color: #5a3900;
+  font-weight: 700;
+}
+
+.hdm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(216, 138, 0, 0.28);
+}
+
+.hdm-btn:active {
+  transform: translateY(0);
+}
+
+/* Destello que cruza el botón primario al pasar el cursor. */
+.hdm-btn--primary::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 -60%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.55s var(--hdm-ease);
+}
+
+.hdm-btn--primary:hover::after {
+  left: 110%;
+}
+
+.hdm-btn[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================================
+   APARICIÓN AL HACER SCROLL
+   Añade la clase con IntersectionObserver.
+   ============================================================ */
+
+.hdm-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--hdm-ease), transform 0.7s var(--hdm-ease);
+}
+
+.hdm-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   ACCESIBILIDAD
+   ============================================================ */
+
+:focus-visible {
+  outline: 3px solid var(--color-hdm-orange);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
