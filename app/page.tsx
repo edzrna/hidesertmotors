@@ -9,16 +9,14 @@ import { Montserrat, Inter } from "next/font/google";
 const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["700", "800", "900"],
+  variable: "--font-montserrat",
 });
 
 const inter = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-inter",
 });
-
-const BRAND_YELLOW = "#f5c542";
-const BRAND_ORANGE = "#d88a00";
-const BRAND_DARK = "#071018";
 
 const PRIMARY_WHATSAPP = "+1 760 620 6390";
 const SECONDARY_WHATSAPP = "+1 760 641 1996";
@@ -26,172 +24,195 @@ const PRIMARY_WHATSAPP_URL = "https://wa.me/17606206390";
 const SECONDARY_WHATSAPP_URL = "https://wa.me/17606411996";
 const FACEBOOK_URL = "https://facebook.com/hidesertmotors";
 const ENGLISH_PAGE_URL = "/en";
+const SITE_URL = "https://www.hidesertmotors.com";
 
-export default function Home() {
-  const moodScale = [
-    {
-      key: "good_option",
-      label: "Buena opción",
-      icon: "/icons/neutral.png",
-      color: "#f0a43a",
-      text: "#2f1b00",
-    },
-    {
-      key: "good_deal",
-      label: "Buen trato",
-      icon: "/icons/good.png",
-      color: "#f5b93f",
-      text: "#2f1b00",
-    },
-    {
-      key: "great_buy",
-      label: "Muy buena compra",
-      icon: "/icons/great.png",
-      color: "#f7c84a",
-      text: "#2f1b00",
-    },
-    {
-      key: "best_option",
-      label: "Mejor opción",
-      icon: "/icons/best.png",
-      color: "#ffd85a",
-      text: "#2f1b00",
-    },
-  ];
+/* ============================================================
+   CALIFICACIÓN HDM
+   Fuera del componente: son funciones puras, no necesitan
+   recrearse en cada render.
+   ============================================================ */
 
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [isImageVisible, setIsImageVisible] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isTablet, setIsTablet] = useState(false);
-  const [shareMessage, setShareMessage] = useState("");
+const MOOD_SCALE = [
+  { key: "good_option", label: "Buena opción", icon: "/icons/neutral.png" },
+  { key: "good_deal", label: "Buen trato", icon: "/icons/good.png" },
+  { key: "great_buy", label: "Muy buena compra", icon: "/icons/great.png" },
+  { key: "best_option", label: "Mejor opción", icon: "/icons/best.png" },
+];
 
-  const touchStartX = useRef<number | null>(null);
-  const touchEndX = useRef<number | null>(null);
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
 
-  useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setIsMobile(width < 768);
-      setIsTablet(width < 1100);
-    };
+function getConditionScore(condition: string) {
+  const map: Record<string, number> = {
+    excelente: 95,
+    muy_bueno: 82,
+    bueno: 72,
+    regular: 66,
+    malo: 60,
+  };
+  return map[condition] ?? 60;
+}
 
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+function getMilesScore(miles: number) {
+  if (miles <= 30000) return 95;
+  if (miles <= 60000) return 85;
+  if (miles <= 90000) return 78;
+  if (miles <= 130000) return 70;
+  return 60;
+}
 
-    handleResize();
-    handleScroll();
+function getYearScore(year: number) {
+  if (year >= 2024) return 96;
+  if (year >= 2021) return 86;
+  if (year >= 2018) return 78;
+  if (year >= 2014) return 70;
+  return 60;
+}
 
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("scroll", handleScroll);
+function getHistoryScore({
+  titleStatus,
+  serviceRecords,
+  accidents,
+  owners,
+}: {
+  titleStatus: string;
+  serviceRecords: boolean;
+  accidents: number;
+  owners: number;
+}) {
+  let score = 72;
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  if (titleStatus === "clean") score += 14;
+  if (titleStatus === "rebuilt") score -= 8;
+  if (titleStatus === "salvage") score -= 14;
+  if (serviceRecords) score += 6;
+  if (accidents === 1) score -= 6;
+  if (accidents >= 2) score -= 12;
+  if (owners === 1) score += 4;
+  if (owners >= 3) score -= 6;
 
-  function clamp(value: number, min: number, max: number) {
-    return Math.max(min, Math.min(max, value));
-  }
+  return clamp(score, 60, 100);
+}
 
-  function getConditionScore(condition: string) {
-    const map: Record<string, number> = {
-      excelente: 95,
-      muy_bueno: 82,
-      bueno: 72,
-      regular: 66,
-      malo: 60,
-    };
+function getMarketValueScore(price: number, marketPrice: number) {
+  if (!marketPrice || marketPrice <= 0) return 70;
+  const diffPercent = ((marketPrice - price) / marketPrice) * 100;
 
-    return map[condition] ?? 60;
-  }
+  if (diffPercent >= 10) return 95;
+  if (diffPercent >= 5) return 86;
+  if (diffPercent >= 0) return 78;
+  if (diffPercent >= -5) return 70;
+  return 60;
+}
 
-  function getMilesScore(miles: number) {
-    if (miles <= 30000) return 95;
-    if (miles <= 60000) return 85;
-    if (miles <= 90000) return 78;
-    if (miles <= 130000) return 70;
-    return 60;
-  }
-
-  function getYearScore(year: number) {
-    if (year >= 2024) return 96;
-    if (year >= 2021) return 86;
-    if (year >= 2018) return 78;
-    if (year >= 2014) return 70;
-    return 60;
-  }
-
-  function getHistoryScore({
-    titleStatus,
-    serviceRecords,
-    accidents,
-    owners,
-  }: {
-    titleStatus: string;
-    serviceRecords: boolean;
-    accidents: number;
-    owners: number;
-  }) {
-    let score = 72;
-
-    if (titleStatus === "clean") score += 14;
-    if (titleStatus === "rebuilt") score -= 8;
-    if (titleStatus === "salvage") score -= 14;
-    if (serviceRecords) score += 6;
-    if (accidents === 1) score -= 6;
-    if (accidents >= 2) score -= 12;
-    if (owners === 1) score += 4;
-    if (owners >= 3) score -= 6;
-
-    return clamp(score, 60, 100);
-  }
-
-  function getMarketValueScore(price: number, marketPrice: number) {
-    if (!marketPrice || marketPrice <= 0) return 70;
-    const diffPercent = ((marketPrice - price) / marketPrice) * 100;
-
-    if (diffPercent >= 10) return 95;
-    if (diffPercent >= 5) return 86;
-    if (diffPercent >= 0) return 78;
-    if (diffPercent >= -5) return 70;
-    return 60;
-  }
-
-  function getHDMScore(vehicle: any) {
-    const conditionScore = getConditionScore(vehicle.condition);
-    const milesScore = getMilesScore(vehicle.miles);
-    const yearScore = getYearScore(vehicle.year);
-    const historyScore = getHistoryScore({
+function getHDMScore(vehicle: any) {
+  const total =
+    getConditionScore(vehicle.condition) * 0.25 +
+    getMilesScore(vehicle.miles) * 0.2 +
+    getYearScore(vehicle.year) * 0.15 +
+    getHistoryScore({
       titleStatus: vehicle.titleStatus,
       serviceRecords: vehicle.serviceRecords,
       accidents: vehicle.accidents,
       owners: vehicle.owners,
-    });
-    const valueScore = getMarketValueScore(
-      vehicle.priceValue,
-      vehicle.marketPrice
+    }) * 0.25 +
+    getMarketValueScore(vehicle.priceValue, vehicle.marketPrice) * 0.15;
+
+  return Math.round(clamp(total, 60, 100));
+}
+
+function getHDMLevel(score: number) {
+  if (score >= 90) return MOOD_SCALE[3];
+  if (score >= 80) return MOOD_SCALE[2];
+  if (score >= 70) return MOOD_SCALE[1];
+  return MOOD_SCALE[0];
+}
+
+/* ============================================================
+   MEDIDOR HDM — el anillo se llena al entrar en pantalla
+   ============================================================ */
+
+function RingGradientDefs() {
+  return (
+    <svg width="0" height="0" aria-hidden style={{ position: "absolute" }}>
+      <defs>
+        <linearGradient id="hdmRingGradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#f5c542" />
+          <stop offset="100%" stopColor="#d88a00" />
+        </linearGradient>
+      </defs>
+    </svg>
+  );
+}
+
+function HDMRing({
+  score,
+  small = false,
+  dark = false,
+}: {
+  score: number;
+  small?: boolean;
+  dark?: boolean;
+}) {
+  const ref = useRef<SVGSVGElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-visible");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.4 }
     );
 
-    const total =
-      conditionScore * 0.25 +
-      milesScore * 0.2 +
-      yearScore * 0.15 +
-      historyScore * 0.25 +
-      valueScore * 0.15;
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
-    return Math.round(clamp(total, 60, 100));
-  }
+  return (
+    <svg
+      ref={ref}
+      viewBox="0 0 100 100"
+      role="img"
+      aria-label={`Calificación HDM: ${score} de 100`}
+      className={`hdm-ring${small ? " hdm-ring--sm" : ""}${dark ? " hdm-ring--dark" : ""}`}
+      style={{ "--score": score } as React.CSSProperties}
+    >
+      <g className="hdm-ring-rot">
+        <circle cx="50" cy="50" r="44" className="hdm-ring-track" />
+        <circle cx="50" cy="50" r="44" className="hdm-ring-fill" />
+      </g>
+      <text
+        x="50"
+        y="50"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="hdm-ring-value"
+      >
+        {score}
+      </text>
+    </svg>
+  );
+}
 
-  function getHDMLevel(score: number) {
-    if (score >= 90) return moodScale[3];
-    if (score >= 80) return moodScale[2];
-    if (score >= 70) return moodScale[1];
-    return moodScale[0];
-  }
+/* ============================================================
+   PÁGINA
+   ============================================================ */
+
+export default function Home() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isFading, setIsFading] = useState(false);
+  const [shareMessage, setShareMessage] = useState("");
+
+  const touchStartX = useRef<number | null>(null);
 
   const vehicles = rawVehicles.map((vehicle: any) => {
     const score = getHDMScore(vehicle);
@@ -201,11 +222,9 @@ export default function Home() {
       ...vehicle,
       sold: Boolean(vehicle.sold),
       score,
+      levelKey: level.key,
       level: level.label,
-      color: level.color,
-      text: level.text,
       icon: level.icon,
-      iconKey: level.key,
     };
   });
 
@@ -229,8 +248,7 @@ export default function Home() {
 
   const inventoryScore = vehicles.length
     ? Math.round(
-        vehicles.reduce((sum, vehicle) => sum + vehicle.score, 0) /
-          vehicles.length
+        vehicles.reduce((sum, v) => sum + v.score, 0) / vehicles.length
       )
     : 60;
 
@@ -238,49 +256,91 @@ export default function Home() {
   const featuredVehicle = vehicles[0];
   const bestVehicle = [...vehicles].sort((a, b) => b.score - a.score)[0];
 
-  const featuredGallery = featuredVehicle?.gallery?.length
+  const featuredGallery: string[] = featuredVehicle?.gallery?.length
     ? featuredVehicle.gallery
     : featuredVehicle
     ? [featuredVehicle.image]
     : [];
 
   const activeFeaturedImage =
-    featuredGallery?.[activeFeaturedIndex] || featuredVehicle?.image;
+    featuredGallery[activeFeaturedIndex] || featuredVehicle?.image;
+
+  /* --- Sombra del header al hacer scroll --- */
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /* --- Aparición de secciones --- */
+  useEffect(() => {
+    const targets = document.querySelectorAll(".hdm-reveal");
+    if (!targets.length) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    targets.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [vehicles.length]);
+
+  /* --- Lightbox: Escape y bloqueo de scroll --- */
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsLightboxOpen(false);
+    };
+
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [isLightboxOpen]);
 
   useEffect(() => {
     setActiveFeaturedIndex(0);
   }, [featuredVehicle?.id]);
 
   function animateToSlide(nextIndex: number) {
-    setIsImageVisible(false);
-
+    setIsFading(true);
     window.setTimeout(() => {
       setActiveFeaturedIndex(nextIndex);
-      setIsImageVisible(true);
+      setIsFading(false);
     }, 140);
   }
 
   function goToFeaturedSlide(index: number) {
-    if (index === activeFeaturedIndex) return;
-    animateToSlide(index);
+    if (index !== activeFeaturedIndex) animateToSlide(index);
   }
 
   function goToPrevFeaturedSlide() {
-    const nextIndex =
+    animateToSlide(
       activeFeaturedIndex === 0
         ? featuredGallery.length - 1
-        : activeFeaturedIndex - 1;
-
-    animateToSlide(nextIndex);
+        : activeFeaturedIndex - 1
+    );
   }
 
   function goToNextFeaturedSlide() {
-    const nextIndex =
+    animateToSlide(
       activeFeaturedIndex === featuredGallery.length - 1
         ? 0
-        : activeFeaturedIndex + 1;
-
-    animateToSlide(nextIndex);
+        : activeFeaturedIndex + 1
+    );
   }
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
@@ -288,402 +348,145 @@ export default function Home() {
   }
 
   function handleTouchEnd(e: React.TouchEvent<HTMLDivElement>) {
-    touchEndX.current = e.changedTouches[0].clientX;
+    if (touchStartX.current === null) return;
 
-    if (touchStartX.current === null || touchEndX.current === null) return;
-
-    const delta = touchStartX.current - touchEndX.current;
-
-    if (delta > 40) {
-      goToNextFeaturedSlide();
-    } else if (delta < -40) {
-      goToPrevFeaturedSlide();
-    }
+    const delta = touchStartX.current - e.changedTouches[0].clientX;
+    if (delta > 40) goToNextFeaturedSlide();
+    else if (delta < -40) goToPrevFeaturedSlide();
 
     touchStartX.current = null;
-    touchEndX.current = null;
   }
 
   function getVehicleUrl(vehicle: any) {
-    if (typeof window === "undefined") {
-      return `https://www.hidesertmotors.com/car/${vehicle.id}`;
-    }
-
+    if (typeof window === "undefined") return `${SITE_URL}/car/${vehicle.id}`;
     return `${window.location.origin}/car/${vehicle.id}`;
   }
 
   async function handleCopyVehicleLink(vehicle: any) {
     try {
-      const url = getVehicleUrl(vehicle);
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(getVehicleUrl(vehicle));
       setShareMessage(`Link copiado: ${vehicle.name}`);
-      window.setTimeout(() => setShareMessage(""), 2200);
     } catch {
       setShareMessage("No se pudo copiar el link");
-      window.setTimeout(() => setShareMessage(""), 2200);
     }
+    window.setTimeout(() => setShareMessage(""), 2200);
   }
 
-return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "#f4f7fb",
-        color: "#0b1622",
-        fontFamily: inter.style.fontFamily,
-      }}
-    >
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1000,
-          background:
-            "linear-gradient(180deg, rgba(7,16,24,0.96), rgba(7,16,24,0.92))",
-          backdropFilter: "blur(14px)",
-          borderBottom: "1px solid rgba(245,197,66,0.14)",
-          boxShadow: isScrolled ? "0 10px 30px rgba(0,0,0,0.22)" : "none",
-          transition: "all 0.3s ease",
-          padding: isScrolled ? "6px 0" : "0px",
-        }}
-      >
-        <section
-          style={{
-            maxWidth: "1240px",
-            margin: "0 auto",
-            padding: isMobile ? "12px 14px 10px" : "16px 20px 12px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: isMobile ? "12px" : "16px",
-              flexWrap: "wrap",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: isMobile ? "10px" : "14px",
-                width: isTablet ? "100%" : "auto",
-                justifyContent: isTablet ? "center" : "flex-start",
-                textAlign: isTablet ? "center" : "left",
-                flexDirection: isMobile ? "column" : "row",
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="HI DESERT MOTORS"
-                style={{
-                  width: isScrolled ? "110px" : isMobile ? "120px" : "220px",
-                  height: isScrolled ? "110px" : isMobile ? "120px" : "220px",
-                  objectFit: "contain",
-                  transition: "all 0.35s ease",
-                  filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.12))",
-                  display: "block",
-                  margin: isTablet ? "0 auto" : "0",
-                }}
-              />
+  return (
+    <main className={`${montserrat.variable} ${inter.variable}`}>
+      <RingGradientDefs />
 
-              {!isMobile && (
-                <div>
-                  <div
-                    style={{
-                      fontSize: isScrolled ? "18px" : isTablet ? "22px" : "26px",
-                      fontWeight: 800,
-                      letterSpacing: "0.02em",
-                      transition: "all 0.3s ease",
-                      fontFamily: montserrat.style.fontFamily,
-                      color: "#ffffff",
-                      textShadow: "0 2px 10px rgba(0,0,0,0.18)",
-                    }}
-                  >
-                    Compra con confianza.
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-                alignItems: "center",
-                width: isTablet ? "100%" : "auto",
-                justifyContent: "center",
-              }}
-            >
-              <span style={activeLanguageButtonStyle}>ES</span>
-
-              <Link href={ENGLISH_PAGE_URL} style={languageButtonStyle}>
-                EN
-              </Link>
-
-              <a
-                href="#inventario"
-                style={{
-                  ...primaryButtonStyle,
-                  padding: isScrolled
-                    ? "10px 14px"
-                    : isMobile
-                    ? "11px 14px"
-                    : "12px 18px",
-                  fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
-                  textAlign: "center",
-                }}
-              >
-                Ver inventario
-              </a>
-
-              <a
-                href="#opiniones"
-                style={{
-                  ...ghostButtonStyle,
-                  padding: isScrolled
-                    ? "10px 14px"
-                    : isMobile
-                    ? "11px 14px"
-                    : "12px 18px",
-                  fontSize: isScrolled ? "13px" : isMobile ? "13px" : "15px",
-                  textAlign: "center",
-                }}
-              >
-                Opiniones
-              </a>
-
-              <a
-                href={PRIMARY_WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="WhatsApp principal"
-                style={{
-                  ...whatsAppIconButtonStyle,
-                  width: isScrolled ? "42px" : isMobile ? "44px" : "50px",
-                  height: isScrolled ? "42px" : isMobile ? "44px" : "50px",
-                }}
-              >
-                <svg viewBox="0 0 32 32" style={{ width: 20, height: 20, fill: "#071018" }}>
-                  <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
-                </svg>
-              </a>
-            </div>
+      {/* ============ HEADER ============ */}
+      <header className={`hdm-header${isScrolled ? " is-scrolled" : ""}`}>
+        <div className="hdm-shell hdm-header-inner">
+          <div className="hdm-brand">
+            <img src="/logo.png" alt="HI DESERT MOTORS" className="hdm-logo" />
+            <span className="hdm-tagline">Compra con confianza.</span>
           </div>
-        </section>
+
+          <nav className="hdm-nav">
+            <span className="hdm-lang hdm-lang--active" aria-current="page">
+              ES
+            </span>
+
+            <Link href={ENGLISH_PAGE_URL} className="hdm-lang">
+              EN
+            </Link>
+
+            <a href="#inventario" className="hdm-btn hdm-btn--primary">
+              Ver inventario
+            </a>
+
+            <a href="#opiniones" className="hdm-btn hdm-btn--ghost">
+              Opiniones
+            </a>
+
+            <a
+              href={PRIMARY_WHATSAPP_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Escribir por WhatsApp"
+              className="hdm-wa"
+            >
+              <WhatsAppGlyph />
+            </a>
+          </nav>
+        </div>
       </header>
 
-      <section
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: isMobile ? "18px 14px 14px" : "28px 20px 18px",
-          display: "grid",
-          gridTemplateColumns: isTablet
-            ? "1fr"
-            : "minmax(0,1.2fr) minmax(340px,0.8fr)",
-          gap: isMobile ? "16px" : "22px",
-          alignItems: "start",
-        }}
-      >
-        <div
-          style={{
-            borderRadius: isMobile ? "22px" : "30px",
-            border: "1px solid rgba(216,138,0,0.10)",
-            background: "#ffffff",
-            padding: isMobile ? "18px" : isTablet ? "22px" : "32px",
-            boxShadow: "0 18px 48px rgba(216,138,0,0.06)",
-            overflow: "hidden",
-          }}
-        >
-          <div style={pillStyle}>Calificación HDM</div>
+      {/* ============ HERO + DESTACADO ============ */}
+      <div className="hdm-shell hdm-top">
+        <section className="hdm-hero">
+          <span className="hdm-pill">Calificación HDM</span>
 
-          <h1
-            style={{
-              fontSize: isMobile
-                ? "28px"
-                : isTablet
-                ? "34px"
-                : "clamp(26px, 6vw, 40px)",
-              lineHeight: 0.98,
-              margin: "0 0 14px 0",
-              fontWeight: 900,
-              letterSpacing: "-0.04em",
-              fontFamily: montserrat.style.fontFamily,
-              maxWidth: "680px",
-            }}
-          >
+          <h1 className="hdm-h1">
             Encuentra el auto correcto.
             <br />
-            Sin adivinar.
+            <span className="hdm-accent">Sin adivinar.</span>
           </h1>
 
-          <p
-            style={{
-              color: "#5b6b7f",
-              fontSize: isMobile ? "15px" : "18px",
-              lineHeight: 1.6,
-              maxWidth: isTablet ? "100%" : "650px",
-              marginBottom: "20px",
-            }}
-          >
-            Vehículos usados con una calificación clara basada en condición,
-            precio, millas y confianza del comprador.
+          <p className="hdm-hero-lead">
+            Cada vehículo recibe una calificación del 60 al 100 según su
+            condición, millas, año, historial y precio contra el mercado.
           </p>
 
-          <div
-            style={{
-              ...meterWrapStyle,
-              padding: isMobile ? "14px" : "18px",
-              borderRadius: isMobile ? "18px" : "22px",
-            }}
-          >
-            <div
-              style={{
-                ...meterHeaderStyle,
-                flexDirection: isMobile ? "column" : "row",
-                alignItems: isMobile ? "flex-start" : "center",
-                gap: isMobile ? "8px" : "12px",
-                marginBottom: isMobile ? "14px" : "16px",
-              }}
-            >
-              <span style={{ fontSize: isMobile ? "13px" : "14px" }}>
-                Nivel general del inventario
-              </span>
-              <strong
-                style={{
-                  color: "#b97400",
-                  fontSize: isMobile ? "14px" : "15px",
-                }}
-              >
-                {inventoryLevel.label} - {inventoryScore}
-              </strong>
+          <div className="hdm-meter">
+            <div className="hdm-meter-top">
+              <HDMRing score={inventoryScore} dark />
+
+              <div>
+                <div className="hdm-meter-label">Nivel del inventario</div>
+                <div className="hdm-meter-level">{inventoryLevel.label}</div>
+              </div>
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile
-                  ? "repeat(2, minmax(0, 1fr))"
-                  : "repeat(4, minmax(0, 1fr))",
-                gap: isMobile ? "12px 10px" : "14px",
-              }}
-            >
-              {moodScale.map((item) => (
-                <div key={item.key} style={scaleGridItemStyle}>
-                  <div
-                    style={{
-                      ...scaleIconFrameStyle,
-                      width: isMobile ? "54px" : "64px",
-                      height: isMobile ? "54px" : "64px",
-                      border:
-                        item.key === inventoryLevel.key
-                          ? "2px solid #0b1622"
-                          : "1px solid rgba(216,138,0,0.10)",
-                    }}
-                  >
-                    <img src={item.icon} alt={item.label} style={scaleIconStyle} />
+            <div className="hdm-scale">
+              {MOOD_SCALE.map((item) => (
+                <div
+                  key={item.key}
+                  className={`hdm-scale-item${
+                    item.key === inventoryLevel.key ? " is-current" : ""
+                  }`}
+                >
+                  <div className="hdm-scale-frame">
+                    <img src={item.icon} alt="" />
                   </div>
-                  <div
-                    style={{
-                      ...scaleLabelStyle,
-                      fontSize: isMobile ? "11px" : "12px",
-                    }}
-                  >
-                    {item.label}
-                  </div>
+                  <span className="hdm-scale-label">{item.label}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {bestVehicle && (
-            <div
-              style={{
-                marginTop: "16px",
-                padding: isMobile ? "13px 14px" : "16px",
-                borderRadius: "18px",
-                background: "#fff8ea",
-                border: "1px solid rgba(216,138,0,0.10)",
-                color: "#7a4d00",
-                fontSize: isMobile ? "13px" : "14px",
-                lineHeight: 1.6,
-                wordBreak: "break-word",
-              }}
-            >
+            <p className="hdm-note">
               Mejor evaluado del inventario: <strong>{bestVehicle.name}</strong>{" "}
               con <strong>{bestVehicle.score}</strong> puntos.
-            </div>
+            </p>
           )}
-        </div>
+        </section>
 
         {featuredVehicle && (
-          <div
-            style={{
-              borderRadius: isMobile ? "22px" : "30px",
-              border: "1px solid rgba(216,138,0,0.10)",
-              background: "#ffffff",
-              padding: isMobile ? "16px" : isTablet ? "18px" : "24px",
-              boxShadow: "0 18px 48px rgba(216,138,0,0.06)",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                fontSize: 13,
-                marginBottom: 8,
-                color: "#8a5a00",
-                fontFamily: montserrat.style.fontFamily,
-                textTransform: "uppercase",
-                letterSpacing: "0.16em",
-              }}
-            >
-              Auto destacado
-            </div>
+          <section className="hdm-panel">
+            <div className="hdm-eyebrow">Auto destacado</div>
+            <h2 className="hdm-featured-title">{featuredVehicle.name}</h2>
 
             <div
-              style={{
-                fontSize: isMobile ? 19 : isTablet ? 22 : 24,
-                fontWeight: 800,
-                lineHeight: 1.08,
-                fontFamily: montserrat.style.fontFamily,
-                wordBreak: "break-word",
-              }}
-            >
-              {featuredVehicle.name}
-            </div>
-
-            <div
-              style={{ position: "relative", marginTop: 14 }}
+              className={`hdm-stage${isFading ? " is-fading" : ""}${
+                featuredVehicle.sold ? " is-sold" : ""
+              }`}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
             >
               <img
                 src={activeFeaturedImage}
                 alt={featuredVehicle.name}
-                style={{
-                  width: "100%",
-                  height: isMobile ? 220 : isTablet ? 280 : 320,
-                  objectFit: "cover",
-                  borderRadius: isMobile ? 18 : 20,
-                  opacity: isImageVisible ? 1 : 0.4,
-                  transition: "0.25s",
-                  display: "block",
-                  cursor: featuredVehicle.sold ? "default" : "zoom-in",
-                  touchAction: "pan-y",
-                  filter: featuredVehicle.sold
-                    ? "grayscale(100%) brightness(0.7)"
-                    : "none",
-                }}
                 onClick={() => {
                   if (!featuredVehicle.sold) setIsLightboxOpen(true);
                 }}
               />
 
               {featuredVehicle.sold && (
-                <div style={soldBadgeStyle}>VENDIDO</div>
+                <span className="hdm-badge-sold">VENDIDO</span>
               )}
 
               {featuredGallery.length > 1 && !featuredVehicle.sold && (
@@ -691,24 +494,14 @@ return (
                   <button
                     onClick={goToPrevFeaturedSlide}
                     aria-label="Imagen anterior"
-                    style={{
-                      ...featuredArrowStyle,
-                      left: "10px",
-                      width: isMobile ? "42px" : "44px",
-                      height: isMobile ? "42px" : "44px",
-                    }}
+                    className="hdm-arrow hdm-arrow--prev"
                   >
                     ‹
                   </button>
                   <button
                     onClick={goToNextFeaturedSlide}
                     aria-label="Imagen siguiente"
-                    style={{
-                      ...featuredArrowStyle,
-                      right: "10px",
-                      width: isMobile ? "42px" : "44px",
-                      height: isMobile ? "42px" : "44px",
-                    }}
+                    className="hdm-arrow hdm-arrow--next"
                   >
                     ›
                   </button>
@@ -717,87 +510,33 @@ return (
             </div>
 
             {featuredGallery.length > 1 && !featuredVehicle.sold && (
-              <div
-                style={{
-                  display: "flex",
-                  gap: "8px",
-                  marginTop: "12px",
-                  overflowX: "auto",
-                  WebkitOverflowScrolling: "touch",
-                  scrollBehavior: "smooth",
-                  scrollSnapType: "x mandatory",
-                  paddingBottom: "4px",
-                }}
-              >
-                {featuredGallery.map((img: string, index: number) => (
+              <div className="hdm-thumbs">
+                {featuredGallery.map((img, index) => (
                   <button
                     key={index}
                     onClick={() => goToFeaturedSlide(index)}
-                    aria-label={`Ir a imagen ${index + 1}`}
-                    style={{
-                      padding: 0,
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      flex: "0 0 auto",
-                      scrollSnapAlign: "start",
-                    }}
+                    aria-label={`Ver imagen ${index + 1}`}
+                    className={`hdm-thumb${
+                      index === activeFeaturedIndex ? " is-active" : ""
+                    }`}
                   >
-                    <img
-                      src={img}
-                      alt={`${featuredVehicle.name} ${index + 1}`}
-                      style={{
-                        width: isMobile ? "64px" : "76px",
-                        height: isMobile ? "64px" : "76px",
-                        minWidth: isMobile ? "64px" : "76px",
-                        objectFit: "cover",
-                        borderRadius: "12px",
-                        border:
-                          index === activeFeaturedIndex
-                            ? "2px solid #7a4d00"
-                            : "1px solid rgba(216,138,0,0.12)",
-                        display: "block",
-                      }}
-                    />
+                    <img src={img} alt="" />
                   </button>
                 ))}
               </div>
             )}
 
-            <div
-              style={{
-                marginTop: 14,
-                fontSize: isMobile ? 24 : 28,
-                fontWeight: 900,
-                fontFamily: montserrat.style.fontFamily,
-                lineHeight: 1,
-              }}
-            >
-              {featuredVehicle.priceText}
-            </div>
+            <div className="hdm-price">{featuredVehicle.priceText}</div>
 
             {featuredVehicle.sold && (
-              <div style={soldTextStyle}>ESTE VEHÍCULO YA FUE VENDIDO</div>
+              <div className="hdm-sold-text">ESTE VEHÍCULO YA FUE VENDIDO</div>
             )}
 
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-                marginTop: "16px",
-                flexDirection: isMobile ? "column" : "row",
-              }}
-            >
+            <div className="hdm-actions">
               <Link
                 href={featuredVehicle.sold ? "#" : `/car/${featuredVehicle.id}`}
-                style={{
-                  ...primaryButtonStyle,
-                  width: isMobile ? "100%" : "auto",
-                  textAlign: "center",
-                  opacity: featuredVehicle.sold ? 0.5 : 1,
-                  pointerEvents: featuredVehicle.sold ? "none" : "auto",
-                }}
+                aria-disabled={featuredVehicle.sold || undefined}
+                className="hdm-btn hdm-btn--primary"
               >
                 {featuredVehicle.sold ? "No disponible" : "Ver detalles"}
               </Link>
@@ -812,13 +551,8 @@ return (
                 }
                 target="_blank"
                 rel="noreferrer"
-                style={{
-                  ...ghostButtonStyle,
-                  width: isMobile ? "100%" : "auto",
-                  textAlign: "center",
-                  opacity: featuredVehicle.sold ? 0.5 : 1,
-                  pointerEvents: featuredVehicle.sold ? "none" : "auto",
-                }}
+                aria-disabled={featuredVehicle.sold || undefined}
+                className="hdm-btn hdm-btn--ghost"
               >
                 {featuredVehicle.sold ? "Vendido" : "Pedir información"}
               </a>
@@ -826,28 +560,20 @@ return (
 
             {!featuredVehicle.sold && (
               <>
-                <div style={shareTitleStyle}>Compartir vehículo</div>
+                <div className="hdm-share-title">Compartir vehículo</div>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile
-                      ? "1fr 1fr"
-                      : "repeat(3, minmax(0, 1fr))",
-                    gap: "10px",
-                  }}
-                >
+                <div className="hdm-share-grid">
                   <a
                     href={`https://wa.me/?text=${encodeURIComponent(
-                      `${featuredVehicle.name} - ${featuredVehicle.priceText} ${getVehicleUrl(
-                        featuredVehicle
-                      )}`
+                      `${featuredVehicle.name} - ${
+                        featuredVehicle.priceText
+                      } ${getVehicleUrl(featuredVehicle)}`
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={shareNetworkButtonStyle}
+                    className="hdm-share-btn"
                   >
-                    <ShareIconWhatsApp />
+                    <WhatsAppGlyph />
                     <span>WhatsApp</span>
                   </a>
 
@@ -857,212 +583,109 @@ return (
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={shareNetworkButtonStyle}
+                    className="hdm-share-btn"
                   >
-                    <ShareIconFacebook />
+                    <FacebookGlyph />
                     <span>Facebook</span>
                   </a>
 
                   <a
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                       `${featuredVehicle.name} - ${featuredVehicle.priceText}`
-                    )}&url=${encodeURIComponent(getVehicleUrl(featuredVehicle))}`}
+                    )}&url=${encodeURIComponent(
+                      getVehicleUrl(featuredVehicle)
+                    )}`}
                     target="_blank"
                     rel="noreferrer"
-                    style={shareNetworkButtonStyle}
+                    className="hdm-share-btn"
                   >
-                    <ShareIconX />
+                    <XGlyph />
                     <span>X</span>
                   </a>
 
                   <button
                     onClick={() => handleCopyVehicleLink(featuredVehicle)}
-                    style={shareNetworkButtonStyle}
+                    className="hdm-share-btn"
                   >
-                    <ShareIconLink />
+                    <LinkGlyph />
                     <span>Copiar link</span>
                   </button>
                 </div>
               </>
             )}
-          </div>
+          </section>
         )}
-      </section>
+      </div>
 
-      <section
-        id="inventario"
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: isMobile ? "10px 14px 22px" : "18px 20px 24px",
-        }}
-      >
-        <div style={{ marginBottom: "18px" }}>
-          <div style={sectionKickerStyle}>Inventario</div>
-
-          <h2
-            style={{
-              fontSize: isMobile ? "28px" : "36px",
-              margin: 0,
-              fontWeight: 900,
-              lineHeight: 1.05,
-              fontFamily: montserrat.style.fontFamily,
-            }}
-          >
-            Vehículos calificados automáticamente
-          </h2>
+      {/* ============ INVENTARIO ============ */}
+      <section id="inventario" className="hdm-shell" style={{ paddingBlock: "18px 24px" }}>
+        <div className="hdm-section-head hdm-reveal">
+          <div className="hdm-kicker">Inventario</div>
+          <h2 className="hdm-h2">Vehículos calificados automáticamente</h2>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile
-              ? "1fr"
-              : "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "18px",
-          }}
-        >
+        <div className="hdm-grid">
           {vehicles.map((vehicle) => (
-            <article key={vehicle.id} style={vehicleCardStyle}>
-              <div style={{ position: "relative" }}>
-                <img
-                  src={vehicle.image}
-                  alt={vehicle.name}
-                  style={{
-                    width: "100%",
-                    height: "220px",
-                    objectFit: "cover",
-                    display: "block",
-                    filter: vehicle.sold
-                      ? "grayscale(100%) brightness(0.7)"
-                      : "none",
-                  }}
-                />
-
-                {vehicle.sold && <div style={soldBadgeRightStyle}>VENDIDO</div>}
-
-                <div style={tagBadgeStyle}>{vehicle.tag}</div>
+            <article
+              key={vehicle.id}
+              className={`hdm-card hdm-reveal${
+                vehicle.sold ? " hdm-card--sold" : ""
+              }`}
+            >
+              <div className="hdm-card-media">
+                <img src={vehicle.image} alt={vehicle.name} loading="lazy" />
+                {vehicle.tag && <span className="hdm-tag">{vehicle.tag}</span>}
+                {vehicle.sold && <span className="hdm-badge-sold">VENDIDO</span>}
               </div>
 
-              <div style={{ padding: isMobile ? "16px" : "20px" }}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "12px",
-                    alignItems: "start",
-                    flexDirection: isMobile ? "column" : "row",
-                  }}
-                >
-                  <h3
-                    style={{
-                      margin: 0,
-                      fontSize: isMobile ? "20px" : "22px",
-                      lineHeight: 1.1,
-                      fontFamily: montserrat.style.fontFamily,
-                    }}
-                  >
-                    {vehicle.name}
-                  </h3>
-
-                  <div
-                    style={{
-                      color: "#0b1622",
-                      fontWeight: 900,
-                      whiteSpace: "nowrap",
-                      fontSize: isMobile ? "20px" : "inherit",
-                      fontFamily: montserrat.style.fontFamily,
-                    }}
-                  >
-                    {vehicle.priceText}
-                  </div>
+              <div className="hdm-card-body">
+                <div className="hdm-card-head">
+                  <h3 className="hdm-card-title">{vehicle.name}</h3>
+                  <span className="hdm-card-price">{vehicle.priceText}</span>
                 </div>
 
                 {vehicle.sold && (
-                  <div style={soldTextStyle}>ESTE VEHÍCULO YA FUE VENDIDO</div>
+                  <div className="hdm-sold-text">
+                    ESTE VEHÍCULO YA FUE VENDIDO
+                  </div>
                 )}
 
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "10px",
-                    marginTop: "14px",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <img
-                    src={vehicle.icon}
-                    alt={vehicle.level}
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      objectFit: "contain",
-                    }}
-                  />
-
-                  <div
-                    style={{
-                      padding: "9px 13px",
-                      borderRadius: "999px",
-                      background: vehicle.color,
-                      color: vehicle.text,
-                      fontWeight: 800,
-                      fontSize: "14px",
-                      fontFamily: montserrat.style.fontFamily,
-                    }}
-                  >
-                    {vehicle.level} - {vehicle.score}
+                <div className="hdm-score-row">
+                  <HDMRing score={vehicle.score} small />
+                  <div>
+                    <div className="hdm-score-level">{vehicle.level}</div>
+                    <div className="hdm-score-caption">
+                      Calificación HDM sobre 100
+                    </div>
                   </div>
                 </div>
 
-                <p
-                  style={{
-                    color: "#5b6b7f",
-                    fontSize: "14px",
-                    lineHeight: 1.7,
-                    marginTop: "14px",
-                  }}
-                >
-                  {vehicle.details}
-                </p>
+                <p className="hdm-card-text">{vehicle.details}</p>
 
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: isMobile
-                      ? "1fr 1fr"
-                      : "repeat(2, 1fr)",
-                    gap: "8px",
-                    marginTop: "14px",
-                    fontSize: "13px",
-                    color: "#7a4d00",
-                  }}
-                >
-                  <div>Año: {vehicle.year}</div>
-                  <div>Millas: {vehicle.miles.toLocaleString()}</div>
-                  <div>Título: {vehicle.titleStatus}</div>
-                  <div>Dueños: {vehicle.owners}</div>
-                </div>
+                <dl className="hdm-specs">
+                  <div>
+                    <dt>Año: </dt>
+                    <dd>{vehicle.year}</dd>
+                  </div>
+                  <div>
+                    <dt>Millas: </dt>
+                    <dd>{vehicle.miles.toLocaleString("es-MX")}</dd>
+                  </div>
+                  <div>
+                    <dt>Título: </dt>
+                    <dd>{vehicle.titleStatus}</dd>
+                  </div>
+                  <div>
+                    <dt>Dueños: </dt>
+                    <dd>{vehicle.owners}</dd>
+                  </div>
+                </dl>
 
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "10px",
-                    marginTop: "18px",
-                    flexWrap: "wrap",
-                    flexDirection: isMobile ? "column" : "row",
-                  }}
-                >
+                <div className="hdm-actions">
                   <Link
                     href={vehicle.sold ? "#" : `/car/${vehicle.id}`}
-                    style={{
-                      ...primaryButtonStyle,
-                      width: isMobile ? "100%" : "auto",
-                      textAlign: "center",
-                      opacity: vehicle.sold ? 0.5 : 1,
-                      pointerEvents: vehicle.sold ? "none" : "auto",
-                    }}
+                    aria-disabled={vehicle.sold || undefined}
+                    className="hdm-btn hdm-btn--primary"
                   >
                     {vehicle.sold ? "No disponible" : "Ver detalles"}
                   </Link>
@@ -1077,27 +700,15 @@ return (
                     }
                     target="_blank"
                     rel="noreferrer"
-                    style={{
-                      ...ghostButtonStyle,
-                      width: isMobile ? "100%" : "auto",
-                      textAlign: "center",
-                      opacity: vehicle.sold ? 0.5 : 1,
-                      pointerEvents: vehicle.sold ? "none" : "auto",
-                    }}
+                    aria-disabled={vehicle.sold || undefined}
+                    className="hdm-btn hdm-btn--ghost"
                   >
                     {vehicle.sold ? "Vendido" : "Pedir información"}
                   </a>
                 </div>
 
                 {!vehicle.sold && (
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                      gap: "8px",
-                      marginTop: "12px",
-                    }}
-                  >
+                  <div className="hdm-share-mini">
                     <a
                       href={`https://wa.me/?text=${encodeURIComponent(
                         `${vehicle.name} - ${vehicle.priceText} ${getVehicleUrl(
@@ -1106,9 +717,10 @@ return (
                       )}`}
                       target="_blank"
                       rel="noreferrer"
-                      style={shareMiniButtonStyle}
+                      aria-label="Compartir por WhatsApp"
+                      className="hdm-share-btn"
                     >
-                      <ShareIconWhatsApp />
+                      <WhatsAppGlyph />
                     </a>
 
                     <a
@@ -1117,16 +729,18 @@ return (
                       )}`}
                       target="_blank"
                       rel="noreferrer"
-                      style={shareMiniButtonStyle}
+                      aria-label="Compartir en Facebook"
+                      className="hdm-share-btn"
                     >
-                      <ShareIconFacebook />
+                      <FacebookGlyph />
                     </a>
 
                     <button
                       onClick={() => handleCopyVehicleLink(vehicle)}
-                      style={shareMiniButtonStyle}
+                      aria-label="Copiar link del vehículo"
+                      className="hdm-share-btn"
                     >
-                      <ShareIconLink />
+                      <LinkGlyph />
                     </button>
                   </div>
                 )}
@@ -1136,218 +750,98 @@ return (
         </div>
       </section>
 
-      <section
-        id="opiniones"
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: isMobile ? "4px 14px 40px" : "8px 20px 60px",
-        }}
-      >
-        <div style={{ marginBottom: "18px" }}>
-          <div style={sectionKickerStyle}>Opiniones</div>
-
-          <h2
-            style={{
-              fontSize: isMobile ? "28px" : "36px",
-              margin: 0,
-              fontWeight: 900,
-              lineHeight: 1.05,
-              fontFamily: montserrat.style.fontFamily,
-            }}
-          >
-            Lo que dicen nuestros clientes
-          </h2>
+      {/* ============ OPINIONES ============ */}
+      <section id="opiniones" className="hdm-shell" style={{ paddingBlock: "8px 60px" }}>
+        <div className="hdm-section-head hdm-reveal">
+          <div className="hdm-kicker">Opiniones</div>
+          <h2 className="hdm-h2">Lo que dicen nuestros clientes</h2>
         </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile
-              ? "1fr"
-              : "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "18px",
-          }}
-        >
+        <div className="hdm-grid">
           {reviews.map((review, index) => (
-            <article
-              key={index}
-              style={{
-                ...reviewCardStyle,
-                padding: isMobile ? "18px" : "22px",
-                borderRadius: isMobile ? "20px" : "24px",
-              }}
-            >
-              <div style={pillStyle}>{review.mood}</div>
-
-              <p
-                style={{
-                  color: "#1b2c42",
-                  lineHeight: 1.7,
-                  margin: "14px 0 18px",
-                  fontSize: isMobile ? "14px" : "15px",
-                }}
-              >
-                "{review.text}"
-              </p>
-
-              <div style={{ color: "#5b6b7f", fontWeight: 700 }}>
-                {review.name}
-              </div>
-            </article>
+            <figure key={index} className="hdm-review hdm-reveal">
+              <span className="hdm-pill">{review.mood}</span>
+              <blockquote>{review.text}</blockquote>
+              <figcaption>{review.name}</figcaption>
+            </figure>
           ))}
         </div>
       </section>
 
-      {shareMessage && <div style={toastStyle}>{shareMessage}</div>}
+      {shareMessage && (
+        <div className="hdm-toast" role="status">
+          {shareMessage}
+        </div>
+      )}
 
-      <footer style={footerStyle}>
-        <div
-          style={{
-            maxWidth: "1240px",
-            margin: "0 auto",
-            padding: isMobile ? "26px 14px 30px" : "34px 20px 40px",
-            display: "grid",
-            gridTemplateColumns: isTablet ? "1fr" : "1.1fr 0.9fr",
-            gap: "24px",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              gap: "18px",
-              alignItems: "center",
-              flexWrap: "wrap",
-              justifyContent: isTablet ? "center" : "flex-start",
-              textAlign: isTablet ? "center" : "left",
-              flexDirection: isMobile ? "column" : "row",
-            }}
-          >
+      {/* ============ PIE ============ */}
+      <footer className="hdm-footer">
+        <div className="hdm-shell hdm-footer-grid">
+          <div className="hdm-footer-brand">
             <img
               src="/logo.png"
-              alt="HI DESERT MOTORS"
-              style={{
-                width: isMobile ? "96px" : "120px",
-                height: isMobile ? "96px" : "120px",
-                objectFit: "contain",
-              }}
+              alt=""
+              className="hdm-logo"
+              style={{ width: "clamp(96px, 20vw, 120px)" }}
             />
 
             <div>
-              <div
-                style={{
-                  fontWeight: 900,
-                  fontSize: isMobile ? "20px" : "22px",
-                  marginBottom: "8px",
-                  fontFamily: montserrat.style.fontFamily,
-                }}
-              >
-                HI DESERT MOTORS
-              </div>
-
-              <div
-                style={{
-                  color: "#c9d2df",
-                  lineHeight: 1.8,
-                  fontSize: isMobile ? "14px" : "15px",
-                }}
-              >
+              <div className="hdm-footer-name">HI DESERT MOTORS</div>
+              <p className="hdm-footer-text">
                 Vehículos usados seleccionados con una evaluación clara.
                 <br />
                 Hesperia, California
-              </div>
+              </p>
             </div>
           </div>
 
-          <div
-            style={{
-              padding: isMobile ? "18px" : "22px",
-              borderRadius: "24px",
-              background: "rgba(255,255,255,0.04)",
-            }}
-          >
-            <div
-              style={{
-                color: "#f5c542",
-                fontSize: "12px",
-                textTransform: "uppercase",
-                marginBottom: "14px",
-                fontFamily: montserrat.style.fontFamily,
-                textAlign: isMobile ? "center" : "left",
-              }}
-            >
-              Redes de contacto
-            </div>
+          <div className="hdm-contact-card">
+            <div className="hdm-eyebrow">Redes de contacto</div>
 
-            <div
-              style={{
-                display: "flex",
-                gap: "12px",
-                justifyContent: isMobile ? "center" : "flex-start",
-                flexWrap: "wrap",
-              }}
-            >
-              <a
-                href="mailto:ventas@hidesertmotors.com"
-                aria-label="Email"
-                style={socialIconButtonStyle}
-              >
-                <MailIcon />
+            <div className="hdm-social">
+              <a href="mailto:ventas@hidesertmotors.com" aria-label="Enviar correo">
+                <MailGlyph />
               </a>
 
               <a
                 href={PRIMARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={`WhatsApp principal ${PRIMARY_WHATSAPP}`}
-                style={socialIconButtonStyle}
+                aria-label={`WhatsApp ${PRIMARY_WHATSAPP}`}
               >
-                <FooterWhatsAppIcon />
+                <WhatsAppGlyph />
               </a>
 
               <a
                 href={SECONDARY_WHATSAPP_URL}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={`WhatsApp secundario ${SECONDARY_WHATSAPP}`}
-                style={socialIconButtonStyle}
+                aria-label={`WhatsApp ${SECONDARY_WHATSAPP}`}
               >
-                <FooterWhatsAppIcon />
+                <WhatsAppGlyph />
               </a>
 
-              <a
-                href={FACEBOOK_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Facebook"
-                style={socialIconButtonStyle}
-              >
-                <ShareIconFacebook footer />
+              <a href={FACEBOOK_URL} target="_blank" rel="noreferrer" aria-label="Facebook">
+                <FacebookGlyph />
               </a>
             </div>
           </div>
         </div>
       </footer>
 
+      {/* ============ LIGHTBOX ============ */}
       {isLightboxOpen && featuredVehicle && !featuredVehicle.sold && (
         <div
+          className="hdm-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={featuredVehicle.name}
           onClick={() => setIsLightboxOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(7,16,24,0.92)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 9999,
-            padding: isMobile ? "16px" : "24px",
-          }}
         >
           <button
             onClick={() => setIsLightboxOpen(false)}
             aria-label="Cerrar"
-            style={closeLightboxStyle}
+            className="hdm-lightbox-close"
           >
             ×
           </button>
@@ -1356,12 +850,6 @@ return (
             src={activeFeaturedImage}
             alt={featuredVehicle.name}
             onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: "94vw",
-              maxHeight: "88vh",
-              borderRadius: isMobile ? "16px" : "20px",
-              display: "block",
-            }}
           />
         </div>
       )}
@@ -1371,366 +859,46 @@ return (
   );
 }
 
-/* ================= STYLES ================= */
+/* ============================================================
+   ICONOS
+   El tamaño y el color los define el CSS del contenedor.
+   ============================================================ */
 
-const activeLanguageButtonStyle = {
-  padding: "10px 12px",
-  borderRadius: "999px",
-  background: "linear-gradient(135deg,#f5c542,#d88a00)",
-  color: "#071018",
-  fontWeight: 800,
-  fontFamily: montserrat.style.fontFamily,
-  fontSize: "13px",
-};
-
-const languageButtonStyle = {
-  padding: "10px 12px",
-  borderRadius: "999px",
-  border: "1px solid rgba(216,138,0,0.18)",
-  background: "#fffaf0",
-  color: "#5a3900",
-  textDecoration: "none",
-  fontWeight: 800,
-  fontFamily: montserrat.style.fontFamily,
-  fontSize: "13px",
-};
-
-const reviewCardStyle = {
-  padding: "22px",
-  borderRadius: "24px",
-  border: "1px solid rgba(216,138,0,0.10)",
-  background: "#ffffff",
-  boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
-};
-
-const vehicleCardStyle = {
-  borderRadius: "26px",
-  overflow: "hidden",
-  border: "1px solid rgba(216,138,0,0.10)",
-  background: "#ffffff",
-  boxShadow: "0 18px 40px rgba(216,138,0,0.06)",
-};
-
-const primaryButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "12px 18px",
-  borderRadius: "999px",
-  border: "none",
-  background: "linear-gradient(135deg,#f5c542,#d88a00)",
-  color: "#071018",
-  fontWeight: 800,
-  textDecoration: "none",
-  fontFamily: montserrat.style.fontFamily,
-  boxShadow: "0 10px 24px rgba(216,138,0,0.20)",
-};
-
-const ghostButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "12px 18px",
-  borderRadius: "999px",
-  border: "1px solid rgba(216,138,0,0.18)",
-  background: "#fffaf0",
-  color: "#5a3900",
-  textDecoration: "none",
-  fontWeight: 700,
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const pillStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "8px 12px",
-  borderRadius: "999px",
-  background: "#fff7e6",
-  color: "#8a5a00",
-  border: "1px solid rgba(216,138,0,0.12)",
-  fontSize: "12px",
-  fontWeight: 800,
-  marginBottom: "16px",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const meterWrapStyle = {
-  background: "#fffdf8",
-  border: "1px solid rgba(216,138,0,0.10)",
-};
-
-const meterHeaderStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  color: "#7a4d00",
-  fontWeight: 700,
-};
-
-const scaleGridItemStyle = {
-  display: "flex",
-  flexDirection: "column" as const,
-  alignItems: "center",
-  textAlign: "center" as const,
-  gap: "8px",
-  minWidth: 0,
-};
-
-const scaleIconFrameStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "18px",
-  background: "#ffffff",
-  boxShadow: "0 8px 20px rgba(216,138,0,0.06)",
-  margin: "0 auto",
-};
-
-const scaleIconStyle = {
-  width: "64%",
-  height: "64%",
-  objectFit: "contain" as const,
-};
-
-const scaleLabelStyle = {
-  color: "#6c5030",
-  lineHeight: 1.3,
-  fontWeight: 700,
-  wordBreak: "break-word" as const,
-};
-
-const whatsAppIconButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "999px",
-  textDecoration: "none",
-  background: "linear-gradient(135deg,#f5c542,#d88a00)",
-  boxShadow: "0 10px 24px rgba(216,138,0,0.22)",
-  flexShrink: 0,
-};
-
-const featuredArrowStyle = {
-  position: "absolute" as const,
-  top: "50%",
-  transform: "translateY(-50%)",
-  borderRadius: "999px",
-  border: "1px solid rgba(255,255,255,0.18)",
-  background: "rgba(7,16,24,0.45)",
-  color: "#ffffff",
-  fontSize: "22px",
-  fontWeight: 800,
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  backdropFilter: "blur(6px)",
-};
-
-const socialIconButtonStyle = {
-  width: "48px",
-  height: "48px",
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: "999px",
-  textDecoration: "none",
-  background: "rgba(255,255,255,0.08)",
-  border: "1px solid rgba(255,255,255,0.10)",
-};
-
-const footerIconSvgStyle = {
-  width: "22px",
-  height: "22px",
-  fill: "#f5f7fb",
-};
-
-const closeLightboxStyle = {
-  position: "absolute" as const,
-  top: "16px",
-  right: "16px",
-  width: "42px",
-  height: "42px",
-  borderRadius: "999px",
-  border: "1px solid rgba(255,255,255,0.18)",
-  background: "rgba(255,255,255,0.08)",
-  color: "#ffffff",
-  fontSize: "22px",
-  fontWeight: 800,
-  cursor: "pointer",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-};
-
-const shareTitleStyle = {
-  color: "#8a5a00",
-  fontSize: "12px",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.16em",
-  marginTop: "16px",
-  marginBottom: "10px",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const shareNetworkButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "8px",
-  padding: "13px 14px",
-  borderRadius: "14px",
-  border: "1px solid rgba(216,138,0,0.16)",
-  background: "#fffaf0",
-  color: "#5a3900",
-  fontWeight: 800,
-  fontFamily: montserrat.style.fontFamily,
-  textDecoration: "none",
-  cursor: "pointer",
-  fontSize: "14px",
-  boxShadow: "0 8px 18px rgba(216,138,0,0.08)",
-};
-
-const shareMiniButtonStyle = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "42px",
-  borderRadius: "12px",
-  border: "1px solid rgba(216,138,0,0.16)",
-  background: "#fffaf0",
-  color: "#5a3900",
-  textDecoration: "none",
-  cursor: "pointer",
-};
-
-const shareIconStyle = {
-  width: "16px",
-  height: "16px",
-  fill: "#5a3900",
-  flexShrink: 0,
-};
-
-const soldBadgeStyle = {
-  position: "absolute" as const,
-  top: "12px",
-  left: "12px",
-  background: "#ff3b4d",
-  color: "#fff",
-  padding: "8px 14px",
-  borderRadius: "999px",
-  fontWeight: 900,
-  fontSize: "12px",
-  letterSpacing: "0.05em",
-  boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const soldBadgeRightStyle = {
-  ...soldBadgeStyle,
-  left: "auto",
-  right: "12px",
-};
-
-const soldTextStyle = {
-  marginTop: "8px",
-  fontSize: "13px",
-  fontWeight: 800,
-  color: "#ff3b4d",
-  letterSpacing: "0.05em",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const tagBadgeStyle = {
-  position: "absolute" as const,
-  top: "14px",
-  left: "14px",
-  padding: "8px 12px",
-  borderRadius: "999px",
-  background: "rgba(255,250,240,0.96)",
-  border: "1px solid rgba(216,138,0,0.14)",
-  fontSize: "12px",
-  fontWeight: 800,
-  color: "#7a4d00",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const sectionKickerStyle = {
-  color: "#8a5a00",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.2em",
-  fontSize: "12px",
-  marginBottom: "8px",
-  fontFamily: montserrat.style.fontFamily,
-};
-
-const toastStyle = {
-  position: "fixed" as const,
-  bottom: "18px",
-  left: "50%",
-  transform: "translateX(-50%)",
-  background: "#071018",
-  color: "#ffffff",
-  padding: "12px 16px",
-  borderRadius: "999px",
-  fontSize: "13px",
-  fontWeight: 700,
-  zIndex: 10000,
-  boxShadow: "0 12px 28px rgba(0,0,0,0.28)",
-  maxWidth: "90vw",
-  textAlign: "center" as const,
-};
-
-const footerStyle = {
-  borderTop: "1px solid rgba(245,197,66,0.10)",
-  background: "linear-gradient(180deg, rgba(7,16,24,0.98), rgba(4,10,16,1))",
-  color: "#f5f7fb",
-  marginTop: "30px",
-};
-
-function ShareIconWhatsApp() {
+function WhatsAppGlyph() {
   return (
-    <svg viewBox="0 0 32 32" style={shareIconStyle}>
+    <svg viewBox="0 0 32 32" aria-hidden>
       <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
     </svg>
   );
 }
 
-function FooterWhatsAppIcon() {
+function FacebookGlyph() {
   return (
-    <svg viewBox="0 0 32 32" style={footerIconSvgStyle}>
-      <path d="M16.04 3C8.85 3 3 8.73 3 15.79c0 2.48.73 4.88 2.11 6.95L3 29l6.49-2.02a13.2 13.2 0 0 0 6.55 1.77h.01c7.19 0 13.04-5.73 13.04-12.79C29.09 8.73 23.24 3 16.04 3Zm0 23.45h-.01a10.9 10.9 0 0 1-5.56-1.52l-.4-.24-3.85 1.2 1.26-3.72-.26-.38a10.43 10.43 0 0 1-1.66-5.63c0-5.8 4.72-10.52 10.52-10.52 2.8 0 5.43 1.08 7.41 3.04a10.36 10.36 0 0 1 3.09 7.45c0 5.8-4.72 10.52-10.54 10.52Zm5.77-7.87c-.32-.16-1.88-.92-2.17-1.02-.29-.11-.5-.16-.71.16-.21.31-.82 1.02-1 1.23-.18.21-.37.23-.69.08-.32-.16-1.33-.48-2.54-1.54-.94-.82-1.57-1.84-1.76-2.15-.18-.31-.02-.48.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.97-2.3-.25-.6-.51-.52-.71-.53l-.61-.01c-.21 0-.55.08-.84.39-.29.31-1.1 1.07-1.1 2.61s1.13 3.03 1.29 3.24c.16.21 2.22 3.5 5.38 4.77.75.31 1.33.49 1.79.63.75.24 1.43.21 1.97.13.6-.09 1.88-.77 2.14-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37Z" />
-    </svg>
-  );
-}
-
-function ShareIconFacebook({ footer = false }: { footer?: boolean }) {
-  return (
-    <svg viewBox="0 0 24 24" style={footer ? footerIconSvgStyle : shareIconStyle}>
+    <svg viewBox="0 0 24 24" aria-hidden>
       <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.5 1.6-1.5h1.7V4.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H8v3h2.7v8h2.8Z" />
     </svg>
   );
 }
 
-function ShareIconX() {
+function XGlyph() {
   return (
-    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+    <svg viewBox="0 0 24 24" aria-hidden>
       <path d="M18.9 2H22l-6.77 7.74L23 22h-6.26l-4.9-6.41L6.23 22H3.1l7.24-8.27L1 2h6.42l4.43 5.85L18.9 2Zm-1.1 18h1.73L6.47 3.9H4.61L17.8 20Z" />
     </svg>
   );
 }
 
-function ShareIconLink() {
+function LinkGlyph() {
   return (
-    <svg viewBox="0 0 24 24" style={shareIconStyle}>
+    <svg viewBox="0 0 24 24" aria-hidden>
       <path d="M10.59 13.41a1 1 0 0 0 1.41 1.41l3.59-3.59a3 3 0 0 0-4.24-4.24l-1.88 1.88a1 1 0 1 0 1.41 1.41l1.88-1.88a1 1 0 1 1 1.41 1.41l-3.58 3.6Zm2.82-2.82a1 1 0 0 0-1.41-1.41l-3.59 3.59a3 3 0 1 0 4.24 4.24l1.88-1.88a1 1 0 1 0-1.41-1.41l-1.88 1.88a1 1 0 1 1-1.41-1.41l3.58-3.6Z" />
     </svg>
   );
 }
 
-function MailIcon() {
+function MailGlyph() {
   return (
-    <svg viewBox="0 0 24 24" style={footerIconSvgStyle}>
+    <svg viewBox="0 0 24 24" aria-hidden>
       <path d="M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm0 2v.01L12 13l8-5.99V7H4Zm16 10V9.49l-7.4 5.55a1 1 0 0 1-1.2 0L4 9.49V17h16Z" />
     </svg>
   );
