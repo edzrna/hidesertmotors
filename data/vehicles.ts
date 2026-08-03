@@ -1,5 +1,35 @@
 export const vehicles = [
 
+   {
+    id: "mustang-gt-2024",
+    name: "2024 Ford Mustang GT",
+    priceText: "$40,500",
+    priceValue: 43000,
+    marketPrice: 46000,
+    year: 2024,
+    miles: 9900,
+    condition: "excelente",
+    titleStatus: "salvage",
+    serviceRecords: true,
+    accidents: 0,
+    owners: 1,
+    sold: false,
+    image: "/cars/mustang-gt-1.jpg",
+    gallery: [
+      "/cars/mustang-gt-1.jpg",
+      "/cars/mustang-gt-2.jpg",
+      "/cars/mustang-gt-3.jpg",
+      "/cars/mustang-gt-4.jpg",
+      "/cars/mustang-gt-5.jpg",
+      "/cars/mustang-gt-6.jpg",
+      "/cars/mustang-gt-7.jpg",
+      "/cars/mustang-gt-8.jpg",
+    ],
+    details: "V8 5.0 | Automático | Frenos y mejoras performance | Filtros de alto flujo",
+    tag: "Destacado",
+  },
+
+  
   {
     id: "mustang-gt-2024",
     name: "2024 Ford Mustang GT",
