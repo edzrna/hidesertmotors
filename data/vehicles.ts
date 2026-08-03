@@ -30,6 +30,36 @@ export const vehicles = [
   },
 
   {
+  id: "traverse-2018",
+  name: "2018 Chevrolet Traverse",
+  priceText: "$8,995",
+  priceValue: 8995,
+  marketPrice: 10500,
+  year: 2018,
+  miles: 129000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/traverse-2018-1.jpg",
+  gallery: [
+    "/cars/traverse-2018-1.jpg",
+    "/cars/traverse-2018-2.jpg",
+    "/cars/traverse-2018-3.jpg",
+    "/cars/traverse-2018-4.jpg",
+    "/cars/traverse-2018-5.jpg",
+    "/cars/traverse-2018-6.jpg",
+    "/cars/traverse-2018-7.jpg",
+    "/cars/traverse-2018-8.jpg",
+  ],
+  details:
+    "3 filas de asientos | Cámara de reversa | Automática | Aire frío | Eléctrica | Amplia y cómoda para toda la familia | Título limpio | Todo en orden",
+  tag: "SUV",
+},
+
+  {
   id: "fusion-2018",
   name: "2018 Ford Fusion",
   priceText: "$5,550",
