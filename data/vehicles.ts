@@ -60,6 +60,36 @@ export const vehicles = [
 },
 
   {
+  id: "equinox-2019",
+  name: "2019 Chevrolet Equinox",
+  priceText: "$7,500",
+  priceValue: 7500,
+  marketPrice: 9000,
+  year: 2019,
+  miles: 121000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/equinox-2019-1.jpg",
+  gallery: [
+    "/cars/equinox-2019-1.jpg",
+    "/cars/equinox-2019-2.jpg",
+    "/cars/equinox-2019-3.jpg",
+    "/cars/equinox-2019-4.jpg",
+    "/cars/equinox-2019-5.jpg",
+    "/cars/equinox-2019-6.jpg",
+    "/cars/equinox-2019-7.jpg",
+    "/cars/equinox-2019-8.jpg",
+  ],
+  details:
+    "Color gris | Cámara de reversa | Automática | Aire frío | Vidrios y seguros eléctricos | SUV cómoda y económica | Título limpio | Todo en orden",
+  tag: "SUV",
+},
+
+  {
   id: "fusion-2018",
   name: "2018 Ford Fusion",
   priceText: "$5,550",
