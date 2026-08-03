@@ -30,6 +30,35 @@ export const vehicles = [
   },
 
   {
+  id: "fusion-2018",
+  name: "2018 Ford Fusion",
+  priceText: "$5,550",
+  priceValue: 5550,
+  marketPrice: 7000,
+  year: 2018,
+  miles: 145000,
+  condition: "bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  sold: false,
+  image: "/cars/fusion-2018-1.jpg",
+  gallery: [
+    "/cars/fusion-2018-1.jpg",
+    "/cars/fusion-2018-2.jpg",
+    "/cars/fusion-2018-3.jpg",
+    "/cars/fusion-2018-4.jpg",
+    "/cars/fusion-2018-5.jpg",
+    "/cars/fusion-2018-6.jpg",
+    "/cars/fusion-2018-7.jpg",
+    "/cars/fusion-2018-8.jpg",
+  ],
+  details:
+    "Automático | Cámara de reversa | Vidrios y seguros eléctricos | Aire acondicionado frío | Excelente para uso diario | Título limpio | Todo en orden",
+  tag: "Sedan",
+},
+
+  {
   id: "gmc-canyon-at4x-2024",
   name: "2024 GMC Canyon AT4X",
   priceText: "$42,500",
