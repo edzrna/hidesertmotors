@@ -81,8 +81,6 @@ export const vehicles = [
     "/cars/equinox-2019-4.jpg",
     "/cars/equinox-2019-5.jpg",
     "/cars/equinox-2019-6.jpg",
-    "/cars/equinox-2019-7.jpg",
-    "/cars/equinox-2019-8.jpg",
   ],
   details:
     "Color gris | Cámara de reversa | Automática | Aire frío | Vidrios y seguros eléctricos | SUV cómoda y económica | Título limpio | Todo en orden",
