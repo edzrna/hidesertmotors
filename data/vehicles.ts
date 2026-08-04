@@ -29,6 +29,37 @@ export const vehicles = [
     tag: "Destacado",
   },
 
+{
+  id: "range-rover-sport-2015",
+  name: "2015 Land Rover Range Rover Sport Supercharged",
+  priceText: "$10,995",
+  priceValue: 10995,
+  marketPrice: 13500,
+  year: 2015,
+  miles: 140000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/range-rover-sport-2015-1.jpg",
+  gallery: [
+    "/cars/range-rover-sport-2015-1.jpg",
+    "/cars/range-rover-sport-2015-2.jpg",
+    "/cars/range-rover-sport-2015-3.jpg",
+    "/cars/range-rover-sport-2015-4.jpg",
+    "/cars/range-rover-sport-2015-5.jpg",
+    "/cars/range-rover-sport-2015-6.jpg",
+    "/cars/range-rover-sport-2015-7.jpg",
+    "/cars/range-rover-sport-2015-8.jpg",
+    "/cars/range-rover-sport-2015-9.jpg",
+  ],
+  details:
+    "Supercharged | Interior en piel | Súper equipada | 3 filas de asientos | Techo panorámico | Entrada sin llave | Encendido por botón | Rines deportivos | Automática | Muy bien cuidada | Título en mano | Cero fallas",
+  tag: "Luxury SUV",
+},
+
   {
   id: "traverse-2018",
   name: "2018 Chevrolet Traverse",
