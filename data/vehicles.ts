@@ -73,7 +73,7 @@ export const vehicles = [
   serviceRecords: false,
   accidents: 0,
   owners: 2,
-  sold: false,
+  sold: true,
   image: "/cars/traverse-2018-1.jpg",
   gallery: [
     "/cars/traverse-2018-1.jpg",
