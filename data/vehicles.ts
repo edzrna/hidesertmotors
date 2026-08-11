@@ -29,6 +29,36 @@ export const vehicles = [
     tag: "Destacado",
   },
 
+  {
+  id: "outlander-sport-2020",
+  name: "2020 Mitsubishi Outlander Sport",
+  priceText: "$8,500",
+  priceValue: 8500,
+  marketPrice: 10000,
+  year: 2020,
+  miles: 137000,
+  condition: "bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/outlander-sport-2020-1.jpg",
+  gallery: [
+    "/cars/outlander-sport-2020-1.jpg",
+  "/cars/outlander-sport-2020-2.jpg",
+  "/cars/outlander-sport-2020-3.jpg",
+  "/cars/outlander-sport-2020-4.jpg",
+  "/cars/outlander-sport-2020-5.jpg",
+  "/cars/outlander-sport-2020-6.jpg",
+  "/cars/outlander-sport-2020-7.jpg",
+  "/cars/outlander-sport-2020-8.jpg",
+  ],
+  details:
+    "SUV compacta | Automática | Cómoda para uso diario | Buen espacio interior | Económica y práctica",
+  tag: "SUV",
+},
+
 {
   id: "range-rover-sport-2015",
   name: "2015 Land Rover Range Rover Sport Supercharged",
