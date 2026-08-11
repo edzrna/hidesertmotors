@@ -29,24 +29,21 @@ export const vehicles = [
     tag: "Destacado",
   },
 
-  {
-  id: "2019-volkswagen-atlas",
+ {
+  id: "volkswagen-atlas-2019",
+  name: "2019 Volkswagen Atlas",
+  priceText: "$11,700",
+  priceValue: 11700,
+  marketPrice: 14000,
   year: 2019,
-  make: "Volkswagen",
-  model: "Atlas",
-  price: 11700,
   miles: 126000,
-
   condition: "muy_bueno",
   titleStatus: "clean",
   serviceRecords: false,
   accidents: 0,
   owners: 0,
-
-  tag: "Buen trato",
-
+  sold: false,
   image: "/cars/atlas-2019-1.jpg",
-
   gallery: [
     "/cars/atlas-2019-1.jpg",
     "/cars/atlas-2019-2.jpg",
@@ -58,18 +55,8 @@ export const vehicles = [
     "/cars/atlas-2019-8.jpg",
     "/cars/atlas-2019-9.jpg",
   ],
-
-  specs: [
-    "126,000 millas",
-    "Versión equipada",
-    "Interior de lujo",
-    "Placas vigentes hasta 2027",
-    "Todo en perfecto estado",
-    "SUV amplia y cómoda",
-  ],
-
-  description:
-    "2019 Volkswagen Atlas en excelente estado general. Versión equipada, cómoda y espaciosa, ideal para familia y viajes. Cuenta con 126,000 millas y placas vigentes hasta 2027. Todo funciona correctamente y se encuentra lista para manejar. Precio: $11,700.",
+  details: "126,000 millas | Versión equipada | Interior de lujo | 3 filas de asientos | Placas vigentes hasta 2027 | Excelente estado",
+  tag: "Buen trato",
 },
 
   {
