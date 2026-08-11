@@ -56,7 +56,7 @@ export const vehicles = [
     "/cars/atlas-2019-6.jpg",
     "/cars/atlas-2019-7.jpg",
     "/cars/atlas-2019-8.jpg",
-     "/cars/atlas-2019-9.jpg",
+    "/cars/atlas-2019-9.jpg",
   ],
 
   specs: [
