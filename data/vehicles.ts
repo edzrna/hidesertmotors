@@ -70,7 +70,7 @@ export const vehicles = [
 
   description:
     "2019 Volkswagen Atlas en excelente estado general. Versión equipada, cómoda y espaciosa, ideal para familia y viajes. Cuenta con 126,000 millas y placas vigentes hasta 2027. Todo funciona correctamente y se encuentra lista para manejar. Precio: $11,700.",
-}
+},
 
   {
   id: "outlander-sport-2020",
