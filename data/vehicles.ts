@@ -30,6 +30,49 @@ export const vehicles = [
   },
 
   {
+  id: "2019-volkswagen-atlas",
+  year: 2019,
+  make: "Volkswagen",
+  model: "Atlas",
+  price: 11700,
+  miles: 126000,
+
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 0,
+
+  tag: "Buen trato",
+
+  image: "/cars/atlas-2019-1.jpg",
+
+  gallery: [
+    "/cars/atlas-2019-1.jpg",
+    "/cars/atlas-2019-2.jpg",
+    "/cars/atlas-2019-3.jpg",
+    "/cars/atlas-2019-4.jpg",
+    "/cars/atlas-2019-5.jpg",
+    "/cars/atlas-2019-6.jpg",
+    "/cars/atlas-2019-7.jpg",
+    "/cars/atlas-2019-8.jpg",
+     "/cars/atlas-2019-9.jpg",
+  ],
+
+  specs: [
+    "126,000 millas",
+    "Versión equipada",
+    "Interior de lujo",
+    "Placas vigentes hasta 2027",
+    "Todo en perfecto estado",
+    "SUV amplia y cómoda",
+  ],
+
+  description:
+    "2019 Volkswagen Atlas en excelente estado general. Versión equipada, cómoda y espaciosa, ideal para familia y viajes. Cuenta con 126,000 millas y placas vigentes hasta 2027. Todo funciona correctamente y se encuentra lista para manejar. Precio: $11,700.",
+}
+
+  {
   id: "outlander-sport-2020",
   name: "2020 Mitsubishi Outlander Sport",
   priceText: "$8,500",
