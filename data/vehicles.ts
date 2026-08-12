@@ -29,6 +29,37 @@ export const vehicles = [
     tag: "Destacado",
   },
 
+  {
+  id: "nissan-kicks-2019",
+  name: "2019 Nissan Kicks",
+  priceText: "$8,900",
+  priceValue: 8900,
+  marketPrice: 11000,
+  year: 2019,
+  miles: 55700,
+  condition: "muy_bueno",
+  titleStatus: "salvage",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 0,
+  sold: false,
+  image: "/cars/nissan-kicks-2019-1.jpg",
+  gallery: [
+    "/cars/nissan-kicks-2019-1.jpg",
+    "/cars/nissan-kicks-2019-2.jpg",
+    "/cars/nissan-kicks-2019-3.jpg",
+    "/cars/nissan-kicks-2019-4.jpg",
+    "/cars/nissan-kicks-2019-5.jpg",
+    "/cars/nissan-kicks-2019-6.jpg",
+    "/cars/nissan-kicks-2019-7.jpg",
+    "/cars/nissan-kicks-2019-8.jpg",
+    "/cars/nissan-kicks-2019-9.jpg",
+  ],
+  details:
+    "Automático | Solo 55,700 millas | Cámara de reversa | Aire frío | Calefacción | Eléctrico | VLF Class AX | Título Salvage | Placas vigentes hasta abril 2027",
+  tag: "Low miles",
+},
+
  {
   id: "volkswagen-atlas-2019",
   name: "2019 Volkswagen Atlas",
