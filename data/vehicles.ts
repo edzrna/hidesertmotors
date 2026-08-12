@@ -56,7 +56,7 @@ export const vehicles = [
     "/cars/nissan-kicks-2019-9.jpg",
   ],
   details:
-    "Automático | Solo 55,700 millas | Cámara de reversa | Aire frío | Calefacción | Eléctrico | VLF Class AX | Título Salvage | Placas vigentes hasta abril 2027",
+    "Automático | Solo 55,700 millas | Cámara de reversa | Aire frío | Calefacción | Eléctrico | Título Salvage | Placas vigentes hasta abril 2027",
   tag: "Low miles",
 },
 
