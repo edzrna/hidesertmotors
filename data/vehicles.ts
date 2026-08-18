@@ -221,7 +221,7 @@ export const vehicles = [
   titleStatus: "clean",
   serviceRecords: false,
   accidents: 0,
-  sold: false,
+  sold: true,
   image: "/cars/fusion-2018-1.jpg",
   gallery: [
     "/cars/fusion-2018-1.jpg",
