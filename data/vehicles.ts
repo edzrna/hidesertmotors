@@ -30,6 +30,40 @@ export const vehicles = [
   },
 
   {
+  id: "toyota-tundra-2016",
+  name: "2016 Toyota Tundra",
+  priceText: "$13,450",
+  priceValue: 13450,
+  marketPrice: 0,
+  year: 2016,
+  miles: 187000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 0,
+  sold: false,
+
+  image: "/cars/tundra-2016-1.jpg",
+
+  gallery: [
+    "/cars/tundra-2016-1.jpg",
+    "/cars/tundra-2016-2.jpg",
+    "/cars/tundra-2016-3.jpg",
+    "/cars/tundra-2016-4.jpg",
+    "/cars/tundra-2016-5.jpg",
+    "/cars/tundra-2016-6.jpg",
+    "/cars/tundra-2016-7.jpg",
+    "/cars/tundra-2016-8.jpg",
+  ],
+
+  details:
+    "Título limpio | Placas vigentes hasta 2027 | Llantas nuevas | Súper cuidada | 187,000 millas",
+
+  tag: "Buen trato",
+},
+
+  {
   id: "nissan-kicks-2019",
   name: "2019 Nissan Kicks",
   priceText: "$8,900",
