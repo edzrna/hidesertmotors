@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AIChat from "@/components/AIChat";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
+import InventoryControls from "@/components/InventoryControls";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
@@ -18,6 +19,12 @@ import {
   type Locale,
   type ScoredVehicle,
 } from "@/lib/hdm";
+import {
+  DEFAULT_SORT,
+  applyInventoryView,
+  getMakes,
+  type SortKey,
+} from "@/lib/sort";
 import {
   CONTACT_EMAIL,
   FACEBOOK_URL,
@@ -39,6 +46,23 @@ export default function HomeView({
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [toast, setToast] = useState("");
+
+  /* Vista del inventario: orden y filtros */
+  const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
+  const [make, setMake] = useState<string | null>(null);
+  const [hideSold, setHideSold] = useState(false);
+
+  const makes = useMemo(() => getMakes(vehicles), [vehicles]);
+
+  const visibleVehicles = useMemo(
+    () => applyInventoryView(vehicles, { sort, make, hideSold, locale }),
+    [vehicles, sort, make, hideSold, locale]
+  );
+
+  function resetFilters() {
+    setMake(null);
+    setHideSold(false);
+  }
 
   const inventoryScore = averageScore(vehicles);
   const inventoryLevel = getHDMLevel(inventoryScore);
@@ -73,7 +97,7 @@ export default function HomeView({
 
     targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [vehicles.length]);
+  }, [visibleVehicles.length]);
 
   function showToast(message: string) {
     setToast(message);
@@ -117,10 +141,6 @@ export default function HomeView({
 
             <a href="#inventario" className="hdm-btn hdm-btn--primary">
               {dict.nav.inventory}
-            </a>
-
-            <a href="#opiniones" className="hdm-btn hdm-btn--ghost">
-              {dict.nav.reviews}
             </a>
 
             <a
@@ -243,14 +263,32 @@ export default function HomeView({
       </div>
 
       {/* ============ INVENTARIO ============ */}
-      <section id="inventario" className="hdm-shell hdm-section">
+      <section id="inventario" className="hdm-shell hdm-section hdm-section--last">
         <div className="hdm-section-head hdm-reveal">
           <div className="hdm-kicker">{dict.inventory.kicker}</div>
           <h2 className="hdm-h2">{dict.inventory.title}</h2>
         </div>
 
+        <InventoryControls
+          dict={dict}
+          makes={makes}
+          sort={sort}
+          make={make}
+          hideSold={hideSold}
+          shown={visibleVehicles.length}
+          total={vehicles.length}
+          onSortChange={setSort}
+          onMakeChange={setMake}
+          onHideSoldChange={setHideSold}
+          onReset={resetFilters}
+        />
+
+        {visibleVehicles.length === 0 && (
+          <p className="hdm-empty">{dict.inventory.empty}</p>
+        )}
+
         <div className="hdm-grid">
-          {vehicles.map((vehicle) => {
+          {visibleVehicles.map((vehicle) => {
             const tag = vehicle.tag ? pick(vehicle.tag, locale) : "";
 
             return (
@@ -356,24 +394,6 @@ export default function HomeView({
               </article>
             );
           })}
-        </div>
-      </section>
-
-      {/* ============ OPINIONES ============ */}
-      <section id="opiniones" className="hdm-shell hdm-section">
-        <div className="hdm-section-head hdm-reveal">
-          <div className="hdm-kicker">{dict.reviewsSection.kicker}</div>
-          <h2 className="hdm-h2">{dict.reviewsSection.title}</h2>
-        </div>
-
-        <div className="hdm-grid">
-          {dict.reviewsSection.items.map((review) => (
-            <figure key={review.name} className="hdm-review hdm-reveal">
-              <span className="hdm-pill">{dict.levels[review.level]}</span>
-              <blockquote>{review.text}</blockquote>
-              <figcaption>{review.name}</figcaption>
-            </figure>
-          ))}
         </div>
       </section>
 
