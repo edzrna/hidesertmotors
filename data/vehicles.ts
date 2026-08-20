@@ -70,7 +70,7 @@ export const vehicles = [
   priceValue: 9350,
   marketPrice: 10500,
   year: 2017,
-  miles: 0,
+  miles: 144000,
 
   condition: "muy_bueno",
   titleStatus: "clean",
@@ -108,7 +108,7 @@ export const vehicles = [
   priceValue: 7450,
   marketPrice: 8500,
   year: 2013,
-  miles: 0,
+  miles: 174000,
   condition: "muy_bueno",
   titleStatus: "clean",
   serviceRecords: false,
