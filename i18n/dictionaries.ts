@@ -18,7 +18,6 @@ const es = {
   nav: {
     tagline: "Compra con confianza.",
     inventory: "Ver inventario",
-    reviews: "Opiniones",
     whatsapp: "Escribir por WhatsApp",
     switchTo: "English",
   },
@@ -101,29 +100,23 @@ const es = {
   inventory: {
     kicker: "Inventario",
     title: "Vehículos calificados automáticamente",
+    sortLabel: "Ordenar por",
+    makeLabel: "Marca",
+    allMakes: "Todas",
+    hideSold: "Ocultar vendidos",
+    count: "{n} de {total} vehículos",
+    empty: "No hay vehículos con esos filtros.",
+    reset: "Quitar filtros",
+    sort: {
+      score_desc: "Mejor calificación HDM",
+      price_asc: "Precio: menor a mayor",
+      price_desc: "Precio: mayor a menor",
+      year_desc: "Año: más nuevos",
+      miles_asc: "Millas: menos primero",
+      name_asc: "Nombre: A-Z",
+    },
   },
 
-  reviewsSection: {
-    kicker: "Opiniones",
-    title: "Lo que dicen nuestros clientes",
-    items: [
-      {
-        name: "Daniel R.",
-        level: "great_buy" as LevelKey,
-        text: "Todo fue claro, rápido y la troca estaba tal como en las fotos.",
-      },
-      {
-        name: "Ashley M.",
-        level: "good_deal" as LevelKey,
-        text: "La calificación me ayudó a entender el valor del auto desde el principio.",
-      },
-      {
-        name: "Marco C.",
-        level: "best_option" as LevelKey,
-        text: "De las mejores experiencias que he tenido comprando auto. Sin presión y todo claro.",
-      },
-    ],
-  },
 
   footer: {
     tagline: "Vehículos usados seleccionados con una evaluación clara.",
@@ -148,7 +141,6 @@ const en: Dictionary = {
   nav: {
     tagline: "Buy with confidence.",
     inventory: "View inventory",
-    reviews: "Reviews",
     whatsapp: "Message us on WhatsApp",
     switchTo: "Español",
   },
@@ -231,29 +223,23 @@ const en: Dictionary = {
   inventory: {
     kicker: "Inventory",
     title: "Vehicles rated automatically",
+    sortLabel: "Sort by",
+    makeLabel: "Make",
+    allMakes: "All",
+    hideSold: "Hide sold",
+    count: "{n} of {total} vehicles",
+    empty: "No vehicles match those filters.",
+    reset: "Clear filters",
+    sort: {
+      score_desc: "Best HDM rating",
+      price_asc: "Price: low to high",
+      price_desc: "Price: high to low",
+      year_desc: "Year: newest first",
+      miles_asc: "Miles: lowest first",
+      name_asc: "Name: A-Z",
+    },
   },
 
-  reviewsSection: {
-    kicker: "Reviews",
-    title: "What our customers say",
-    items: [
-      {
-        name: "Daniel R.",
-        level: "great_buy",
-        text: "Everything was clear and quick, and the truck looked exactly like the photos.",
-      },
-      {
-        name: "Ashley M.",
-        level: "good_deal",
-        text: "The rating helped me understand what the car was worth from the start.",
-      },
-      {
-        name: "Marco C.",
-        level: "best_option",
-        text: "One of the best car buying experiences I've had. No pressure, everything upfront.",
-      },
-    ],
-  },
 
   footer: {
     tagline: "Hand-picked used vehicles with a clear evaluation.",
