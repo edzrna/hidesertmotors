@@ -92,6 +92,7 @@ export const vehicles = [
     "/cars/mazda3-2017-8.jpg",
      "/cars/mazda3-2017-9.jpg",
     "/cars/mazda3-2017-10.jpg",
+    "/cars/mazda3-2017-11.jpg",
   ],
 
   details:
