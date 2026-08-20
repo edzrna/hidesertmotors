@@ -64,6 +64,44 @@ export const vehicles = [
 },
 
   {
+  id: "jeep-compass-altitude-2020",
+  name: "2020 Jeep Compass Altitude",
+  priceText: "$9,850",
+  priceValue: 9850,
+  marketPrice: 12000,
+  year: 2020,
+  miles: 69000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 0,
+  sold: false,
+
+  image: "/cars/compass-altitude-2020-1.jpg",
+
+  gallery: [
+    "/cars/compass-altitude-2020-1.jpg",
+    "/cars/compass-altitude-2020-2.jpg",
+    "/cars/compass-altitude-2020-3.jpg",
+    "/cars/compass-altitude-2020-4.jpg",
+    "/cars/compass-altitude-2020-5.jpg",
+    "/cars/compass-altitude-2020-6.jpg",
+    "/cars/compass-altitude-2020-7.jpg",
+    "/cars/compass-altitude-2020-8.jpg",
+    "/cars/compass-altitude-2020-9.jpg",
+    "/cars/compass-altitude-2020-10.jpg",
+    "/cars/compass-altitude-2020-11.jpg",
+    "/cars/compass-altitude-2020-12.jpg",
+  ],
+
+  details:
+    "Altitude | 69,000 millas | Título limpio | Interior en piel | Muy equipada | Eléctrica | Automática | SUV cómoda y lista para manejar",
+
+  tag: "Buen trato",
+},
+
+  {
   id: "nissan-kicks-2019",
   name: "2019 Nissan Kicks",
   priceText: "$8,900",
