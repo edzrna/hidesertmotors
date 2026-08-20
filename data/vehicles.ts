@@ -102,6 +102,37 @@ export const vehicles = [
 },
 
   {
+  id: "outlander-gt-2016",
+  name: "2016 Mitsubishi Outlander GT",
+  priceText: "$7,350",
+  priceValue: 7350,
+  marketPrice: 9000,
+  year: 2016,
+  miles: 105000,
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 2,
+  sold: false,
+  image: "/cars/outlander-gt-2016-1.jpg",
+  gallery: [
+    "/cars/outlander-gt-2016-1.jpg",
+    "/cars/outlander-gt-2016-2.jpg",
+    "/cars/outlander-gt-2016-3.jpg",
+    "/cars/outlander-gt-2016-4.jpg",
+    "/cars/outlander-gt-2016-5.jpg",
+    "/cars/outlander-gt-2016-6.jpg",
+    "/cars/outlander-gt-2016-7.jpg",
+    "/cars/outlander-gt-2016-8.jpg",
+    "/cars/outlander-gt-2016-9.jpg",
+  ],
+  details:
+    "GT | Título limpio | 105,000 millas | Automática | Interior en piel | 3 filas de asientos | Placas vigentes hasta 2027 | SUV amplia y cómoda | Lista para manejar",
+  tag: "SUV",
+},
+
+  {
   id: "nissan-kicks-2019",
   name: "2019 Nissan Kicks",
   priceText: "$8,900",
