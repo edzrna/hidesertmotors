@@ -1324,3 +1324,162 @@ body {
   font-size: 13px;
   overflow-wrap: anywhere;
 }
+/* ============================================================
+   CONTROLES DEL INVENTARIO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+.hdm-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.hdm-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 190px;
+}
+
+.hdm-control-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-hdm-brown-soft);
+}
+
+.hdm-select {
+  appearance: none;
+  width: 100%;
+  padding: 12px 38px 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background-color: var(--color-hdm-cream);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  /* Flecha dibujada en el fondo: los <select> nativos no se pueden
+     estilizar de forma consistente entre navegadores. */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%237a4d00' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 11px;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.hdm-select:hover {
+  border-color: var(--color-hdm-orange);
+  background-color: #ffffff;
+}
+
+.hdm-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  font-size: 14px;
+  font-weight: 700;
+  color: #5a3900;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background 0.25s ease;
+}
+
+.hdm-toggle:hover {
+  background: #ffffff;
+}
+
+.hdm-toggle input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+  margin: 0;
+}
+
+.hdm-controls-tail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  padding-bottom: 12px;
+}
+
+.hdm-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-hdm-muted);
+  white-space: nowrap;
+}
+
+.hdm-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-hdm-orange);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.hdm-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px dashed var(--hdm-line-strong);
+}
+
+/* En pantallas chicas el contador se va a su propia línea,
+   para que los selects conserven ancho usable. */
+@media (max-width: 640px) {
+  .hdm-controls {
+    gap: 12px;
+  }
+
+  .hdm-control {
+    flex: 1 1 100%;
+  }
+
+  .hdm-toggle {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .hdm-controls-tail {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 0;
+    justify-content: space-between;
+  }
+}
+
+/* La última sección antes del pie necesita aire propio.
+   (La regla vieja `.hdm-section + .hdm-section` dependía de que
+   existiera la sección de opiniones; ya no existe.) */
+.hdm-section--last {
+  padding-block: 18px 60px;
+}
