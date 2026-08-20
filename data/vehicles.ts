@@ -64,6 +64,43 @@ export const vehicles = [
 },
 
   {
+  id: "mazda3-hatchback-2017",
+  name: "2017 Mazda Mazda3 Hatchback",
+  priceText: "$9,350",
+  priceValue: 9350,
+  marketPrice: 10500,
+  year: 2017,
+  miles: 0,
+
+  condition: "muy_bueno",
+  titleStatus: "clean",
+  serviceRecords: false,
+  accidents: 0,
+  owners: 0,
+  sold: false,
+
+  image: "/cars/mazda3-2017-1.jpg",
+
+  gallery: [
+    "/cars/mazda3-2017-1.jpg",
+    "/cars/mazda3-2017-2.jpg",
+    "/cars/mazda3-2017-3.jpg",
+    "/cars/mazda3-2017-4.jpg",
+    "/cars/mazda3-2017-5.jpg",
+    "/cars/mazda3-2017-6.jpg",
+    "/cars/mazda3-2017-7.jpg",
+    "/cars/mazda3-2017-8.jpg",
+     "/cars/mazda3-2017-9.jpg",
+    "/cars/mazda3-2017-10.jpg",
+  ],
+
+  details:
+    "Hatchback deportivo | Automático | Título limpio | Interior en piel de dos tonos | Aire acondicionado frío | Eléctrico | Placas vigentes hasta 2027 | Súper cuidado | Sin fallas",
+
+  tag: "Muy buena compra",
+},
+
+  {
   id: "honda-crv-2013",
   name: "2013 Honda CR-V 4x4",
   priceText: "$7,450",
