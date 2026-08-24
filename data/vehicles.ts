@@ -369,7 +369,7 @@ export const vehicles = [
   serviceRecords: false,
   accidents: 0,
   owners: 2,
-  sold: false,
+  sold: true,
   image: "/cars/equinox-2019-1.jpg",
   gallery: [
     "/cars/equinox-2019-1.jpg",
