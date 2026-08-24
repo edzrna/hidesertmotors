@@ -143,13 +143,6 @@ export default function HomeView({
               {dict.nav.inventory}
             </a>
 
-            <Link
-              href={localePath(locale, "/publicar")}
-              className="hdm-btn hdm-btn--ghost"
-            >
-              {dict.nav.publish}
-            </Link>
-
             <a
               href={PRIMARY_WHATSAPP_URL}
               target="_blank"
