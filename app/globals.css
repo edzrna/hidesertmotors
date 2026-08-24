@@ -1167,3 +1167,734 @@ body {
     transform: none;
   }
 }
+
+/* ============================================================
+   ESPACIADO DE SECCIONES
+   ============================================================ */
+
+.hdm-section {
+  padding-block: 18px 24px;
+}
+
+.hdm-section + .hdm-section {
+  padding-block: 8px 60px;
+}
+
+.hdm-logo--footer {
+  width: clamp(96px, 20vw, 120px);
+}
+
+.hdm-btn--block {
+  width: 100%;
+  margin-top: 22px;
+}
+
+/* ============================================================
+   GALERÍA: variantes de escenario
+   ============================================================ */
+
+.hdm-stage--detail img {
+  aspect-ratio: 3 / 2;
+}
+
+@media (min-width: 1100px) {
+  .hdm-stage--detail img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* Flechas dentro del lightbox: fondo claro translúcido */
+.hdm-arrow--light {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
+  z-index: 2;
+}
+
+.hdm-arrow--light:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hdm-share-note {
+  margin-top: 10px;
+  color: var(--color-hdm-brown);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   FICHA DEL VEHÍCULO
+   ============================================================ */
+
+.hdm-detail {
+  padding-block: clamp(18px, 4vw, 28px) clamp(40px, 8vw, 60px);
+}
+
+.hdm-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-hdm-brown);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  transition: gap 0.25s var(--hdm-ease);
+}
+
+.hdm-back:hover {
+  gap: 10px;
+}
+
+.hdm-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+@media (max-width: 1100px) {
+  .hdm-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hdm-detail-media {
+  padding: clamp(12px, 2vw, 22px);
+}
+
+.hdm-detail-media .hdm-stage {
+  margin-top: 0;
+}
+
+@media (min-width: 1101px) {
+  .hdm-detail-info {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.hdm-detail-info .hdm-h2 {
+  margin-top: 4px;
+}
+
+.hdm-detail-text {
+  color: var(--color-hdm-muted);
+  line-height: 1.8;
+  font-size: 15px;
+  margin-top: 18px;
+}
+
+.hdm-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.hdm-info-box {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--hdm-line);
+  background: #fffdf8;
+  min-width: 0;
+}
+
+.hdm-info-box dt {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-hdm-brown-soft);
+  margin-bottom: 6px;
+}
+
+.hdm-info-box dd {
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.hdm-detail-phone {
+  margin-top: 14px;
+  color: var(--color-hdm-brown);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+/* ============================================================
+   CONTROLES DEL INVENTARIO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+.hdm-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.hdm-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 190px;
+}
+
+.hdm-control-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-hdm-brown-soft);
+}
+
+.hdm-select {
+  appearance: none;
+  width: 100%;
+  padding: 12px 38px 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background-color: var(--color-hdm-cream);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  /* Flecha dibujada en el fondo: los <select> nativos no se pueden
+     estilizar de forma consistente entre navegadores. */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%237a4d00' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 11px;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.hdm-select:hover {
+  border-color: var(--color-hdm-orange);
+  background-color: #ffffff;
+}
+
+.hdm-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  font-size: 14px;
+  font-weight: 700;
+  color: #5a3900;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background 0.25s ease;
+}
+
+.hdm-toggle:hover {
+  background: #ffffff;
+}
+
+.hdm-toggle input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+  margin: 0;
+}
+
+.hdm-controls-tail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  padding-bottom: 12px;
+}
+
+.hdm-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-hdm-muted);
+  white-space: nowrap;
+}
+
+.hdm-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-hdm-orange);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.hdm-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px dashed var(--hdm-line-strong);
+}
+
+/* En pantallas chicas el contador se va a su propia línea,
+   para que los selects conserven ancho usable. */
+@media (max-width: 640px) {
+  .hdm-controls {
+    gap: 12px;
+  }
+
+  .hdm-control {
+    flex: 1 1 100%;
+  }
+
+  .hdm-toggle {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .hdm-controls-tail {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 0;
+    justify-content: space-between;
+  }
+}
+
+/* La última sección antes del pie necesita aire propio.
+   (La regla vieja `.hdm-section + .hdm-section` dependía de que
+   existiera la sección de opiniones; ya no existe.) */
+.hdm-section--last {
+  padding-block: 18px 60px;
+}
+/* ============================================================
+   PUBLICAR ANUNCIO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+.pub-head {
+  margin: var(--sp-3, 18px) 0 26px;
+}
+
+.pub-lede {
+  color: var(--color-hdm-muted);
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 62ch;
+  margin: 12px 0 0;
+}
+
+/* Arriba y visible: es lo que deja claro que el sitio no vende. */
+.pub-disclaimer {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-orange);
+  background: #fffdf8;
+  color: var(--color-hdm-brown);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 70ch;
+}
+
+/* ---------- Disposición ---------- */
+
+.pub-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .pub-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pub-fields {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pub-live {
+  order: 2;
+}
+
+@media (max-width: 1000px) {
+  /* En móvil la calificación va arriba: es la razón de llenar el
+     formulario, no un resumen del final. */
+  .pub-live {
+    order: 0;
+    position: sticky;
+    top: 8px;
+    z-index: 20;
+  }
+}
+
+/* ---------- Panel de calificación en vivo ---------- */
+
+.pub-live {
+  padding: 20px;
+  border-radius: var(--hdm-r, 26px);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+@media (min-width: 1001px) {
+  .pub-live {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.pub-live-ring {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pub-live-level {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+  line-height: 1.2;
+}
+
+.pub-live-caption {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-hdm-muted);
+  margin: 4px 0 0;
+}
+
+.pub-live-conf {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.pub-live-conf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  margin-bottom: 8px;
+}
+
+.pub-live-conf-head strong {
+  font-family: var(--font-display);
+  color: var(--color-hdm-brown);
+  white-space: nowrap;
+}
+
+.pub-bar {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(216, 138, 0, 0.12);
+  overflow: hidden;
+}
+
+.pub-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  transition: width 0.4s var(--hdm-ease);
+}
+
+.pub-live-flags {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.18);
+}
+
+.pub-live-flags-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-sold);
+  margin-bottom: 8px;
+}
+
+.pub-live-flags ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.pub-live-flags li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #8c2230;
+}
+
+/* ---------- Secciones ---------- */
+
+.pub-step {
+  border: 1px solid var(--hdm-line);
+  border-radius: var(--hdm-r, 26px);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  padding: clamp(18px, 3vw, 24px);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pub-step legend {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+  padding: 0 10px;
+  margin-left: -10px;
+}
+
+.pub-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+/* ---------- Campos ---------- */
+
+.pub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pub-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.pub-field input[type="text"],
+.pub-field input[type="number"],
+.pub-field input[type="tel"],
+.pub-field input[type="email"],
+.pub-field input:not([type]),
+.pub-field select,
+.pub-field textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 16px; /* 16px evita que iOS haga zoom al enfocar */
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pub-field input:focus,
+.pub-field select:focus,
+.pub-field textarea:focus {
+  background: #ffffff;
+  border-color: var(--color-hdm-orange);
+}
+
+.pub-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.pub-field input[type="file"] {
+  padding: 11px;
+  font-size: 14px;
+}
+
+.pub-help {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
+}
+
+.pub-field-error {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-hdm-sold);
+}
+
+.pub-field.has-error input,
+.pub-field.has-error select,
+.pub-field.has-error textarea {
+  border-color: var(--color-hdm-sold);
+}
+
+.pub-count {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-hdm-sand);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-hdm-brown);
+}
+
+/* ---------- Casillas ---------- */
+
+.pub-checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+}
+
+.pub-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line);
+  background: #fffdf8;
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pub-check:hover {
+  background: #ffffff;
+  border-color: var(--hdm-line-strong);
+}
+
+.pub-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+}
+
+/* Las casillas de defecto se tiñen al marcarse: marcar aquí es
+   declarar un problema, y debe verse distinto a marcar "sí funciona". */
+.pub-checks--negative .pub-check:has(input:checked) {
+  background: #fff5f5;
+  border-color: rgba(255, 59, 77, 0.28);
+}
+
+.pub-checks--negative .pub-check input {
+  accent-color: var(--color-hdm-sold);
+}
+
+/* ---------- Declaración y envío ---------- */
+
+.pub-declaration {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--hdm-line-strong);
+  background: #fffdf8;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-brown);
+  cursor: pointer;
+}
+
+.pub-declaration.has-error {
+  border-color: var(--color-hdm-sold);
+  background: #fff5f5;
+}
+
+.pub-declaration input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+}
+
+.pub-error {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.22);
+  color: #8c2230;
+  font-size: 14px;
+}
+
+.pub-error strong {
+  font-family: var(--font-display);
+}
+
+.pub-submit {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+.pub-submit:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.pub-done {
+  padding: clamp(28px, 6vw, 48px);
+  border-radius: var(--hdm-r-lg, 30px);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  text-align: center;
+}
+
+.pub-done h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 900;
+  margin: 0 0 12px;
+}
+
+.pub-done p {
+  color: var(--color-hdm-muted);
+  line-height: 1.7;
+  max-width: 46ch;
+  margin: 0 auto;
+}
