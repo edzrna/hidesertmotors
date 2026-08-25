@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
-import { getLevelIcon, type LevelKey, type Locale, type TitleStatusKey } from "@/lib/hdm";
+import type { LevelKey, Locale, TitleStatusKey } from "@/lib/hdm";
+import { getLevelIcon } from "@/lib/listing-score";
 
 /**
  * Lectura de anuncios publicados.
