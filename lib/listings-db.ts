@@ -166,7 +166,7 @@ export async function getListingById(id: string, locale: Locale) {
 
   try {
     const sql = getSql();
-    if (!sql) return [];
+    if (!sql) return null;
 
     const rows = await sql`
       SELECT
