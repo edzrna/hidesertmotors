@@ -17,7 +17,21 @@ import {
  * porque es el punto de contacto del anuncio.
  */
 
-const sql = neon(process.env.DATABASE_URL!);
+/**
+ * La conexión se crea DENTRO de cada consulta, no al cargar el módulo.
+ *
+ * `neon()` lanza si la cadena viene vacía. Hecho arriba, ese error
+ * ocurre al importar el archivo — antes de cualquier try/catch — y
+ * tumba la página entera con un 500. Aquí queda dentro del try.
+ */
+function getSql() {
+  const url = process.env.DATABASE_URL;
+  if (!url) {
+    console.error("DATABASE_URL no está definida");
+    return null;
+  }
+  return neon(url);
+}
 
 export interface PublicListing {
   id: string;
@@ -117,6 +131,9 @@ function mapRow(row: any, locale: Locale): PublicListing {
 
 export async function getPublishedListings(locale: Locale) {
   try {
+    const sql = getSql();
+    if (!sql) return [];
+
     const rows = await sql`
       SELECT
         id, year, make, model, miles, price,
@@ -148,6 +165,9 @@ export async function getListingById(id: string, locale: Locale) {
   if (!Number.isInteger(numeric) || numeric <= 0) return null;
 
   try {
+    const sql = getSql();
+    if (!sql) return [];
+
     const rows = await sql`
       SELECT
         id, year, make, model, miles, price,
