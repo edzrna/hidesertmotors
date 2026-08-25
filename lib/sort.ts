@@ -3,7 +3,7 @@ import type { Locale, ScoredVehicle } from "./hdm";
 /**
  * Ordenamiento y filtro del inventario.
  * Igual que hdm.ts: lógica pura, sin JSX, para que sirva en cualquier vista.
- */
+ */ 
 
 export const SORT_KEYS = [
   "score_desc",
