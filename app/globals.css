@@ -2177,3 +2177,50 @@ body {
   font-size: 13px;
   color: var(--color-hdm-muted);
 }
+
+/* ============================================================
+   TABLERO DE ANUNCIOS
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+/* Aviso de qué es el sitio, dentro del hero oscuro. */
+.hdm-board-note {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(245, 197, 66, 0.08);
+  border: 1px solid rgba(245, 197, 66, 0.16);
+  color: #e7d7b4;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Panel de "todavía no hay anuncios" */
+.hdm-empty-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
+}
+
+/* ---------- Banderas ---------- */
+
+.hdm-card-flags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+/* Detalle técnico del fallo de envío. Pega esto al final de globals.css */
+
+.pub-error-detail {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  word-break: break-word;
+  opacity: 0.85;
+}
