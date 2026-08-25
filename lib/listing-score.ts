@@ -116,16 +116,6 @@ function clamp(value: number, min: number, max: number) {
    COMPONENTES
    ============================================================ */
 
-export function getLevelIcon(level: LevelKey): string {
-  const icons: Record<LevelKey, string> = {
-    good_option: "/icons/good-option.svg",
-    good_deal: "/icons/good-deal.svg",
-    great_buy: "/icons/great-buy.svg",
-    best_option: "/icons/best-option.svg",
-  };
-  return icons[level];
-}
-
 function titleScore(status: TitleStatus) {
   const map: Record<TitleStatus, number> = {
     clean: 100,
