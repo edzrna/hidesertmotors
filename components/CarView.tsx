@@ -5,31 +5,27 @@ import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
-import {
-  formatMiles,
-  localePath,
-  pick,
-  type Locale,
-  type ScoredVehicle,
-} from "@/lib/hdm";
-import { PRIMARY_WHATSAPP, PRIMARY_WHATSAPP_URL, SITE_URL } from "@/lib/site";
+import type { ListingDictionary } from "@/i18n/listing";
+import { formatMiles, localePath, type Locale } from "@/lib/hdm";
+import { sellerWhatsAppUrl, type PublicListing } from "@/lib/listings-db";
+import { SITE_URL } from "@/lib/site";
 
 export default function CarView({
   locale,
   dict,
-  vehicle,
+  t,
+  listing,
 }: {
   locale: Locale;
   dict: Dictionary;
-  vehicle: ScoredVehicle;
+  t: ListingDictionary;
+  listing: PublicListing;
 }) {
-  const gallery = vehicle.gallery?.length ? vehicle.gallery : [vehicle.image];
-  const path = localePath(locale, `/car/${vehicle.id}`);
-
+  const path = localePath(locale, `/car/${listing.id}`);
   const shareUrl =
     typeof window === "undefined" ? `${SITE_URL}${path}` : window.location.href;
 
-  const shareText = `${vehicle.name} - ${vehicle.priceText} | HI DESERT MOTORS`;
+  const gallery = listing.gallery.length ? listing.gallery : [listing.image];
 
   return (
     <main className="hdm-shell hdm-detail">
@@ -43,74 +39,122 @@ export default function CarView({
         <div className="hdm-panel hdm-detail-media">
           <Gallery
             images={gallery}
-            alt={vehicle.name}
+            alt={listing.name}
             dict={dict}
-            sold={vehicle.sold}
+            sold={listing.sold}
             size="detail"
           />
+
+          {/* El anuncio del vendedor, tal como lo escribió. */}
+          {listing.description && (
+            <section className="hdm-seller-note">
+              <div className="hdm-eyebrow">{dict.vehicle.sellerSays}</div>
+              <p>{listing.description}</p>
+            </section>
+          )}
         </div>
 
         <div className="hdm-panel hdm-detail-info">
           <div className="hdm-kicker">{dict.vehicle.sheet}</div>
 
-          <h1 className="hdm-h2">{vehicle.name}</h1>
+          <h1 className="hdm-h2">{listing.name}</h1>
 
-          <div className="hdm-price">{vehicle.priceText}</div>
+          <div className="hdm-price">{listing.priceText}</div>
 
-          {vehicle.sold && (
+          {listing.sold && (
             <div className="hdm-sold-text">{dict.vehicle.soldNotice}</div>
           )}
 
           <div className="hdm-score-row">
             <HDMRing
-              score={vehicle.score}
-              label={`${dict.hero.pill}: ${vehicle.score}/100`}
+              score={listing.score}
+              label={`${dict.hero.pill}: ${listing.score}/100`}
               small
             />
             <div>
-              <div className="hdm-score-level">{dict.levels[vehicle.levelKey]}</div>
-              <div className="hdm-score-caption">{dict.vehicle.scoreCaption}</div>
+              <div className="hdm-score-level">
+                {dict.levels[listing.levelKey]}
+              </div>
+              <div className="hdm-score-caption">
+                {dict.vehicle.declaredCaption}
+              </div>
             </div>
           </div>
 
-          <p className="hdm-detail-text">{pick(vehicle.details, locale)}</p>
+          {/* Aviso de origen del dato. Va junto al número, no al pie:
+              quien ve la calificación tiene que ver de dónde sale. */}
+          <p className="hdm-declared">{t.score.declaredBy}</p>
+
+          <div className="hdm-conf">
+            <div className="hdm-conf-head">
+              <span>{t.score.confidence}</span>
+              <strong>
+                {t.score[listing.confidenceLevel]} · {listing.confidence}
+              </strong>
+            </div>
+            <div className="pub-bar">
+              <span style={{ width: `${listing.confidence}%` }} />
+            </div>
+          </div>
+
+          {listing.flags.length > 0 && (
+            <div className="hdm-flags">
+              <div className="hdm-flags-title">{t.flags.title}</div>
+              <ul>
+                {listing.flags.map((flag) => (
+                  <li key={flag}>
+                    {t.flags[flag as keyof typeof t.flags] ?? flag}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <dl className="hdm-info-grid">
-            <InfoBox label={dict.specs.year} value={String(vehicle.year)} />
+            <InfoBox label={dict.specs.year} value={String(listing.year)} />
             <InfoBox
               label={dict.specs.miles}
-              value={formatMiles(vehicle.miles, locale)}
+              value={formatMiles(listing.miles, locale)}
             />
             <InfoBox
               label={dict.specs.title}
-              value={dict.titles[vehicle.titleStatus]}
+              value={dict.titles[listing.titleStatus]}
             />
-            <InfoBox label={dict.specs.owners} value={String(vehicle.owners)} />
-            <InfoBox label={dict.specs.accidents} value={String(vehicle.accidents)} />
+            <InfoBox label={dict.specs.owners} value={String(listing.owners)} />
             <InfoBox
-              label={dict.specs.condition}
-              value={dict.conditions[vehicle.condition]}
+              label={dict.specs.accidents}
+              value={String(listing.accidents)}
             />
           </dl>
 
-          {!vehicle.sold && (
-            <a
-              href={`${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
-                fill(dict.vehicle.whatsappMessage, { name: vehicle.name })
-              )}`}
-              target="_blank"
-              rel="noreferrer"
-              className="hdm-btn hdm-btn--primary hdm-btn--block"
-            >
-              {dict.vehicle.contactWhatsapp}
-            </a>
+          {listing.knownIssues && (
+            <section className="hdm-known">
+              <div className="hdm-eyebrow">{t.fields.knownIssues}</div>
+              <p>{listing.knownIssues}</p>
+            </section>
           )}
 
-          <ShareButtons url={shareUrl} text={shareText} dict={dict} extended />
+          {!listing.sold && (
+            <>
+              <a
+                href={sellerWhatsAppUrl(
+                  listing.sellerPhone,
+                  fill(dict.vehicle.whatsappMessage, { name: listing.name })
+                )}
+                target="_blank"
+                rel="noreferrer"
+                className="hdm-btn hdm-btn--primary hdm-btn--block"
+              >
+                {dict.vehicle.contactSeller}
+              </a>
 
-          <p className="hdm-detail-phone">
-            {dict.vehicle.mainWhatsapp}: {PRIMARY_WHATSAPP}
-          </p>
+              <p className="hdm-seller-line">
+                {fill(dict.vehicle.soldBy, { name: listing.sellerName })}
+              </p>
+            </>
+          )}
+
+          <ShareButtons url={shareUrl} text={listing.name} dict={dict} extended />
         </div>
       </div>
     </main>

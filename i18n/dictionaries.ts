@@ -28,7 +28,9 @@ const es = {
     titleTop: "Encuentra el auto correcto.",
     titleAccent: "Sin adivinar.",
     lead: "Cada vehículo recibe una calificación del 60 al 100 según su condición, millas, año, historial y precio contra el mercado.",
-    meterLabel: "Nivel del inventario",
+    meterLabel: "Nivel de los anuncios",
+    boardNotice:
+      "Hi Desert Motors es un tablero de anuncios. No compramos, vendemos ni intermediamos: cada auto lo publica su dueño y tú tratas directamente con él. No inspeccionamos los vehículos.",
     best: "Mejor evaluado del inventario",
     points: "puntos",
   },
@@ -51,7 +53,7 @@ const es = {
   titles: {
     clean: "Limpio",
     rebuilt: "Reconstruido",
-    salvage: "Salvamento",
+    salvage: "Salvage",
   } satisfies Record<TitleStatusKey, string>,
 
   vehicle: {
@@ -64,6 +66,10 @@ const es = {
     soldNotice: "ESTE VEHÍCULO YA FUE VENDIDO",
     unavailable: "No disponible",
     scoreCaption: "Calificación HDM sobre 100",
+    declaredCaption: "Según lo declarado por el vendedor",
+    contactSeller: "Contactar al vendedor",
+    sellerSays: "Lo que dice el vendedor",
+    soldBy: "Publicado por {name}",
     whatsappMessage: "Hola, me interesa el {name}",
     contactWhatsapp: "Contactar por WhatsApp",
     mainWhatsapp: "WhatsApp principal",
@@ -107,6 +113,9 @@ const es = {
     hideSold: "Ocultar vendidos",
     count: "{n} de {total} vehículos",
     empty: "No hay vehículos con esos filtros.",
+    emptyTitle: "Todavía no hay anuncios",
+    emptyBody:
+      "Sé el primero. Publica tu auto, recibe su calificación HDM y aparece aquí.",
     reset: "Quitar filtros",
     sort: {
       score_desc: "Mejor calificación HDM",
@@ -119,10 +128,28 @@ const es = {
   },
 
 
+  flags: {
+    title_salvage: "Título Salvage",
+    title_rebuilt: "Título reconstruido",
+    title_lien: "Con gravamen",
+    title_missing: "Sin título en mano",
+    transmission: "Transmisión patina",
+    overheating: "Se sobrecalienta",
+    starting: "No siempre arranca",
+    check_engine: "Check engine encendido",
+    brakes: "Frenos irregulares",
+    rust: "Tiene óxido",
+    multiple_accidents: "2+ accidentes",
+    high_miles: "Millaje muy alto",
+    no_smog: "Sin smog vigente",
+  },
+
   footer: {
-    tagline: "Vehículos usados seleccionados con una evaluación clara.",
+    tagline: "Anuncios de autos usados con una calificación clara.",
     city: "Hesperia, California",
-    contact: "Redes de contacto",
+    contact: "Contacto",
+    noPhoneNotice:
+      "No tenemos teléfono de ventas. Cada anuncio trae el contacto directo de su vendedor. Este correo es para dudas del sitio, reportar un anuncio o solicitudes de privacidad.",
     email: "Enviar correo",
   },
 };
@@ -152,7 +179,9 @@ const en: Dictionary = {
     titleTop: "Find the right car.",
     titleAccent: "No guesswork.",
     lead: "Every vehicle gets a 60 to 100 rating based on its condition, mileage, year, history and price against the market.",
-    meterLabel: "Inventory level",
+    meterLabel: "Listings level",
+    boardNotice:
+      "Hi Desert Motors is a listings board. We do not buy, sell, or broker: each car is posted by its owner and you deal directly with them. We do not inspect vehicles.",
     best: "Top rated in stock",
     points: "points",
   },
@@ -188,6 +217,10 @@ const en: Dictionary = {
     soldNotice: "THIS VEHICLE HAS BEEN SOLD",
     unavailable: "Unavailable",
     scoreCaption: "HDM rating out of 100",
+    declaredCaption: "Based on what the seller declared",
+    contactSeller: "Contact the seller",
+    sellerSays: "What the seller says",
+    soldBy: "Posted by {name}",
     whatsappMessage: "Hi, I'm interested in the {name}",
     contactWhatsapp: "Contact on WhatsApp",
     mainWhatsapp: "Main WhatsApp",
@@ -231,6 +264,9 @@ const en: Dictionary = {
     hideSold: "Hide sold",
     count: "{n} of {total} vehicles",
     empty: "No vehicles match those filters.",
+    emptyTitle: "No listings yet",
+    emptyBody:
+      "Be the first. List your car, get its HDM rating, and appear here.",
     reset: "Clear filters",
     sort: {
       score_desc: "Best HDM rating",
@@ -243,10 +279,28 @@ const en: Dictionary = {
   },
 
 
+  flags: {
+    title_salvage: "Salvage title",
+    title_rebuilt: "Rebuilt title",
+    title_lien: "Has a lien",
+    title_missing: "Title not in hand",
+    transmission: "Transmission slips",
+    overheating: "Overheats",
+    starting: "Does not always start",
+    check_engine: "Check engine on",
+    brakes: "Brakes not normal",
+    rust: "Has rust",
+    multiple_accidents: "2+ accidents",
+    high_miles: "Very high mileage",
+    no_smog: "No current smog",
+  },
+
   footer: {
-    tagline: "Hand-picked used vehicles with a clear evaluation.",
+    tagline: "Used car listings with a clear rating.",
     city: "Hesperia, California",
-    contact: "Get in touch",
+    contact: "Contact",
+    noPhoneNotice:
+      "We have no sales line. Every listing carries its seller's direct contact. This email is for site questions, reporting a listing, or privacy requests.",
     email: "Send an email",
   },
 };

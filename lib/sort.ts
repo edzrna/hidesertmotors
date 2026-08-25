@@ -1,4 +1,5 @@
-import type { Locale, ScoredVehicle } from "./hdm";
+import type { Locale } from "./hdm";
+import type { PublicListing } from "./listings-db";
 
 /**
  * Ordenamiento y filtro del inventario.
@@ -24,45 +25,21 @@ export function isSortKey(value: string): value is SortKey {
 
 /* ============================================================
    MARCA
-   Los nombres vienen como "2024 GMC Canyon AT4X": primero el año,
-   luego la marca. Quitamos el año y tomamos la marca de lo que queda.
-
-   Las marcas de dos palabras hay que reconocerlas a mano, porque
-   partir por espacios dejaría "Land" y "Alfa" sueltas.
-
-   Si algún día agregas un campo `make` a vehicles.ts, esta función
-   lo usa y deja de adivinar.
+   Ya viene como columna propia del anuncio: el vendedor la eligió
+   de una lista cerrada, así que no hay que deducirla del nombre.
    ============================================================ */
 
-const TWO_WORD_MAKES = [
-  "land rover",
-  "alfa romeo",
-  "aston martin",
-  "range rover",
-];
-
-export function getMake(vehicle: ScoredVehicle): string {
-  const explicit = (vehicle as { make?: string }).make;
-  if (explicit) return explicit;
-
-  // Quita el año inicial si lo trae
-  const withoutYear = vehicle.name.replace(/^\s*\d{4}\s+/, "").trim();
-  const lower = withoutYear.toLowerCase();
-
-  const twoWord = TWO_WORD_MAKES.find((make) => lower.startsWith(make));
-  if (twoWord) {
-    return withoutYear.slice(0, twoWord.length);
-  }
-
-  return withoutYear.split(/\s+/)[0] || vehicle.name;
+export function getMake(listing: PublicListing): string {
+  return listing.make;
 }
 
-/** Marcas presentes en el inventario, ordenadas alfabéticamente */
-export function getMakes(vehicles: ScoredVehicle[]): string[] {
+/** Marcas presentes en los anuncios, ordenadas alfabéticamente */
+export function getMakes(listings: PublicListing[]): string[] {
   const seen = new Map<string, string>();
 
-  vehicles.forEach((vehicle) => {
-    const make = getMake(vehicle);
+  listings.forEach((listing) => {
+    const make = listing.make?.trim();
+    if (!make) return;
     const key = make.toLowerCase();
     if (!seen.has(key)) seen.set(key, make);
   });
@@ -75,14 +52,15 @@ export function getMakes(vehicles: ScoredVehicle[]): string[] {
    ============================================================ */
 
 function compareBy(key: SortKey, locale: Locale) {
-  return (a: ScoredVehicle, b: ScoredVehicle) => {
+  return (a: PublicListing, b: PublicListing) => {
     switch (key) {
       case "score_desc":
         return b.score - a.score;
       case "price_asc":
-        return a.priceValue - b.priceValue;
+        // Los anuncios sin precio van al final en ambos sentidos.
+        return (a.priceValue ?? Infinity) - (b.priceValue ?? Infinity);
       case "price_desc":
-        return b.priceValue - a.priceValue;
+        return (b.priceValue ?? -Infinity) - (a.priceValue ?? -Infinity);
       case "year_desc":
         return b.year - a.year;
       case "miles_asc":
@@ -96,7 +74,7 @@ function compareBy(key: SortKey, locale: Locale) {
 }
 
 export function sortVehicles(
-  vehicles: ScoredVehicle[],
+  vehicles: PublicListing[],
   key: SortKey,
   locale: Locale
 ) {
@@ -118,7 +96,7 @@ export function sortVehicles(
    ============================================================ */
 
 export function applyInventoryView(
-  vehicles: ScoredVehicle[],
+  vehicles: PublicListing[],
   {
     sort,
     make,

@@ -58,6 +58,10 @@ export async function POST(request: Request) {
       photoCount: Array.isArray(body.photos) ? body.photos.length : 0,
     },
     knownIssues: String(body.knownIssues ?? "").trim().slice(0, 2000),
+    // Texto plano. Nunca HTML: el anuncio se muestra en una página
+    // pública y aceptar marcado de un desconocido es abrir la puerta
+    // a inyección de scripts.
+    description: String(body.description ?? "").trim().slice(0, 1200),
   };
 
   const check = validateListing(listing);
@@ -95,7 +99,7 @@ export async function POST(request: Request) {
     INSERT INTO listings (
       year, make, model, miles, price,
       title_status, owners, reported_accidents,
-      defects, documentation, known_issues,
+      defects, documentation, known_issues, description,
       photos, seller_name, seller_phone, seller_email,
       score, level_key, confidence, confidence_level, flags,
       locale, status
@@ -105,7 +109,7 @@ export async function POST(request: Request) {
       ${listing.titleStatus}, ${listing.owners}, ${listing.reportedAccidents},
       ${JSON.stringify(listing.defects)},
       ${JSON.stringify(listing.documentation)},
-      ${listing.knownIssues},
+      ${listing.knownIssues}, ${listing.description},
       ${JSON.stringify(photos)},
       ${name}, ${phone},
       ${body.seller?.email ? String(body.seller.email).slice(0, 120) : null},

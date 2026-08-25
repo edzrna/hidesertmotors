@@ -1,10 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/lib/hdm";
+import {
+  ACCIDENT_OPTIONS,
+  DESCRIPTION_MAX,
+  MAKES,
+  MILE_STEPS,
+  OTHER_MAKE,
+  OWNER_OPTIONS,
+  QUICK_EMOJI,
+  getYears,
+} from "@/lib/vehicle-data";
 import {
   scoreListing,
   validateListing,
@@ -13,15 +23,6 @@ import {
   type TitleStatus,
   type TireCondition,
 } from "@/lib/listing-score";
-
-/**
- * Formulario de publicación.
- *
- * La pieza importante es que la calificación se recalcula en cada
- * cambio y está siempre a la vista. El vendedor ve exactamente qué le
- * cuesta cada defecto y qué le suma cada documento — que es la forma
- * de que declarar la verdad sea la opción atractiva y no un castigo.
- */
 
 const DEFECT_KEYS = [
   "checkEngineOn",
@@ -81,6 +82,8 @@ const EMPTY_DEFECTS: DefectReport = {
   tires: "good",
 };
 
+const MIN_PHOTOS = 3;
+
 export default function ListingForm({
   locale,
   dict,
@@ -93,6 +96,7 @@ export default function ListingForm({
   const [form, setForm] = useState({
     year: "",
     make: "",
+    otherMake: "",
     model: "",
     miles: "",
     price: "",
@@ -100,6 +104,7 @@ export default function ListingForm({
     owners: "1",
     reportedAccidents: "0",
     knownIssues: "",
+    description: "",
     vin: "",
     hasServiceRecords: false,
     smogCurrent: false,
@@ -116,6 +121,9 @@ export default function ListingForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
 
+  const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const years = useMemo(() => getYears(), []);
+
   function set<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
@@ -127,12 +135,57 @@ export default function ListingForm({
     setDefects((prev) => ({ ...prev, [key]: value }));
   }
 
-  /** El anuncio tal como lo evaluaría el servidor, con lo que hay ahora. */
+  /**
+   * Las fotos se ACUMULAN, no se reemplazan.
+   *
+   * En el celular la gente suele elegirlas de una en una. Con la
+   * versión anterior cada selección borraba la anterior y nunca se
+   * llegaba al mínimo de tres, sin que quedara claro por qué.
+   */
+  function addPhotos(files: FileList | null) {
+    if (!files) return;
+    const incoming = Array.from(files);
+
+    setPhotos((prev) => {
+      const seen = new Set(prev.map((f) => `${f.name}:${f.size}`));
+      const nuevas = incoming.filter((f) => !seen.has(`${f.name}:${f.size}`));
+      return [...prev, ...nuevas].slice(0, 24);
+    });
+  }
+
+  function removePhoto(index: number) {
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  /** Inserta el emoji donde está el cursor, no al final. */
+  function insertEmoji(emoji: string) {
+    const el = descriptionRef.current;
+    if (!el) {
+      set("description", form.description + emoji);
+      return;
+    }
+
+    const start = el.selectionStart ?? form.description.length;
+    const end = el.selectionEnd ?? start;
+    const next =
+      form.description.slice(0, start) + emoji + form.description.slice(end);
+
+    set("description", next.slice(0, DESCRIPTION_MAX));
+
+    requestAnimationFrame(() => {
+      el.focus();
+      el.setSelectionRange(start + emoji.length, start + emoji.length);
+    });
+  }
+
+  const resolvedMake =
+    form.make === OTHER_MAKE ? form.otherMake.trim() : form.make;
+
   const draft: Listing = useMemo(
     () => ({
       id: "draft",
       year: Number(form.year) || new Date().getFullYear(),
-      make: form.make,
+      make: resolvedMake,
       model: form.model,
       miles: Number(form.miles) || 0,
       titleStatus: form.titleStatus,
@@ -148,35 +201,53 @@ export default function ListingForm({
         photoCount: photos.length,
       },
       knownIssues: form.knownIssues,
+      description: form.description,
     }),
-    [form, defects, photos.length]
+    [form, resolvedMake, defects, photos.length]
   );
 
   const result = useMemo(() => scoreListing(draft), [draft]);
 
+  /** Nombres legibles de lo que falta, para el aviso de error. */
+  function collectErrors() {
+    const found: Record<string, string> = {};
+
+    if (!form.year) found.year = t.fields.year;
+    if (!resolvedMake) found.make = t.fields.make;
+    if (!form.model.trim()) found.model = t.fields.model;
+    if (!form.miles) found.miles = t.fields.miles;
+    if (!form.knownIssues.trim()) found.knownIssues = t.fields.knownIssues;
+    if (!form.description.trim()) found.description = t.fields.description;
+    if (photos.length < MIN_PHOTOS) found.photos = t.fields.photos;
+    if (!form.name.trim()) found.name = t.fields.name;
+    if (!form.phone.trim()) found.phone = t.fields.phone;
+    if (form.vin && !/^[A-HJ-NPR-Z0-9]{17}$/i.test(form.vin))
+      found.vin = t.fields.vin;
+    if (!form.declaration) found.declaration = t.form.declaration.slice(0, 40);
+
+    return found;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const check = validateListing(draft);
-    const nextErrors = { ...check.errors };
-    if (!form.declaration) nextErrors.declaration = "required";
-    if (!form.name.trim()) nextErrors.name = "required";
-    if (!form.phone.trim()) nextErrors.phone = "required";
-    if (form.vin && !/^[A-HJ-NPR-Z0-9]{17}$/i.test(form.vin))
-      nextErrors.vin = "invalid";
+    const found = collectErrors();
+    setErrors(found);
 
-    setErrors(nextErrors);
-    if (Object.keys(nextErrors).length > 0) {
-      document
-        .querySelector(".pub-error")
-        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (Object.keys(found).length > 0) {
+      // El aviso aparece en el mismo render, así que hay que esperar
+      // un cuadro antes de buscarlo en el DOM.
+      requestAnimationFrame(() => {
+        document
+          .querySelector(".pub-error")
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
       return;
     }
 
     setStatus("sending");
 
     try {
-      // Las fotos van primero: el anuncio guarda sus URLs, no los archivos.
       const photoUrls: string[] = [];
       for (const file of photos) {
         const body = new FormData();
@@ -207,7 +278,7 @@ export default function ListingForm({
       setStatus("sent");
     } catch {
       setStatus("idle");
-      setErrors({ submit: "failed" });
+      setErrors({ submit: t.form.errorTitle });
     }
   }
 
@@ -220,13 +291,13 @@ export default function ListingForm({
     );
   }
 
-  const confidenceLabel = t.score[result.confidenceLevel];
+  const errorList = Object.values(errors);
+  const charsLeft = DESCRIPTION_MAX - form.description.length;
 
   return (
     <form className="pub-form" onSubmit={handleSubmit} noValidate>
       <RingGradientDefs />
 
-      {/* La calificación viaja con el usuario mientras baja por el formulario. */}
       <aside className="pub-live">
         <div className="pub-live-ring">
           <HDMRing
@@ -243,7 +314,7 @@ export default function ListingForm({
           <div className="pub-live-conf-head">
             <span>{t.score.confidence}</span>
             <strong>
-              {confidenceLabel} · {result.confidence}
+              {t.score[result.confidenceLevel]} · {result.confidence}
             </strong>
           </div>
           <div className="pub-bar">
@@ -271,43 +342,75 @@ export default function ListingForm({
 
           <div className="pub-row">
             <Field label={t.fields.year} error={errors.year && t.form.required}>
-              <input
-                type="number"
-                inputMode="numeric"
+              <select
                 value={form.year}
                 onChange={(e) => set("year", e.target.value)}
-              />
-            </Field>
-
-            <Field label={t.fields.make} error={errors.make && t.form.required}>
-              <input
-                value={form.make}
-                onChange={(e) => set("make", e.target.value)}
-              />
+              >
+                <option value="">{t.fields.selectPlaceholder}</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </Field>
 
             <Field
-              label={t.fields.model}
-              error={errors.model && t.form.required}
+              label={t.fields.make}
+              help={t.fields.makeHelp}
+              error={errors.make && t.form.required}
             >
-              <input
-                value={form.model}
-                onChange={(e) => set("model", e.target.value)}
-              />
+              <select
+                value={form.make}
+                onChange={(e) => set("make", e.target.value)}
+              >
+                <option value="">{t.fields.selectPlaceholder}</option>
+                {MAKES.map((make) => (
+                  <option key={make} value={make}>
+                    {make}
+                  </option>
+                ))}
+                <option value={OTHER_MAKE}>{t.fields.otherMake}</option>
+              </select>
             </Field>
           </div>
+
+          {form.make === OTHER_MAKE && (
+            <Field label={t.fields.otherMakeLabel}>
+              <input
+                value={form.otherMake}
+                onChange={(e) => set("otherMake", e.target.value)}
+              />
+            </Field>
+          )}
+
+          <Field label={t.fields.model} error={errors.model && t.form.required}>
+            <input
+              value={form.model}
+              onChange={(e) => set("model", e.target.value)}
+              placeholder="Silverado 1500, Civic EX, F-150…"
+            />
+          </Field>
 
           <div className="pub-row">
             <Field
               label={t.fields.miles}
               error={errors.miles && t.form.required}
             >
-              <input
-                type="number"
-                inputMode="numeric"
+              <select
                 value={form.miles}
                 onChange={(e) => set("miles", e.target.value)}
-              />
+              >
+                <option value="">{t.fields.selectPlaceholder}</option>
+                {MILE_STEPS.map((step, index) => (
+                  <option key={step} value={step}>
+                    {step.toLocaleString(locale === "en" ? "en-US" : "es-MX")}
+                    {index === MILE_STEPS.length - 1
+                      ? ` ${t.fields.milesOver}`
+                      : ""}
+                  </option>
+                ))}
+              </select>
             </Field>
 
             <Field label={t.fields.price}>
@@ -340,23 +443,29 @@ export default function ListingForm({
 
           <div className="pub-row">
             <Field label={t.fields.owners}>
-              <input
-                type="number"
-                inputMode="numeric"
-                min={1}
+              <select
                 value={form.owners}
                 onChange={(e) => set("owners", e.target.value)}
-              />
+              >
+                {OWNER_OPTIONS.map((n) => (
+                  <option key={n} value={n}>
+                    {n === 5 ? `${n}+` : n}
+                  </option>
+                ))}
+              </select>
             </Field>
 
             <Field label={t.fields.accidents}>
-              <input
-                type="number"
-                inputMode="numeric"
-                min={0}
+              <select
                 value={form.reportedAccidents}
                 onChange={(e) => set("reportedAccidents", e.target.value)}
-              />
+              >
+                {ACCIDENT_OPTIONS.map((n) => (
+                  <option key={n} value={n}>
+                    {n === 3 ? `${n}+` : n}
+                  </option>
+                ))}
+              </select>
             </Field>
           </div>
         </fieldset>
@@ -412,10 +521,49 @@ export default function ListingForm({
             error={errors.knownIssues && t.form.required}
           >
             <textarea
-              rows={4}
+              rows={3}
               value={form.knownIssues}
               onChange={(e) => set("knownIssues", e.target.value)}
             />
+          </Field>
+        </fieldset>
+
+        {/* ---------- Tu anuncio ---------- */}
+        <fieldset className="pub-step">
+          <legend>{t.fields.description}</legend>
+
+          <Field
+            label={t.fields.description}
+            help={t.fields.descriptionHelp}
+            error={errors.description && t.form.required}
+          >
+            <div className="pub-emoji">
+              {QUICK_EMOJI.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => insertEmoji(emoji)}
+                  aria-label={emoji}
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+
+            <textarea
+              ref={descriptionRef}
+              rows={9}
+              maxLength={DESCRIPTION_MAX}
+              value={form.description}
+              placeholder={t.fields.descriptionPlaceholder}
+              onChange={(e) => set("description", e.target.value)}
+            />
+
+            <span
+              className={`pub-chars${charsLeft < 80 ? " is-low" : ""}`}
+            >
+              {charsLeft} {t.form.charsLeft}
+            </span>
           </Field>
         </fieldset>
 
@@ -460,14 +608,41 @@ export default function ListingForm({
             help={t.fields.photosHelp}
             error={errors.photos && t.form.minPhotos}
           >
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => setPhotos(Array.from(e.target.files ?? []))}
-            />
+            <label className="pub-file">
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  addPhotos(e.target.files);
+                  // Permite volver a elegir el mismo archivo si se quitó.
+                  e.target.value = "";
+                }}
+              />
+              <span>{t.form.addPhotos}</span>
+            </label>
+
             {photos.length > 0 && (
-              <span className="pub-count">{photos.length}</span>
+              <>
+                <span
+                  className={`pub-count${
+                    photos.length < MIN_PHOTOS ? " is-low" : ""
+                  }`}
+                >
+                  {photos.length} {t.form.photosSelected}
+                </span>
+
+                <ul className="pub-photos">
+                  {photos.map((file, index) => (
+                    <li key={`${file.name}-${index}`}>
+                      <span>{file.name}</span>
+                      <button type="button" onClick={() => removePhoto(index)}>
+                        {t.form.removePhoto}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </Field>
         </fieldset>
@@ -506,9 +681,7 @@ export default function ListingForm({
         </fieldset>
 
         <label
-          className={`pub-declaration${
-            errors.declaration ? " has-error" : ""
-          }`}
+          className={`pub-declaration${errors.declaration ? " has-error" : ""}`}
         >
           <input
             type="checkbox"
@@ -518,10 +691,17 @@ export default function ListingForm({
           <span>{t.form.declaration}</span>
         </label>
 
-        {Object.keys(errors).length > 0 && (
+        {/* El aviso nombra lo que falta. "Revisa los campos marcados"
+            obliga a recorrer el formulario entero adivinando. */}
+        {errorList.length > 0 && (
           <div className="pub-error" role="alert">
             <strong>{t.form.errorTitle}</strong>
             <span>{t.form.errorBody}</span>
+            <ul>
+              {errorList.map((label) => (
+                <li key={label}>{label}</li>
+              ))}
+            </ul>
           </div>
         )}
 

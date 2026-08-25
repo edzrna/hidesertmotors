@@ -11,63 +11,57 @@ import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
   MOOD_SCALE,
-  averageScore,
   formatMiles,
   getHDMLevel,
   localePath,
-  pick,
   type Locale,
-  type ScoredVehicle,
 } from "@/lib/hdm";
+import {
+  sellerWhatsAppUrl,
+  type PublicListing,
+} from "@/lib/listings-db";
 import {
   DEFAULT_SORT,
   applyInventoryView,
   getMakes,
   type SortKey,
 } from "@/lib/sort";
-import {
-  CONTACT_EMAIL,
-  FACEBOOK_URL,
-  PRIMARY_WHATSAPP,
-  PRIMARY_WHATSAPP_URL,
-  SECONDARY_WHATSAPP,
-  SECONDARY_WHATSAPP_URL,
-  SITE_URL,
-} from "@/lib/site";
+import { CONTACT_EMAIL, FACEBOOK_URL, SITE_URL } from "@/lib/site";
 
 export default function HomeView({
   locale,
   dict,
-  vehicles,
+  listings,
 }: {
   locale: Locale;
   dict: Dictionary;
-  vehicles: ScoredVehicle[];
+  listings: PublicListing[];
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [toast, setToast] = useState("");
 
-  /* Vista del inventario: orden y filtros */
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [make, setMake] = useState<string | null>(null);
   const [hideSold, setHideSold] = useState(false);
 
-  const makes = useMemo(() => getMakes(vehicles), [vehicles]);
+  const makes = useMemo(() => getMakes(listings), [listings]);
 
-  const visibleVehicles = useMemo(
-    () => applyInventoryView(vehicles, { sort, make, hideSold, locale }),
-    [vehicles, sort, make, hideSold, locale]
+  const visible = useMemo(
+    () => applyInventoryView(listings, { sort, make, hideSold, locale }),
+    [listings, sort, make, hideSold, locale]
   );
 
-  function resetFilters() {
-    setMake(null);
-    setHideSold(false);
-  }
+  const available = useMemo(() => listings.filter((l) => !l.sold), [listings]);
 
-  const inventoryScore = averageScore(vehicles);
-  const inventoryLevel = getHDMLevel(inventoryScore);
-  const featured = vehicles[0];
-  const best = [...vehicles].sort((a, b) => b.score - a.score)[0];
+  const inventoryScore = available.length
+    ? Math.round(
+        available.reduce((sum, l) => sum + l.score, 0) / available.length
+      )
+    : 0;
+
+  const inventoryLevel = getHDMLevel(inventoryScore || 60);
+  const featured = available[0];
+  const best = [...available].sort((a, b) => b.score - a.score)[0];
 
   const otherLocale: Locale = locale === "es" ? "en" : "es";
 
@@ -78,7 +72,6 @@ export default function HomeView({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Aparición progresiva de las secciones */
   useEffect(() => {
     const targets = document.querySelectorAll(".hdm-reveal");
     if (!targets.length) return;
@@ -97,14 +90,14 @@ export default function HomeView({
 
     targets.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [visibleVehicles.length]);
+  }, [visible.length]);
 
   function showToast(message: string) {
     setToast(message);
     window.setTimeout(() => setToast(""), 2200);
   }
 
-  function vehicleUrl(id: string) {
+  function listingUrl(id: string) {
     const path = localePath(locale, `/car/${id}`);
     if (typeof window === "undefined") return `${SITE_URL}${path}`;
     return `${window.location.origin}${path}`;
@@ -149,16 +142,6 @@ export default function HomeView({
             >
               {dict.nav.publish}
             </Link>
-
-            <a
-              href={PRIMARY_WHATSAPP_URL}
-              target="_blank"
-              rel="noreferrer"
-              aria-label={dict.nav.whatsapp}
-              className="hdm-wa"
-            >
-              <WhatsAppGlyph />
-            </a>
           </nav>
         </div>
       </header>
@@ -176,32 +159,45 @@ export default function HomeView({
 
           <p className="hdm-hero-lead">{dict.hero.lead}</p>
 
-          <div className="hdm-meter">
-            <div className="hdm-meter-top">
-              <HDMRing score={inventoryScore} label={ringLabel(inventoryScore)} dark />
+          {/* Deja claro de entrada qué es el sitio. */}
+          <p className="hdm-board-note">{dict.hero.boardNotice}</p>
 
-              <div>
-                <div className="hdm-meter-label">{dict.hero.meterLabel}</div>
-                <div className="hdm-meter-level">{dict.levels[inventoryLevel]}</div>
+          {available.length > 0 && (
+            <div className="hdm-meter">
+              <div className="hdm-meter-top">
+                <HDMRing
+                  score={inventoryScore}
+                  label={ringLabel(inventoryScore)}
+                  dark
+                />
+
+                <div>
+                  <div className="hdm-meter-label">{dict.hero.meterLabel}</div>
+                  <div className="hdm-meter-level">
+                    {dict.levels[inventoryLevel]}
+                  </div>
+                </div>
+              </div>
+
+              <div className="hdm-scale">
+                {MOOD_SCALE.map((item) => (
+                  <div
+                    key={item.key}
+                    className={`hdm-scale-item${
+                      item.key === inventoryLevel ? " is-current" : ""
+                    }`}
+                  >
+                    <div className="hdm-scale-frame">
+                      <img src={item.icon} alt="" />
+                    </div>
+                    <span className="hdm-scale-label">
+                      {dict.levels[item.key]}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
-
-            <div className="hdm-scale">
-              {MOOD_SCALE.map((item) => (
-                <div
-                  key={item.key}
-                  className={`hdm-scale-item${
-                    item.key === inventoryLevel ? " is-current" : ""
-                  }`}
-                >
-                  <div className="hdm-scale-frame">
-                    <img src={item.icon} alt="" />
-                  </div>
-                  <span className="hdm-scale-label">{dict.levels[item.key]}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
 
           {best && (
             <p className="hdm-note">
@@ -211,13 +207,13 @@ export default function HomeView({
           )}
         </section>
 
-        {featured && (
+        {featured ? (
           <section className="hdm-panel">
             <div className="hdm-eyebrow">{dict.vehicle.featured}</div>
             <h2 className="hdm-featured-title">{featured.name}</h2>
 
             <Gallery
-              images={featured.gallery?.length ? featured.gallery : [featured.image]}
+              images={featured.gallery.length ? featured.gallery : [featured.image]}
               alt={featured.name}
               dict={dict}
               sold={featured.sold}
@@ -225,46 +221,48 @@ export default function HomeView({
 
             <div className="hdm-price">{featured.priceText}</div>
 
-            {featured.sold && (
-              <div className="hdm-sold-text">{dict.vehicle.soldNotice}</div>
-            )}
-
             <div className="hdm-actions">
               <Link
-                href={featured.sold ? "#" : localePath(locale, `/car/${featured.id}`)}
-                aria-disabled={featured.sold || undefined}
+                href={localePath(locale, `/car/${featured.id}`)}
                 className="hdm-btn hdm-btn--primary"
               >
-                {featured.sold ? dict.vehicle.unavailable : dict.vehicle.details}
+                {dict.vehicle.details}
               </Link>
 
               <a
-                href={
-                  featured.sold
-                    ? "#"
-                    : `${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
-                        fill(dict.vehicle.whatsappMessage, {
-                          name: featured.name,
-                        })
-                      )}`
-                }
+                href={sellerWhatsAppUrl(
+                  featured.sellerPhone,
+                  fill(dict.vehicle.whatsappMessage, { name: featured.name })
+                )}
                 target="_blank"
                 rel="noreferrer"
-                aria-disabled={featured.sold || undefined}
                 className="hdm-btn hdm-btn--ghost"
               >
-                {featured.sold ? dict.vehicle.sold : dict.vehicle.ask}
+                {dict.vehicle.contactSeller}
               </a>
             </div>
 
-            {!featured.sold && (
-              <ShareButtons
-                url={vehicleUrl(featured.id)}
-                text={`${featured.name} - ${featured.priceText}`}
-                dict={dict}
-                onNotify={showToast}
-              />
-            )}
+            <ShareButtons
+              url={listingUrl(featured.id)}
+              text={`${featured.name} - ${featured.priceText}`}
+              dict={dict}
+              onNotify={showToast}
+            />
+          </section>
+        ) : (
+          <section className="hdm-panel hdm-empty-panel">
+            <div className="hdm-eyebrow">{dict.inventory.kicker}</div>
+            <h2 className="hdm-featured-title">{dict.inventory.emptyTitle}</h2>
+            <p className="hdm-card-text">{dict.inventory.emptyBody}</p>
+
+            <div className="hdm-actions">
+              <Link
+                href={localePath(locale, "/publicar")}
+                className="hdm-btn hdm-btn--primary"
+              >
+                {dict.nav.publish}
+              </Link>
+            </div>
           </section>
         )}
       </div>
@@ -276,131 +274,147 @@ export default function HomeView({
           <h2 className="hdm-h2">{dict.inventory.title}</h2>
         </div>
 
-        <InventoryControls
-          dict={dict}
-          makes={makes}
-          sort={sort}
-          make={make}
-          hideSold={hideSold}
-          shown={visibleVehicles.length}
-          total={vehicles.length}
-          onSortChange={setSort}
-          onMakeChange={setMake}
-          onHideSoldChange={setHideSold}
-          onReset={resetFilters}
-        />
+        {listings.length > 0 && (
+          <InventoryControls
+            dict={dict}
+            makes={makes}
+            sort={sort}
+            make={make}
+            hideSold={hideSold}
+            shown={visible.length}
+            total={listings.length}
+            onSortChange={setSort}
+            onMakeChange={setMake}
+            onHideSoldChange={setHideSold}
+            onReset={() => {
+              setMake(null);
+              setHideSold(false);
+            }}
+          />
+        )}
 
-        {visibleVehicles.length === 0 && (
-          <p className="hdm-empty">{dict.inventory.empty}</p>
+        {visible.length === 0 && (
+          <p className="hdm-empty">
+            {listings.length === 0
+              ? dict.inventory.emptyBody
+              : dict.inventory.empty}
+          </p>
         )}
 
         <div className="hdm-grid">
-          {visibleVehicles.map((vehicle) => {
-            const tag = vehicle.tag ? pick(vehicle.tag, locale) : "";
+          {visible.map((listing) => (
+            <article
+              key={listing.id}
+              className={`hdm-card hdm-reveal${
+                listing.sold ? " hdm-card--sold" : ""
+              }`}
+            >
+              <div className="hdm-card-media">
+                <img src={listing.image} alt={listing.name} loading="lazy" />
+                {listing.sold && (
+                  <span className="hdm-badge-sold">{dict.vehicle.soldBadge}</span>
+                )}
+              </div>
 
-            return (
-              <article
-                key={vehicle.id}
-                className={`hdm-card hdm-reveal${
-                  vehicle.sold ? " hdm-card--sold" : ""
-                }`}
-              >
-                <div className="hdm-card-media">
-                  <img src={vehicle.image} alt={vehicle.name} loading="lazy" />
-                  {tag && <span className="hdm-tag">{tag}</span>}
-                  {vehicle.sold && (
-                    <span className="hdm-badge-sold">{dict.vehicle.soldBadge}</span>
-                  )}
+              <div className="hdm-card-body">
+                <div className="hdm-card-head">
+                  <h3 className="hdm-card-title">{listing.name}</h3>
+                  <span className="hdm-card-price">{listing.priceText}</span>
                 </div>
 
-                <div className="hdm-card-body">
-                  <div className="hdm-card-head">
-                    <h3 className="hdm-card-title">{vehicle.name}</h3>
-                    <span className="hdm-card-price">{vehicle.priceText}</span>
-                  </div>
+                {listing.sold && (
+                  <div className="hdm-sold-text">{dict.vehicle.soldNotice}</div>
+                )}
 
-                  {vehicle.sold && (
-                    <div className="hdm-sold-text">{dict.vehicle.soldNotice}</div>
-                  )}
-
-                  <div className="hdm-score-row">
-                    <HDMRing
-                      score={vehicle.score}
-                      label={ringLabel(vehicle.score)}
-                      small
-                    />
-                    <div>
-                      <div className="hdm-score-level">
-                        {dict.levels[vehicle.levelKey]}
-                      </div>
-                      <div className="hdm-score-caption">
-                        {dict.vehicle.scoreCaption}
-                      </div>
+                <div className="hdm-score-row">
+                  <HDMRing
+                    score={listing.score}
+                    label={ringLabel(listing.score)}
+                    small
+                  />
+                  <div>
+                    <div className="hdm-score-level">
+                      {dict.levels[listing.levelKey]}
+                    </div>
+                    <div className="hdm-score-caption">
+                      {dict.vehicle.declaredCaption}
                     </div>
                   </div>
+                </div>
 
-                  <p className="hdm-card-text">{pick(vehicle.details, locale)}</p>
+                {/* Las banderas van en la tarjeta, no escondidas en la
+                    ficha: son la razón por la que el sitio sirve. */}
+                {listing.flags.length > 0 && (
+                  <ul className="hdm-card-flags">
+                    {listing.flags.slice(0, 3).map((flag) => (
+                      <li key={flag}>
+                        {dict.flags[flag as keyof typeof dict.flags] ?? flag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
 
-                  <dl className="hdm-specs">
-                    <div>
-                      <dt>{dict.specs.year}: </dt>
-                      <dd>{vehicle.year}</dd>
-                    </div>
-                    <div>
-                      <dt>{dict.specs.miles}: </dt>
-                      <dd>{formatMiles(vehicle.miles, locale)}</dd>
-                    </div>
-                    <div>
-                      <dt>{dict.specs.title}: </dt>
-                      <dd>{dict.titles[vehicle.titleStatus]}</dd>
-                    </div>
-                    <div>
-                      <dt>{dict.specs.owners}: </dt>
-                      <dd>{vehicle.owners}</dd>
-                    </div>
-                  </dl>
+                <p className="hdm-card-text">
+                  {listing.description.slice(0, 160)}
+                  {listing.description.length > 160 ? "…" : ""}
+                </p>
 
-                  <div className="hdm-actions">
-                    <Link
-                      href={vehicle.sold ? "#" : localePath(locale, `/car/${vehicle.id}`)}
-                      aria-disabled={vehicle.sold || undefined}
-                      className="hdm-btn hdm-btn--primary"
-                    >
-                      {vehicle.sold ? dict.vehicle.unavailable : dict.vehicle.details}
-                    </Link>
+                <dl className="hdm-specs">
+                  <div>
+                    <dt>{dict.specs.year}: </dt>
+                    <dd>{listing.year}</dd>
+                  </div>
+                  <div>
+                    <dt>{dict.specs.miles}: </dt>
+                    <dd>{formatMiles(listing.miles, locale)}</dd>
+                  </div>
+                  <div>
+                    <dt>{dict.specs.title}: </dt>
+                    <dd>{dict.titles[listing.titleStatus]}</dd>
+                  </div>
+                  <div>
+                    <dt>{dict.specs.owners}: </dt>
+                    <dd>{listing.owners}</dd>
+                  </div>
+                </dl>
 
+                <div className="hdm-actions">
+                  <Link
+                    href={localePath(locale, `/car/${listing.id}`)}
+                    className="hdm-btn hdm-btn--primary"
+                  >
+                    {dict.vehicle.details}
+                  </Link>
+
+                  {!listing.sold && (
                     <a
-                      href={
-                        vehicle.sold
-                          ? "#"
-                          : `${PRIMARY_WHATSAPP_URL}?text=${encodeURIComponent(
-                              fill(dict.vehicle.whatsappMessage, {
-                                name: vehicle.name,
-                              })
-                            )}`
-                      }
+                      href={sellerWhatsAppUrl(
+                        listing.sellerPhone,
+                        fill(dict.vehicle.whatsappMessage, {
+                          name: listing.name,
+                        })
+                      )}
                       target="_blank"
                       rel="noreferrer"
-                      aria-disabled={vehicle.sold || undefined}
                       className="hdm-btn hdm-btn--ghost"
                     >
-                      {vehicle.sold ? dict.vehicle.sold : dict.vehicle.ask}
+                      {dict.vehicle.contactSeller}
                     </a>
-                  </div>
-
-                  {!vehicle.sold && (
-                    <ShareButtons
-                      url={vehicleUrl(vehicle.id)}
-                      text={`${vehicle.name} - ${vehicle.priceText}`}
-                      dict={dict}
-                      variant="mini"
-                      onNotify={showToast}
-                    />
                   )}
                 </div>
-              </article>
-            );
-          })}
+
+                {!listing.sold && (
+                  <ShareButtons
+                    url={listingUrl(listing.id)}
+                    text={`${listing.name} - ${listing.priceText}`}
+                    dict={dict}
+                    variant="mini"
+                    onNotify={showToast}
+                  />
+                )}
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
@@ -429,27 +443,13 @@ export default function HomeView({
           <div className="hdm-contact-card">
             <div className="hdm-eyebrow">{dict.footer.contact}</div>
 
+            {/* Ya no hay teléfono del sitio. El contacto de cada auto
+                es su vendedor; este correo es sólo para el sitio. */}
+            <p className="hdm-footer-text">{dict.footer.noPhoneNotice}</p>
+
             <div className="hdm-social">
               <a href={`mailto:${CONTACT_EMAIL}`} aria-label={dict.footer.email}>
                 <MailGlyph />
-              </a>
-
-              <a
-                href={PRIMARY_WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`WhatsApp ${PRIMARY_WHATSAPP}`}
-              >
-                <WhatsAppGlyph />
-              </a>
-
-              <a
-                href={SECONDARY_WHATSAPP_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`WhatsApp ${SECONDARY_WHATSAPP}`}
-              >
-                <WhatsAppGlyph />
               </a>
 
               <a

@@ -28,6 +28,7 @@ const es = {
   fields: {
     year: "Año",
     make: "Marca",
+    makeHelp: "Si no está en la lista, elige \"Otra marca\".",
     model: "Modelo",
     miles: "Millas del odómetro",
     price: "Precio que pides",
@@ -37,6 +38,15 @@ const es = {
     knownIssues: "Problemas conocidos",
     knownIssuesHelp:
       "Obligatorio. Si no tiene ninguno, escribe \"ninguno\". Un anuncio honesto vende más rápido que uno perfecto.",
+    description: "Tu anuncio",
+    descriptionHelp:
+      "Cuéntale al comprador por qué lo vendes, qué le has hecho y cómo lo has cuidado. Puedes usar emojis y varios párrafos.",
+    descriptionPlaceholder:
+      "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
+    otherMake: "Otra marca",
+    otherMakeLabel: "¿Cuál marca?",
+    selectPlaceholder: "Selecciona…",
+    milesOver: "o más",
     tires: "Estado de las llantas",
     vin: "VIN (17 caracteres)",
     vinHelp:
@@ -52,7 +62,7 @@ const es = {
     clean: "Limpio",
     clean_lien: "Limpio, con gravamen por liquidar",
     rebuilt: "Reconstruido",
-    salvage: "Salvamento",
+    salvage: "Salvage",
     no_title: "Sin título en mano",
   },
 
@@ -105,7 +115,7 @@ const es = {
 
   flags: {
     title: "A revisar antes de pagar",
-    title_salvage: "Título de salvamento",
+    title_salvage: "Título Salvage",
     title_rebuilt: "Título reconstruido",
     title_lien: "Tiene gravamen por liquidar",
     title_missing: "El vendedor no tiene el título en mano",
@@ -127,7 +137,11 @@ const es = {
     minPhotos: "Sube al menos 3 fotos",
     invalidVin: "El VIN debe tener 17 caracteres",
     errorTitle: "Faltan datos",
-    errorBody: "Revisa los campos marcados y vuelve a intentar.",
+    errorBody: "Falta llenar:",
+    charsLeft: "caracteres restantes",
+    addPhotos: "Agregar fotos",
+    removePhoto: "Quitar",
+    photosSelected: "fotos seleccionadas",
     successTitle: "Anuncio recibido",
     successBody:
       "Lo revisamos y lo publicamos en cuanto esté listo. Te avisamos al teléfono que dejaste.",
@@ -159,6 +173,7 @@ const en: Dict = {
   fields: {
     year: "Year",
     make: "Make",
+    makeHelp: 'If it is not listed, choose "Other make".',
     model: "Model",
     miles: "Odometer miles",
     price: "Asking price",
@@ -168,6 +183,15 @@ const en: Dict = {
     knownIssues: "Known issues",
     knownIssuesHelp:
       'Required. If there are none, write "none". An honest listing sells faster than a perfect one.',
+    description: "Your listing",
+    descriptionHelp:
+      "Tell the buyer why you're selling, what you've done to it, and how you've looked after it. Emojis and multiple paragraphs are fine.",
+    descriptionPlaceholder:
+      "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
+    otherMake: "Other make",
+    otherMakeLabel: "Which make?",
+    selectPlaceholder: "Select…",
+    milesOver: "or more",
     tires: "Tire condition",
     vin: "VIN (17 characters)",
     vinHelp:
@@ -258,7 +282,11 @@ const en: Dict = {
     minPhotos: "Upload at least 3 photos",
     invalidVin: "The VIN must be 17 characters",
     errorTitle: "Missing information",
-    errorBody: "Check the marked fields and try again.",
+    errorBody: "Still missing:",
+    charsLeft: "characters left",
+    addPhotos: "Add photos",
+    removePhoto: "Remove",
+    photosSelected: "photos selected",
     successTitle: "Listing received",
     successBody:
       "We'll review it and publish it shortly. We'll let you know at the number you left.",

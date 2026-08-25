@@ -1,14 +1,15 @@
 import { notFound } from "next/navigation";
-import { vehicles } from "@/data/vehicles";
-import { scoreAll, isLocale, type Vehicle } from "@/lib/hdm";
+import { isLocale } from "@/lib/hdm";
 import { getDictionary } from "@/i18n/dictionaries";
+import { getPublishedListings } from "@/lib/listings-db";
 import HomeView from "@/components/HomeView";
 
 /**
- * Server component: calcula las calificaciones en el servidor y le pasa
- * a la vista solo lo que necesita. El HTML sale ya renderizado, que es
- * lo que Google indexa.
+ * Los anuncios cambian sin que haya un despliegue, así que la página
+ * se regenera cada minuto en vez de quedar fija en el build.
  */
+export const revalidate = 60;
+
 export default async function HomePage({
   params,
 }: {
@@ -17,9 +18,9 @@ export default async function HomePage({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const scored = scoreAll(vehicles as Vehicle[]);
+  const listings = await getPublishedListings(locale);
 
   return (
-    <HomeView locale={locale} dict={getDictionary(locale)} vehicles={scored} />
+    <HomeView locale={locale} dict={getDictionary(locale)} listings={listings} />
   );
 }

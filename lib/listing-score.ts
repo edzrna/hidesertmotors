@@ -85,6 +85,12 @@ export interface Listing {
 
   /** Texto libre obligatorio. Vacío no cuenta como "sin problemas". */
   knownIssues: string;
+
+  /**
+   * Anuncio libre del vendedor: por qué lo vende, qué le hizo, cómo
+   * tratarlo. No entra en la calificación — es venta, no dato.
+   */
+  description: string;
 }
 
 /* ============================================================
@@ -333,6 +339,8 @@ export function validateListing(listing: Partial<Listing>) {
 
   // Obliga a escribir algo. "Ninguno" es una respuesta válida y firmada.
   if (!listing.knownIssues?.trim()) errors.knownIssues = "required";
+
+  if (!listing.description?.trim()) errors.description = "required";
 
   if ((listing.documentation?.photoCount ?? 0) < 3)
     errors.photos = "min_three";

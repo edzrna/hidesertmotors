@@ -1,10 +1,15 @@
-/** Datos de contacto y del sitio. Antes estaban repetidos en cada página. */
+/**
+ * Datos del sitio.
+ *
+ * Ya no hay teléfono de contacto propio: Hi Desert Motors publica
+ * anuncios, no vende. Cada anuncio lleva el teléfono de su vendedor,
+ * guardado con el anuncio.
+ *
+ * El correo se queda porque es el canal para soporte del sitio,
+ * reportes de anuncios y solicitudes de privacidad, no para vender.
+ */
 
 export const SITE_URL = "https://www.hidesertmotors.com";
 
-export const PRIMARY_WHATSAPP = "+1 760 620 6390";
-export const SECONDARY_WHATSAPP = "+1 760 641 1996";
-export const PRIMARY_WHATSAPP_URL = "https://wa.me/17606206390";
-export const SECONDARY_WHATSAPP_URL = "https://wa.me/17606411996";
+export const CONTACT_EMAIL = "contacto@hidesertmotors.com";
 export const FACEBOOK_URL = "https://facebook.com/hidesertmotors";
-export const CONTACT_EMAIL = "ventas@hidesertmotors.com";
