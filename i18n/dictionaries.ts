@@ -18,6 +18,7 @@ const es = {
   nav: {
     tagline: "Compra con confianza.",
     inventory: "Ver inventario",
+    publish: "Publica tu auto",
     whatsapp: "Escribir por WhatsApp",
     switchTo: "English",
   },
@@ -141,6 +142,7 @@ const en: Dictionary = {
   nav: {
     tagline: "Buy with confidence.",
     inventory: "View inventory",
+    publish: "List your car",
     whatsapp: "Message us on WhatsApp",
     switchTo: "Español",
   },
