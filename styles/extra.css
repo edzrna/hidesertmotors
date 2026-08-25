@@ -35,6 +35,16 @@
   padding: 0;
 }
 
+/* Detalle técnico del fallo de envío. Pega esto al final de globals.css */
+
+.pub-error-detail {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  word-break: break-word;
+  opacity: 0.85;
+}
+
 .hdm-card-flags li {
   padding: 5px 10px;
   border-radius: 999px;
@@ -150,3 +160,4 @@
   font-size: 13px;
   color: var(--color-hdm-muted);
 }
+
