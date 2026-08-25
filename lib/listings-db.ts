@@ -1,5 +1,4 @@
 import { neon } from "@neondatabase/serverless";
-import type { LevelKey, Locale, TitleStatusKey } from "@/lib/hdm";
 import { getLevelIcon, type LevelKey, type Locale, type TitleStatusKey } from "@/lib/hdm";
 
 /**
