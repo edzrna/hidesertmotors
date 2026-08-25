@@ -1,0 +1,152 @@
+/* ============================================================
+   TABLERO DE ANUNCIOS
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+/* Aviso de qué es el sitio, dentro del hero oscuro. */
+.hdm-board-note {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(245, 197, 66, 0.08);
+  border: 1px solid rgba(245, 197, 66, 0.16);
+  color: #e7d7b4;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Panel de "todavía no hay anuncios" */
+.hdm-empty-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
+}
+
+/* ---------- Banderas ---------- */
+
+.hdm-card-flags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.hdm-card-flags li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.2);
+  color: #8c2230;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hdm-flags {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.18);
+}
+
+.hdm-flags-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-sold);
+  margin-bottom: 8px;
+}
+
+.hdm-flags ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.hdm-flags li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #8c2230;
+}
+
+/* ---------- Origen del dato ---------- */
+
+/* Va pegado al número, no al pie de la página: quien ve la
+   calificación tiene que ver de dónde sale. */
+.hdm-declared {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
+  font-style: italic;
+}
+
+.hdm-conf {
+  margin-top: 16px;
+}
+
+.hdm-conf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  margin-bottom: 7px;
+}
+
+.hdm-conf-head strong {
+  font-family: var(--font-display);
+  color: var(--color-hdm-brown);
+  white-space: nowrap;
+}
+
+/* ---------- Texto del vendedor ---------- */
+
+/* white-space: pre-wrap conserva los saltos de línea que escribió
+   el vendedor sin necesidad de aceptar HTML. */
+.hdm-seller-note {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-seller-note p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.75;
+  color: var(--color-hdm-ink);
+  font-size: 15px;
+}
+
+.hdm-known {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-known p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-hdm-muted);
+}
+
+.hdm-seller-line {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}

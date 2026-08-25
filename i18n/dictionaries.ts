@@ -53,7 +53,7 @@ const es = {
   titles: {
     clean: "Limpio",
     rebuilt: "Reconstruido",
-    salvage: "Salvage",
+    salvage: "Salvamento",
   } satisfies Record<TitleStatusKey, string>,
 
   vehicle: {
@@ -129,7 +129,7 @@ const es = {
 
 
   flags: {
-    title_salvage: "Título Salvage",
+    title_salvage: "Título de salvamento",
     title_rebuilt: "Título reconstruido",
     title_lien: "Con gravamen",
     title_missing: "Sin título en mano",
