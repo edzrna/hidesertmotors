@@ -57,8 +57,27 @@ function formatPrice(value: number | null, locale: Locale) {
   return `$${value.toLocaleString(locale === "en" ? "en-US" : "es-MX")}`;
 }
 
+/**
+ * Postgres devuelve jsonb ya parseado, pero si la columna se guardó
+ * como texto llega en cadena. Se cubren los dos casos.
+ */
+function toArray(value: unknown): any[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 function mapRow(row: any, locale: Locale): PublicListing {
-  const gallery: string[] = Array.isArray(row.photos) ? row.photos : [];
+  const gallery = toArray(row.photos).filter(
+    (url): url is string => typeof url === "string"
+  );
 
   return {
     id: String(row.id),
@@ -84,7 +103,9 @@ function mapRow(row: any, locale: Locale): PublicListing {
     icon: getLevelIcon(row.level_key),
     confidence: row.confidence,
     confidenceLevel: row.confidence_level,
-    flags: Array.isArray(row.flags) ? row.flags : [],
+    flags: toArray(row.flags).filter(
+      (flag): flag is string => typeof flag === "string"
+    ),
 
     sellerName: row.seller_name,
     sellerPhone: row.seller_phone,
@@ -94,28 +115,31 @@ function mapRow(row: any, locale: Locale): PublicListing {
   };
 }
 
-/** Columnas públicas. seller_email queda fuera a propósito. */
-const COLUMNS = `
-  id, year, make, model, miles, price,
-  title_status, owners, reported_accidents,
-  description, known_issues, photos,
-  score, level_key, confidence, confidence_level, flags,
-  seller_name, seller_phone,
-  status, published_at
-`;
-
 export async function getPublishedListings(locale: Locale) {
-  const rows = await sql`
-    SELECT ${sql.unsafe(COLUMNS)}
-    FROM listings
-    WHERE status IN ('published', 'sold')
-    ORDER BY
-      CASE WHEN status = 'sold' THEN 1 ELSE 0 END,
-      score DESC,
-      published_at DESC NULLS LAST
-  `;
+  try {
+    const rows = await sql`
+      SELECT
+        id, year, make, model, miles, price,
+        title_status, owners, reported_accidents,
+        description, known_issues, photos,
+        score, level_key, confidence, confidence_level, flags,
+        seller_name, seller_phone,
+        status, published_at
+      FROM listings
+      WHERE status IN ('published', 'sold')
+      ORDER BY
+        CASE WHEN status = 'sold' THEN 1 ELSE 0 END,
+        score DESC,
+        published_at DESC NULLS LAST
+    `;
 
-  return rows.map((row) => mapRow(row, locale));
+    return rows.map((row) => mapRow(row, locale));
+  } catch (error) {
+    // Una base caída no debe tumbar la página entera: el sitio se
+    // muestra vacío y el error queda en los registros de Vercel.
+    console.error("getPublishedListings failed", error);
+    return [];
+  }
 }
 
 export async function getListingById(id: string, locale: Locale) {
@@ -123,15 +147,26 @@ export async function getListingById(id: string, locale: Locale) {
   const numeric = Number(id);
   if (!Number.isInteger(numeric) || numeric <= 0) return null;
 
-  const rows = await sql`
-    SELECT ${sql.unsafe(COLUMNS)}
-    FROM listings
-    WHERE id = ${numeric}
-      AND status IN ('published', 'sold')
-    LIMIT 1
-  `;
+  try {
+    const rows = await sql`
+      SELECT
+        id, year, make, model, miles, price,
+        title_status, owners, reported_accidents,
+        description, known_issues, photos,
+        score, level_key, confidence, confidence_level, flags,
+        seller_name, seller_phone,
+        status, published_at
+      FROM listings
+      WHERE id = ${numeric}
+        AND status IN ('published', 'sold')
+      LIMIT 1
+    `;
 
-  return rows.length ? mapRow(rows[0], locale) : null;
+    return rows.length ? mapRow(rows[0], locale) : null;
+  } catch (error) {
+    console.error("getListingById failed", error);
+    return null;
+  }
 }
 
 /** Enlace de WhatsApp al vendedor del anuncio, no al sitio. */
