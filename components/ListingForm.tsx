@@ -120,6 +120,12 @@ export default function ListingForm({
   const [photos, setPhotos] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  /**
+   * Un fallo al enviar NO es lo mismo que un campo vacío. Antes los dos
+   * mostraban "Faltan datos" y no había forma de saber cuál era.
+   */
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [progress, setProgress] = useState("");
 
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const years = useMemo(() => getYears(), []);
@@ -233,10 +239,9 @@ export default function ListingForm({
 
     const found = collectErrors();
     setErrors(found);
+    setSubmitError(null);
 
     if (Object.keys(found).length > 0) {
-      // El aviso aparece en el mismo render, así que hay que esperar
-      // un cuadro antes de buscarlo en el DOM.
       requestAnimationFrame(() => {
         document
           .querySelector(".pub-error")
@@ -249,14 +254,29 @@ export default function ListingForm({
 
     try {
       const photoUrls: string[] = [];
-      for (const file of photos) {
+
+      for (const [index, file] of photos.entries()) {
+        setProgress(`${index + 1} / ${photos.length}`);
+
         const body = new FormData();
         body.append("file", file);
+
         const res = await fetch("/api/upload", { method: "POST", body });
-        if (!res.ok) throw new Error("upload failed");
+
+        if (!res.ok) {
+          // El endpoint responde con un código propio: se muestra tal
+          // cual para poder diagnosticar sin abrir los registros.
+          const detail = await res.text().catch(() => "");
+          throw new Error(
+            `${t.form.uploadFailed} (${res.status}) ${file.name} ${detail.slice(0, 140)}`
+          );
+        }
+
         const { url } = await res.json();
         photoUrls.push(url);
       }
+
+      setProgress("");
 
       const res = await fetch("/api/listings", {
         method: "POST",
@@ -274,11 +294,25 @@ export default function ListingForm({
         }),
       });
 
-      if (!res.ok) throw new Error("submit failed");
+      if (!res.ok) {
+        const detail = await res.text().catch(() => "");
+        throw new Error(
+          `${t.form.saveFailed} (${res.status}) ${detail.slice(0, 200)}`
+        );
+      }
+
       setStatus("sent");
-    } catch {
+    } catch (error) {
       setStatus("idle");
-      setErrors({ submit: t.form.errorTitle });
+      setProgress("");
+      setSubmitError(
+        error instanceof Error ? error.message : t.form.saveFailed
+      );
+      requestAnimationFrame(() => {
+        document
+          .querySelector(".pub-error")
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
     }
   }
 
@@ -705,12 +739,23 @@ export default function ListingForm({
           </div>
         )}
 
+        {submitError && (
+          <div className="pub-error" role="alert">
+            <strong>{t.form.sendErrorTitle}</strong>
+            <span className="pub-error-detail">{submitError}</span>
+          </div>
+        )}
+
         <button
           type="submit"
           className="hdm-btn hdm-btn--primary pub-submit"
           disabled={status === "sending"}
         >
-          {status === "sending" ? t.form.submitting : t.form.submit}
+          {status === "sending"
+            ? progress
+              ? `${t.form.uploading} ${progress}`
+              : t.form.submitting
+            : t.form.submit}
         </button>
       </div>
     </form>
