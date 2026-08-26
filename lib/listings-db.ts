@@ -48,6 +48,7 @@ export interface PublicListing {
 
   description: string;
   knownIssues: string;
+  city: string;
 
   image: string;
   gallery: string[];
@@ -108,6 +109,7 @@ function mapRow(row: any, locale: Locale): PublicListing {
 
     description: row.description ?? "",
     knownIssues: row.known_issues ?? "",
+    city: row.city ?? "",
 
     image: gallery[0] ?? "/logo.png",
     gallery,
@@ -138,7 +140,7 @@ export async function getPublishedListings(locale: Locale) {
       SELECT
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
-        description, known_issues, photos,
+        description, known_issues, city, photos,
         score, level_key, confidence, confidence_level, flags,
         seller_name, seller_phone,
         status, published_at
@@ -172,7 +174,7 @@ export async function getListingById(id: string, locale: Locale) {
       SELECT
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
-        description, known_issues, photos,
+        description, known_issues, city, photos,
         score, level_key, confidence, confidence_level, flags,
         seller_name, seller_phone,
         status, published_at
@@ -188,6 +190,76 @@ export async function getListingById(id: string, locale: Locale) {
     return null;
   }
 }
+
+/**
+ * Anuncio para su página de edición. Sólo lo devuelve si el token
+ * coincide, y a diferencia del listado público incluye el correo,
+ * porque es su dueño quien lo está viendo.
+ */
+export async function getListingForEdit(id: string, token: string) {
+  const numeric = Number(id);
+  if (!Number.isInteger(numeric) || numeric <= 0) return null;
+  if (!token) return null;
+
+  try {
+    const sql = getSql();
+    if (!sql) return null;
+
+    const rows = await sql`
+      SELECT
+        id, year, make, model, miles, price,
+        title_status, owners, reported_accidents,
+        description, known_issues, city, photos,
+        score, level_key, confidence, confidence_level, flags,
+        seller_name, seller_phone, seller_email,
+        status
+      FROM listings
+      WHERE id = ${numeric}
+        AND edit_token = ${token}
+        AND status IN ('pending', 'published', 'sold')
+      LIMIT 1
+    `;
+
+    if (!rows.length) return null;
+
+    const row = rows[0];
+    const gallery = toArray(row.photos).filter(
+      (url): url is string => typeof url === "string"
+    );
+
+    return {
+      id: String(row.id),
+      name: `${row.year} ${row.make} ${row.model}`.trim(),
+      year: row.year as number,
+      make: row.make as string,
+      model: row.model as string,
+      miles: row.miles as number,
+      titleStatus: row.title_status as TitleStatusKey,
+      owners: row.owners as number,
+      accidents: row.reported_accidents as number,
+      knownIssues: (row.known_issues ?? "") as string,
+
+      price: row.price as number | null,
+      description: (row.description ?? "") as string,
+      city: (row.city ?? "") as string,
+      photos: gallery,
+      sellerName: row.seller_name as string,
+      sellerPhone: row.seller_phone as string,
+      sellerEmail: (row.seller_email ?? "") as string,
+
+      score: row.score as number,
+      levelKey: row.level_key as LevelKey,
+      status: row.status as string,
+    };
+  } catch (error) {
+    console.error("getListingForEdit failed", error);
+    return null;
+  }
+}
+
+export type EditableListing = NonNullable<
+  Awaited<ReturnType<typeof getListingForEdit>>
+>;
 
 /** Enlace de WhatsApp al vendedor del anuncio, no al sitio. */
 export function sellerWhatsAppUrl(phone: string, message: string) {
