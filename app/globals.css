@@ -4,7 +4,7 @@
    HI DESERT MOTORS — sistema de diseño
    Tokens en @theme → Tailwind genera bg-hdm-dark, text-hdm-amber, etc.
    ============================================================ */
-
+ 
 @theme {
   --color-hdm-amber: #f5c542;
   --color-hdm-orange: #d88a00;
