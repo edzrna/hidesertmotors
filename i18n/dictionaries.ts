@@ -128,6 +128,50 @@ const es = {
   },
 
 
+  why: {
+    buyerKicker: "Por qué aquí",
+    buyerTitle: "Compra sabiendo qué estás viendo",
+    buyerLead:
+      "En un anuncio normal ves fotos bonitas y un precio. Lo que le pasa al auto lo descubres cuando ya fuiste a verlo. Aquí no.",
+
+    demoScoreLabel: "Ejemplo de calificación: 84 de 100",
+    backingLabel: "Nivel de respaldo",
+    backingHigh: "Alto",
+    backingLow: "Bajo",
+
+    point1Title: "Una calificación, no una corazonada",
+    point1Body:
+      "Cada auto recibe un número del 60 al 100, calculado con su título, millas, año, historial y estado mecánico declarado. El mismo cálculo para todos, sin favoritos.",
+
+    point2Title: "Lo malo se ve antes de abrir",
+    point2Body:
+      "Si el título es Salvage, si trae el check engine encendido o si no tiene smog vigente, aparece en la tarjeta del listado. No enterrado en la descripción.",
+
+    point3Title: "Y te decimos cuánto creerle",
+    point3Body:
+      "El nivel de respaldo mide cuánto de lo declarado se puede comprobar. Un vendedor que da su VIN, el smog y los registros de servicio sube; uno que solo sube fotos, no.",
+
+    honestNote:
+      "Seamos claros: no inspeccionamos ningún vehículo. La calificación se calcula con lo que declara el vendedor, quien firma que es cierto. Lo que hacemos es obligar a que esa declaración sea concreta y comparable — y enseñarte cuánto de ella está respaldada. Revisa el auto antes de pagar, siempre.",
+
+    sellerKicker: "Vende tu auto",
+    sellerTitle: "Publicar es gratis y toma cinco minutos",
+    sellerLead:
+      "Y ser honesto te conviene: cada documento que aportas sube tu nivel de respaldo, y los anuncios con respaldo alto son los que reciben llamadas en serio.",
+
+    step1Title: "Llena la ficha",
+    step1Body:
+      "Marca lo que sí funciona y lo que no. Son casillas concretas, no un \"está en buen estado\" que no dice nada.",
+
+    step2Title: "Mira tu calificación en vivo",
+    step2Body:
+      "El número se mueve mientras escribes. Vas a ver exactamente qué le suma y qué le resta a tu auto.",
+
+    step3Title: "Lo revisamos y sale publicado",
+    step3Body:
+      "Ningún anuncio se publica solo. Revisamos cada uno antes de que aparezca, y el comprador te contacta directo a tu WhatsApp.",
+  },
+
   flags: {
     title_salvage: "Título Salvage",
     title_rebuilt: "Título reconstruido",
@@ -278,6 +322,50 @@ const en: Dictionary = {
     },
   },
 
+
+  why: {
+    buyerKicker: "Why here",
+    buyerTitle: "Buy knowing what you're looking at",
+    buyerLead:
+      "A normal listing gives you nice photos and a price. Whatever is wrong with the car, you find out after you've driven out to see it. Not here.",
+
+    demoScoreLabel: "Example rating: 84 out of 100",
+    backingLabel: "Backing level",
+    backingHigh: "High",
+    backingLow: "Low",
+
+    point1Title: "A rating, not a hunch",
+    point1Body:
+      "Every car gets a number from 60 to 100, calculated from its title, mileage, year, history and declared mechanical condition. Same math for everyone, no favorites.",
+
+    point2Title: "The bad news shows up first",
+    point2Body:
+      "Salvage title, check engine light on, no current smog — it appears on the listing card. Not buried in the description.",
+
+    point3Title: "And we tell you how much to trust it",
+    point3Body:
+      "The backing level measures how much of the declaration can be verified. A seller who provides their VIN, smog and service records scores higher; one who only uploads photos does not.",
+
+    honestNote:
+      "Let's be clear: we do not inspect any vehicle. The rating is calculated from what the seller declares, and they sign that it is true. What we do is force that declaration to be specific and comparable — and show you how much of it is backed up. Always inspect the car before you pay.",
+
+    sellerKicker: "Sell your car",
+    sellerTitle: "Listing is free and takes five minutes",
+    sellerLead:
+      "And honesty pays: every document you provide raises your backing level, and listings with high backing are the ones that get serious calls.",
+
+    step1Title: "Fill in the details",
+    step1Body:
+      'Check what works and what doesn\'t. Specific boxes, not a vague "in good condition" that tells nobody anything.',
+
+    step2Title: "Watch your rating live",
+    step2Body:
+      "The number moves as you type. You'll see exactly what helps and what hurts your car.",
+
+    step3Title: "We review it and it goes live",
+    step3Body:
+      "No listing publishes itself. We review each one before it appears, and buyers contact you directly on your WhatsApp.",
+  },
 
   flags: {
     title_salvage: "Salvage title",
