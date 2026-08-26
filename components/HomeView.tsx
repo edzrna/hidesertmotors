@@ -7,6 +7,7 @@ import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import InventoryControls from "@/components/InventoryControls";
+import WhySection from "@/components/WhySection";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
@@ -266,6 +267,8 @@ export default function HomeView({
           </section>
         )}
       </div>
+
+      <WhySection locale={locale} dict={dict} />
 
       {/* ============ INVENTARIO ============ */}
       <section id="inventario" className="hdm-shell hdm-section hdm-section--last">
