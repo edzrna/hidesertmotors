@@ -2424,3 +2424,188 @@ body {
   line-height: 1.65;
   color: #b9c6d6;
 }
+/* ============================================================
+   EDICIÓN CON ENLACE SECRETO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+/* ---------- El enlace, al terminar de publicar ---------- */
+
+.pub-link {
+  margin-top: 26px;
+  padding: 22px;
+  border-radius: 20px;
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line-strong);
+  text-align: left;
+}
+
+.pub-link-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+  margin-bottom: 8px;
+}
+
+.pub-link-warn {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-brown);
+}
+
+.pub-link-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--hdm-line-strong);
+  background: #ffffff;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px;
+  color: var(--color-hdm-ink);
+  margin-bottom: 12px;
+}
+
+.pub-link-copy {
+  width: 100%;
+}
+
+/* ---------- Bloque de datos congelados ---------- */
+
+/* Gris deliberado: distinto del resto del formulario, para que se lea
+   como "esto es un registro", no como "esto es un campo apagado". */
+.edit-locked {
+  margin-bottom: 20px;
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: var(--hdm-r);
+  background: #f2f0ec;
+  border: 1px solid rgba(11, 22, 34, 0.1);
+}
+
+.edit-locked-head {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.edit-lock-icon {
+  font-size: 22px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.edit-locked h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.edit-locked-head p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4a5462;
+  max-width: 70ch;
+}
+
+.edit-locked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.edit-locked-grid > div {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(11, 22, 34, 0.07);
+  min-width: 0;
+}
+
+.edit-locked-grid dt {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #6d7684;
+  margin-bottom: 4px;
+}
+
+.edit-locked-grid dd {
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+  color: #2b3542;
+  overflow-wrap: anywhere;
+}
+
+.edit-locked-fix {
+  margin: 16px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(11, 22, 34, 0.08);
+  font-size: 13px;
+  line-height: 1.65;
+  color: #4a5462;
+}
+
+/* ---------- Fotos existentes ---------- */
+
+.edit-thumb {
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+
+.edit-fields .pub-photos li {
+  gap: 12px;
+}
+
+/* ---------- Guardado y retiro ---------- */
+
+.edit-saved {
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: #f0f9f2;
+  border: 1px solid rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Retirar es destructivo, así que no se ve como un botón principal:
+   discreto, y sólo se enciende al pasar por encima. */
+.edit-withdraw {
+  width: 100%;
+  padding: 13px;
+  margin-top: 4px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--color-hdm-muted);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.edit-withdraw:hover {
+  color: var(--color-hdm-sold);
+  border-color: rgba(255, 59, 77, 0.3);
+  background: #fff5f5;
+}
+
+.edit-withdraw:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
