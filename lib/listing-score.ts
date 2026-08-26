@@ -91,6 +91,9 @@ export interface Listing {
    * tratarlo. No entra en la calificación — es venta, no dato.
    */
   description: string;
+
+  /** Ciudad donde se encuentra el vehículo. */
+  city: string;
 }
 
 /* ============================================================
@@ -341,6 +344,9 @@ export function validateListing(listing: Partial<Listing>) {
   if (!listing.knownIssues?.trim()) errors.knownIssues = "required";
 
   if (!listing.description?.trim()) errors.description = "required";
+
+  // La ciudad es necesaria para publicar y localizar el vehículo.
+  if (!listing.city?.trim()) errors.city = "required";
 
   if ((listing.documentation?.photoCount ?? 0) < 3)
     errors.photos = "min_three";
