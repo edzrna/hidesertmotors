@@ -43,6 +43,11 @@ const es = {
       "Cuéntale al comprador por qué lo vendes, qué le has hecho y cómo lo has cuidado. Puedes usar emojis y varios párrafos.",
     descriptionPlaceholder:
       "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
+    city: "¿Dónde está el auto?",
+    cityHelp:
+      "Sólo la ciudad, no tu dirección. El comprador necesita saber si le queda cerca.",
+    otherCity: "Otra ciudad",
+    otherCityLabel: "¿Cuál ciudad?",
     otherMake: "Otra marca",
     otherMakeLabel: "¿Cuál marca?",
     selectPlaceholder: "Selecciona…",
@@ -136,6 +141,8 @@ const es = {
     required: "Este campo es obligatorio",
     minPhotos: "Sube al menos 3 fotos",
     invalidVin: "El VIN debe tener 17 caracteres",
+    invalidPhone: "Escribe 10 dígitos, por ejemplo 7606206390",
+    invalidEmail: "Ese correo no parece válido",
     errorTitle: "Faltan datos",
     errorBody: "Falta llenar:",
     sendErrorTitle: "No se pudo enviar el anuncio",
@@ -149,6 +156,35 @@ const es = {
     successTitle: "Anuncio recibido",
     successBody:
       "Lo revisamos y lo publicamos en cuanto esté listo. Te avisamos al teléfono que dejaste.",
+    editLinkTitle: "Guarda este enlace",
+    editLinkWarn:
+      "Es la única forma de editar o retirar tu anuncio. No lo compartas con nadie y no lo pierdas: por seguridad no podemos volver a generarlo.",
+    copyLink: "Copiar enlace",
+    copied: "Copiado",
+
+    edit: {
+      title: "Edita tu anuncio",
+      lead: "Puedes corregir el precio, las fotos, la descripción, la ubicación y tus datos de contacto.",
+      lockedTitle: "Esto ya no se puede cambiar",
+      lockedBody:
+        "Los datos del vehículo quedaron fijos al publicar: año, marca, modelo, millas, título, dueños, accidentes y el estado que declaraste. Es lo que sostiene tu calificación HDM — si se pudieran cambiar después, no significaría nada para el comprador.",
+      lockedFix:
+        "¿Declaraste algo por error? Retira este anuncio y publica uno nuevo con los datos correctos.",
+      save: "Guardar cambios",
+      saving: "Guardando…",
+      saved: "Cambios guardados",
+      withdraw: "Retirar anuncio",
+      withdrawConfirm:
+        "¿Seguro? Tu anuncio dejará de aparecer en el sitio. Esto no se puede deshacer.",
+      withdrawn: "Anuncio retirado",
+      withdrawnBody: "Ya no aparece en el sitio. Gracias por avisarnos.",
+      notFound: "Enlace no válido",
+      notFoundBody:
+        "Este enlace no corresponde a ningún anuncio activo. Revisa que lo hayas copiado completo.",
+      pendingNotice:
+        "Tu anuncio todavía está en revisión. Los cambios que hagas aquí se verán cuando lo publiquemos.",
+    },
+
     declaration:
       "Declaro que el vehículo es de mi propiedad, que la información anterior es verdadera, y que soy responsable de ella. Entiendo que Hi Desert Motors sólo publica el anuncio y no participa en la venta.",
     declarationRequired: "Tienes que aceptar la declaración para publicar",
@@ -192,6 +228,11 @@ const en: Dict = {
       "Tell the buyer why you're selling, what you've done to it, and how you've looked after it. Emojis and multiple paragraphs are fine.",
     descriptionPlaceholder:
       "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
+    city: "Where is the car?",
+    cityHelp:
+      "City only, not your address. Buyers need to know if it is close to them.",
+    otherCity: "Other city",
+    otherCityLabel: "Which city?",
     otherMake: "Other make",
     otherMakeLabel: "Which make?",
     selectPlaceholder: "Select…",
@@ -285,6 +326,8 @@ const en: Dict = {
     required: "This field is required",
     minPhotos: "Upload at least 3 photos",
     invalidVin: "The VIN must be 17 characters",
+    invalidPhone: "Enter 10 digits, for example 7606206390",
+    invalidEmail: "That email does not look valid",
     errorTitle: "Missing information",
     errorBody: "Still missing:",
     sendErrorTitle: "The listing could not be sent",
@@ -298,6 +341,35 @@ const en: Dict = {
     successTitle: "Listing received",
     successBody:
       "We'll review it and publish it shortly. We'll let you know at the number you left.",
+    editLinkTitle: "Save this link",
+    editLinkWarn:
+      "It is the only way to edit or withdraw your listing. Do not share it, and do not lose it: for security reasons we cannot generate it again.",
+    copyLink: "Copy link",
+    copied: "Copied",
+
+    edit: {
+      title: "Edit your listing",
+      lead: "You can correct the price, photos, description, location and your contact details.",
+      lockedTitle: "This can no longer be changed",
+      lockedBody:
+        "The vehicle details were locked when you published: year, make, model, mileage, title, owners, accidents and the condition you declared. That is what holds up your HDM rating — if it could be changed afterwards, it would mean nothing to a buyer.",
+      lockedFix:
+        "Declared something by mistake? Withdraw this listing and publish a new one with the correct details.",
+      save: "Save changes",
+      saving: "Saving…",
+      saved: "Changes saved",
+      withdraw: "Withdraw listing",
+      withdrawConfirm:
+        "Are you sure? Your listing will stop appearing on the site. This cannot be undone.",
+      withdrawn: "Listing withdrawn",
+      withdrawnBody: "It no longer appears on the site. Thanks for letting us know.",
+      notFound: "Invalid link",
+      notFoundBody:
+        "This link does not match any active listing. Check that you copied it in full.",
+      pendingNotice:
+        "Your listing is still under review. Changes you make here will show once we publish it.",
+    },
+
     declaration:
       "I declare that I own this vehicle, that the information above is true, and that I am responsible for it. I understand that Hi Desert Motors only publishes the listing and takes no part in the sale.",
     declarationRequired: "You must accept the declaration to publish",
