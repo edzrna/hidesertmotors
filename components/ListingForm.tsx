@@ -6,6 +6,12 @@ import type { ListingDictionary } from "@/i18n/listing";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/lib/hdm";
 import {
+  CITIES,
+  OTHER_CITY,
+  isValidEmail,
+  normalizePhone,
+} from "@/lib/locations";
+import {
   ACCIDENT_OPTIONS,
   DESCRIPTION_MAX,
   MAKES,
@@ -98,6 +104,8 @@ export default function ListingForm({
     make: "",
     otherMake: "",
     model: "",
+    city: "",
+    otherCity: "",
     miles: "",
     price: "",
     titleStatus: "clean" as TitleStatus,
@@ -126,6 +134,8 @@ export default function ListingForm({
    */
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [progress, setProgress] = useState("");
+  const [editLink, setEditLink] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const years = useMemo(() => getYears(), []);
@@ -187,6 +197,9 @@ export default function ListingForm({
   const resolvedMake =
     form.make === OTHER_MAKE ? form.otherMake.trim() : form.make;
 
+  const resolvedCity =
+    form.city === OTHER_CITY ? form.otherCity.trim() : form.city;
+
   const draft: Listing = useMemo(
     () => ({
       id: "draft",
@@ -208,8 +221,9 @@ export default function ListingForm({
       },
       knownIssues: form.knownIssues,
       description: form.description,
+      city: resolvedCity,
     }),
-    [form, resolvedMake, defects, photos.length]
+    [form, resolvedMake, resolvedCity, defects, photos.length]
   );
 
   const result = useMemo(() => scoreListing(draft), [draft]);
@@ -225,8 +239,15 @@ export default function ListingForm({
     if (!form.knownIssues.trim()) found.knownIssues = t.fields.knownIssues;
     if (!form.description.trim()) found.description = t.fields.description;
     if (photos.length < MIN_PHOTOS) found.photos = t.fields.photos;
+    if (!resolvedCity) found.city = t.fields.city;
     if (!form.name.trim()) found.name = t.fields.name;
-    if (!form.phone.trim()) found.phone = t.fields.phone;
+
+    // Un teléfono mal tecleado produce un botón de WhatsApp que no
+    // lleva a ningún lado, y el vendedor nunca sabe por qué no le llaman.
+    if (!normalizePhone(form.phone)) found.phone = t.fields.phone;
+
+    if (form.email.trim() && !isValidEmail(form.email))
+      found.email = t.fields.email;
     if (form.vin && !/^[A-HJ-NPR-Z0-9]{17}$/i.test(form.vin))
       found.vin = t.fields.vin;
     if (!form.declaration) found.declaration = t.form.declaration.slice(0, 40);
@@ -287,7 +308,7 @@ export default function ListingForm({
           photos: photoUrls,
           seller: {
             name: form.name,
-            phone: form.phone,
+            phone: normalizePhone(form.phone) ?? form.phone,
             email: form.email || null,
           },
           locale,
@@ -298,6 +319,15 @@ export default function ListingForm({
         const detail = await res.text().catch(() => "");
         throw new Error(
           `${t.form.saveFailed} (${res.status}) ${detail.slice(0, 200)}`
+        );
+      }
+
+      const data = await res.json();
+      if (data.editToken) {
+        setEditLink(
+          `${window.location.origin}${
+            locale === "es" ? "" : "/en"
+          }/editar/${data.id}?t=${data.editToken}`
         );
       }
 
@@ -321,6 +351,38 @@ export default function ListingForm({
       <div className="pub-done">
         <h2>{t.form.successTitle}</h2>
         <p>{t.form.successBody}</p>
+
+        {editLink && (
+          <div className="pub-link">
+            <div className="pub-link-title">{t.form.editLinkTitle}</div>
+            <p className="pub-link-warn">{t.form.editLinkWarn}</p>
+
+            {/* readOnly y no disabled: así se puede seleccionar y
+                copiar a mano si el botón falla. */}
+            <input
+              className="pub-link-input"
+              value={editLink}
+              readOnly
+              onFocus={(e) => e.currentTarget.select()}
+            />
+
+            <button
+              type="button"
+              className="hdm-btn hdm-btn--primary pub-link-copy"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(editLink);
+                  setCopied(true);
+                  window.setTimeout(() => setCopied(false), 2200);
+                } catch {
+                  setCopied(false);
+                }
+              }}
+            >
+              {copied ? t.form.copied : t.form.copyLink}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -425,6 +487,34 @@ export default function ListingForm({
               placeholder="Silverado 1500, Civic EX, F-150…"
             />
           </Field>
+
+          <Field
+            label={t.fields.city}
+            help={t.fields.cityHelp}
+            error={errors.city && t.form.required}
+          >
+            <select
+              value={form.city}
+              onChange={(e) => set("city", e.target.value)}
+            >
+              <option value="">{t.fields.selectPlaceholder}</option>
+              {CITIES.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+              <option value={OTHER_CITY}>{t.fields.otherCity}</option>
+            </select>
+          </Field>
+
+          {form.city === OTHER_CITY && (
+            <Field label={t.fields.otherCityLabel}>
+              <input
+                value={form.otherCity}
+                onChange={(e) => set("otherCity", e.target.value)}
+              />
+            </Field>
+          )}
 
           <div className="pub-row">
             <Field
@@ -695,7 +785,7 @@ export default function ListingForm({
 
             <Field
               label={t.fields.phone}
-              error={errors.phone && t.form.required}
+              error={errors.phone && t.form.invalidPhone}
             >
               <input
                 type="tel"
@@ -705,7 +795,10 @@ export default function ListingForm({
             </Field>
           </div>
 
-          <Field label={t.fields.email}>
+          <Field
+            label={t.fields.email}
+            error={errors.email && t.form.invalidEmail}
+          >
             <input
               type="email"
               value={form.email}
