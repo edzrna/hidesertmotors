@@ -16,7 +16,7 @@ const es = {
   },
 
   nav: {
-    tagline: "Compra con confianza.",
+    tagline: "Compra y vende sin sorpresas.",
     inventory: "Ver inventario",
     publish: "Publica tu auto",
     whatsapp: "Escribir por WhatsApp",
@@ -82,6 +82,7 @@ const es = {
     miles: "Millas",
     title: "Título",
     owners: "Dueños",
+    city: "Ubicación",
     accidents: "Accidentes",
     condition: "Condición",
   },
@@ -195,6 +196,8 @@ const es = {
     noPhoneNotice:
       "No tenemos teléfono de ventas. Cada anuncio trae el contacto directo de su vendedor. Este correo es para dudas del sitio, reportar un anuncio o solicitudes de privacidad.",
     email: "Enviar correo",
+    terms: "Términos de uso",
+    privacy: "Aviso de privacidad",
   },
 };
 
@@ -211,7 +214,7 @@ const en: Dictionary = {
   },
 
   nav: {
-    tagline: "Buy with confidence.",
+    tagline: "Buy and sell with no surprises.",
     inventory: "View inventory",
     publish: "List your car",
     whatsapp: "Message us on WhatsApp",
@@ -277,6 +280,7 @@ const en: Dictionary = {
     miles: "Miles",
     title: "Title",
     owners: "Owners",
+    city: "Location",
     accidents: "Accidents",
     condition: "Condition",
   },
@@ -390,6 +394,8 @@ const en: Dictionary = {
     noPhoneNotice:
       "We have no sales line. Every listing carries its seller's direct contact. This email is for site questions, reporting a listing, or privacy requests.",
     email: "Send an email",
+    terms: "Terms of use",
+    privacy: "Privacy notice",
   },
 };
 

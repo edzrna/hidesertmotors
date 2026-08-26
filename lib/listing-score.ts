@@ -92,7 +92,7 @@ export interface Listing {
    */
   description: string;
 
-  /** Ciudad donde se encuentra el vehículo. */
+  /** Ciudad donde está el auto. Tampoco entra en la calificación. */
   city: string;
 }
 
@@ -344,8 +344,6 @@ export function validateListing(listing: Partial<Listing>) {
   if (!listing.knownIssues?.trim()) errors.knownIssues = "required";
 
   if (!listing.description?.trim()) errors.description = "required";
-
-  // La ciudad es necesaria para publicar y localizar el vehículo.
   if (!listing.city?.trim()) errors.city = "required";
 
   if ((listing.documentation?.photoCount ?? 0) < 3)

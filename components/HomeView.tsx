@@ -379,6 +379,12 @@ export default function HomeView({
                     <dt>{dict.specs.owners}: </dt>
                     <dd>{listing.owners}</dd>
                   </div>
+                  {listing.city && (
+                    <div>
+                      <dt>{dict.specs.city}: </dt>
+                      <dd>{listing.city}</dd>
+                    </div>
+                  )}
                 </dl>
 
                 <div className="hdm-actions">
@@ -449,6 +455,15 @@ export default function HomeView({
             {/* Ya no hay teléfono del sitio. El contacto de cada auto
                 es su vendedor; este correo es sólo para el sitio. */}
             <p className="hdm-footer-text">{dict.footer.noPhoneNotice}</p>
+
+            <nav className="hdm-footer-links">
+              <Link href={localePath(locale, "/terminos")}>
+                {dict.footer.terms}
+              </Link>
+              <Link href={localePath(locale, "/privacidad")}>
+                {dict.footer.privacy}
+              </Link>
+            </nav>
 
             <div className="hdm-social">
               <a href={`mailto:${CONTACT_EMAIL}`} aria-label={dict.footer.email}>

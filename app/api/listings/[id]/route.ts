@@ -54,6 +54,28 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
       return NextResponse.json({ error: "not_found" }, { status: 404 });
     }
 
+    /**
+     * Marcar vendido es su propia acción y termina aquí.
+     *
+     * El vendedor se entera de la venta antes que nadie, así que debe
+     * poder marcarlo sin esperar a que alguien lo haga por él: un
+     * anuncio vendido que sigue apareciendo disponible genera llamadas
+     * inútiles para él y desconfianza para el sitio.
+     */
+    if (body.markSold === true) {
+      await sql`
+        UPDATE listings
+        SET status = 'sold', sold_at = NOW(), updated_at = NOW()
+        WHERE id = ${numericId} AND edit_token = ${token}
+      `;
+      return NextResponse.json({ ok: true, status: "sold" });
+    }
+
+    // Un anuncio ya vendido no se sigue editando.
+    if (rows[0].status === "sold") {
+      return NextResponse.json({ error: "already_sold" }, { status: 409 });
+    }
+
     const photos = (Array.isArray(body.photos) ? body.photos : [])
       .filter((url: unknown) => typeof url === "string")
       .slice(0, 24);

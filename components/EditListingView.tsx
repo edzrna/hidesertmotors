@@ -45,7 +45,7 @@ export default function EditListingView({
   const [email, setEmail] = useState(listing.sellerEmail);
 
   const [status, setStatus] = useState<
-    "idle" | "saving" | "saved" | "withdrawn"
+    "idle" | "saving" | "saved" | "withdrawn" | "sold"
   >("idle");
   const [error, setError] = useState("");
 
@@ -134,6 +134,24 @@ export default function EditListingView({
     }
   }
 
+  async function handleMarkSold() {
+    if (!window.confirm(t.form.edit.markSoldConfirm)) return;
+
+    setStatus("saving");
+    try {
+      const res = await fetch(`/api/listings/${listing.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, markSold: true }),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("sold");
+    } catch {
+      setStatus("idle");
+      setError(t.form.saveFailed);
+    }
+  }
+
   async function handleWithdraw() {
     if (!window.confirm(t.form.edit.withdrawConfirm)) return;
 
@@ -150,6 +168,23 @@ export default function EditListingView({
       setStatus("idle");
       setError(t.form.saveFailed);
     }
+  }
+
+  if (status === "sold") {
+    return (
+      <main className="hdm-shell hdm-detail">
+        <div className="pub-done">
+          <h2>{t.form.edit.soldTitle}</h2>
+          <p>{t.form.edit.soldBody}</p>
+          <Link
+            href={localePath(locale, "/")}
+            className="hdm-btn hdm-btn--primary hdm-btn--block"
+          >
+            {dict.vehicle.back}
+          </Link>
+        </div>
+      </main>
+    );
   }
 
   if (status === "withdrawn") {
@@ -182,6 +217,10 @@ export default function EditListingView({
 
         {listing.status === "pending" && (
           <p className="pub-disclaimer">{t.form.edit.pendingNotice}</p>
+        )}
+
+        {listing.status === "sold" && (
+          <p className="pub-disclaimer">{t.form.edit.alreadySold}</p>
         )}
       </header>
 
@@ -383,11 +422,25 @@ export default function EditListingView({
         <button
           type="button"
           className="hdm-btn hdm-btn--primary pub-submit"
-          disabled={status === "saving"}
+          disabled={status === "saving" || listing.status === "sold"}
           onClick={handleSave}
         >
           {status === "saving" ? t.form.edit.saving : t.form.edit.save}
         </button>
+
+        {listing.status !== "sold" && (
+          <div className="edit-sold-box">
+            <button
+              type="button"
+              className="hdm-btn hdm-btn--ghost edit-sold-btn"
+              disabled={status === "saving"}
+              onClick={handleMarkSold}
+            >
+              {t.form.edit.markSold}
+            </button>
+            <p>{t.form.edit.markSoldHelp}</p>
+          </div>
+        )}
 
         <button
           type="button"

@@ -6,6 +6,8 @@ import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import type { ListingDictionary } from "@/i18n/listing";
+import type { LegalDictionary } from "@/i18n/legal";
+import ReportButton from "@/components/ReportButton";
 import { formatMiles, localePath, type Locale } from "@/lib/hdm";
 import { sellerWhatsAppUrl, type PublicListing } from "@/lib/listings-db";
 import { SITE_URL } from "@/lib/site";
@@ -14,11 +16,13 @@ export default function CarView({
   locale,
   dict,
   t,
+  legal,
   listing,
 }: {
   locale: Locale;
   dict: Dictionary;
   t: ListingDictionary;
+  legal: LegalDictionary;
   listing: PublicListing;
 }) {
   const path = localePath(locale, `/car/${listing.id}`);
@@ -125,6 +129,9 @@ export default function CarView({
               label={dict.specs.accidents}
               value={String(listing.accidents)}
             />
+            {listing.city && (
+              <InfoBox label={dict.specs.city} value={listing.city} />
+            )}
           </dl>
 
           {listing.knownIssues && (
@@ -155,6 +162,8 @@ export default function CarView({
           )}
 
           <ShareButtons url={shareUrl} text={listing.name} dict={dict} extended />
+
+          <ReportButton listingId={listing.id} t={legal} />
         </div>
       </div>
     </main>

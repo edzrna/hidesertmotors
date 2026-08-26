@@ -173,6 +173,13 @@ const es = {
       save: "Guardar cambios",
       saving: "Guardando…",
       saved: "Cambios guardados",
+      markSold: "Ya lo vendí",
+      markSoldHelp:
+        "Tu anuncio se queda visible, marcado como vendido, y deja de recibir contactos.",
+      markSoldConfirm: "¿Ya vendiste este auto?",
+      soldTitle: "Marcado como vendido",
+      soldBody: "Felicidades por la venta. Tu anuncio ya aparece como vendido.",
+      alreadySold: "Este anuncio ya está marcado como vendido.",
       withdraw: "Retirar anuncio",
       withdrawConfirm:
         "¿Seguro? Tu anuncio dejará de aparecer en el sitio. Esto no se puede deshacer.",
@@ -358,6 +365,13 @@ const en: Dict = {
       save: "Save changes",
       saving: "Saving…",
       saved: "Changes saved",
+      markSold: "I sold it",
+      markSoldHelp:
+        "Your listing stays visible, marked as sold, and stops receiving contacts.",
+      markSoldConfirm: "Did you sell this car?",
+      soldTitle: "Marked as sold",
+      soldBody: "Congratulations on the sale. Your listing now shows as sold.",
+      alreadySold: "This listing is already marked as sold.",
       withdraw: "Withdraw listing",
       withdrawConfirm:
         "Are you sure? Your listing will stop appearing on the site. This cannot be undone.",
