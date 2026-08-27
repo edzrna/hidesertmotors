@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import type { CategoryKey } from "@/lib/listing-score";
 import {
   getLevelIcon,
   type LevelKey,
@@ -59,6 +60,7 @@ export interface PublicListing {
   confidence: number;
   confidenceLevel: "low" | "medium" | "high";
   flags: string[];
+  categories: Record<CategoryKey, number>;
 
   sellerName: string;
   sellerPhone: string;
@@ -122,6 +124,12 @@ function mapRow(row: any, locale: Locale): PublicListing {
     flags: toArray(row.flags).filter(
       (flag): flag is string => typeof flag === "string"
     ),
+    categories: (row.categories ?? {
+      mechanical: 0,
+      legal: 0,
+      electrical: 0,
+      cosmetic: 0,
+    }) as Record<CategoryKey, number>,
 
     sellerName: row.seller_name,
     sellerPhone: row.seller_phone,
@@ -141,7 +149,7 @@ export async function getPublishedListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        score, level_key, confidence, confidence_level, flags,
+        score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at
       FROM listings
@@ -175,7 +183,7 @@ export async function getListingById(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        score, level_key, confidence, confidence_level, flags,
+        score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at
       FROM listings
@@ -210,7 +218,7 @@ export async function getListingForEdit(id: string, token: string) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        score, level_key, confidence, confidence_level, flags,
+        score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status
       FROM listings

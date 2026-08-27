@@ -4,6 +4,7 @@ import Link from "next/link";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
+import CategoryGrid from "@/components/CategoryGrid";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { LegalDictionary } from "@/i18n/legal";
@@ -100,6 +101,8 @@ export default function CarView({
               <span style={{ width: `${listing.confidence}%` }} />
             </div>
           </div>
+
+          <CategoryGrid dict={dict} categories={listing.categories} />
 
           {listing.flags.length > 0 && (
             <div className="hdm-flags">

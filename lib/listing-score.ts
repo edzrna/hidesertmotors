@@ -97,94 +97,68 @@ export interface Listing {
 }
 
 /* ============================================================
-   PESOS
-   El peso está donde el dato es verificable. El título y las millas
-   pesan más que nada porque se comprueban con un papel.
+   LAS CUATRO CATEGORÍAS
+
+   Un solo número dice "84". Cuatro dicen "mecánicamente sólido pero
+   con un problema legal", que es lo que el comprador necesita saber
+   para decidir si va a verlo.
+
+   Los pesos reflejan cuánto cuesta arreglar cada cosa. Una
+   transmisión puede valer más que el auto; una abolladura, no.
    ============================================================ */
 
-export const WEIGHTS = {
-  title: 0.24,
-  mechanical: 0.24,
-  miles: 0.18,
-  history: 0.14,
-  age: 0.12,
-  cosmetic: 0.08,
-} as const;
+export type CategoryKey = "mechanical" | "legal" | "electrical" | "cosmetic";
+
+export const CATEGORY_WEIGHTS: Record<CategoryKey, number> = {
+  mechanical: 0.38,
+  legal: 0.3,
+  electrical: 0.16,
+  cosmetic: 0.16,
+};
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
-/* ============================================================
-   COMPONENTES
-   ============================================================ */
+/* ---------- Mecánica ---------- */
 
-function titleScore(status: TitleStatus) {
-  const map: Record<TitleStatus, number> = {
-    clean: 100,
-    clean_lien: 88, // limpio, pero hay que liquidar el gravamen
-    rebuilt: 68,
-    salvage: 55,
-    no_title: 40, // sin título no se puede transferir: bandera roja
-  };
-  return map[status];
+function milesPenalty(miles: number) {
+  if (miles <= 30000) return 0;
+  if (miles <= 60000) return 4;
+  if (miles <= 90000) return 9;
+  if (miles <= 130000) return 15;
+  if (miles <= 180000) return 22;
+  return 30;
 }
 
-function milesScore(miles: number) {
-  if (miles <= 30000) return 98;
-  if (miles <= 60000) return 90;
-  if (miles <= 90000) return 80;
-  if (miles <= 130000) return 70;
-  if (miles <= 180000) return 60;
-  return 50;
-}
-
-function ageScore(year: number, currentYear = new Date().getFullYear()) {
+function agePenalty(year: number, currentYear = new Date().getFullYear()) {
   const age = currentYear - year;
-  if (age <= 2) return 98;
-  if (age <= 5) return 90;
-  if (age <= 9) return 80;
-  if (age <= 14) return 70;
-  if (age <= 20) return 60;
-  return 52;
-}
-
-function historyScore(owners: number, accidents: number) {
-  let score = 88;
-
-  if (owners === 1) score += 8;
-  if (owners === 2) score += 2;
-  if (owners >= 4) score -= 10;
-  else if (owners === 3) score -= 4;
-
-  if (accidents === 1) score -= 12;
-  if (accidents === 2) score -= 22;
-  if (accidents >= 3) score -= 32;
-
-  return clamp(score, 40, 100);
+  if (age <= 2) return 0;
+  if (age <= 5) return 3;
+  if (age <= 9) return 7;
+  if (age <= 14) return 12;
+  if (age <= 20) return 18;
+  return 24;
 }
 
 /**
- * Mecánica: se parte de 100 y se descuenta por cada defecto declarado.
+ * Mecánica: motor, transmisión, frenos y desgaste.
  *
- * Los castigos son deliberadamente duros en lo que cuesta caro arreglar.
- * Una transmisión que patina o un motor que se sobrecalienta pueden valer
- * más que el auto, y el comprador tiene que verlo reflejado en el número.
+ * Los castigos son duros a propósito en lo que cuesta caro. Si el
+ * número no refleja que una transmisión que patina puede valer más
+ * que el auto, la calificación miente.
  */
-function mechanicalScore(d: DefectReport) {
+function mechanicalScore(listing: Listing) {
+  const d = listing.defects;
   let score = 100;
 
-  if (d.transmissionSlips) score -= 30;
-  if (d.overheats) score -= 28;
-  if (!d.startsEveryTime) score -= 22;
-  if (d.checkEngineOn) score -= 18;
-  if (!d.brakesFeelNormal) score -= 16;
-  if (d.leaksFluid) score -= 12;
-  if (d.unusualNoises) score -= 10;
-  if (d.otherWarningLights) score -= 8;
-  if (!d.acWorks) score -= 6;
-  if (!d.heatWorks) score -= 4;
-  if (!d.allWindowsWork) score -= 3;
+  if (d.transmissionSlips) score -= 34;
+  if (d.overheats) score -= 32;
+  if (!d.startsEveryTime) score -= 24;
+  if (d.checkEngineOn) score -= 20;
+  if (!d.brakesFeelNormal) score -= 18;
+  if (d.leaksFluid) score -= 13;
+  if (d.unusualNoises) score -= 11;
 
   const tirePenalty: Record<TireCondition, number> = {
     new: 0,
@@ -194,19 +168,78 @@ function mechanicalScore(d: DefectReport) {
   };
   score -= tirePenalty[d.tires];
 
+  // Millas y año no son defectos, pero predicen desgaste.
+  score -= milesPenalty(listing.miles);
+  score -= agePenalty(listing.year);
+
+  return clamp(score, 20, 100);
+}
+
+/* ---------- Legal y papeles ---------- */
+
+function titlePenalty(status: TitleStatus) {
+  const map: Record<TitleStatus, number> = {
+    clean: 0,
+    clean_lien: 14, // limpio, pero hay que liquidar el gravamen
+    rebuilt: 34,
+    salvage: 48,
+    no_title: 62, // sin título no se puede transferir: bandera roja
+  };
+  return map[status];
+}
+
+/**
+ * Legal: título, historial y papeles al día.
+ *
+ * Es la categoría donde un problema no se arregla con dinero: un
+ * título de salvamento acompaña al auto para siempre.
+ */
+function legalScore(listing: Listing) {
+  let score = 100;
+
+  score -= titlePenalty(listing.titleStatus);
+
+  if (listing.reportedAccidents === 1) score -= 12;
+  if (listing.reportedAccidents === 2) score -= 22;
+  if (listing.reportedAccidents >= 3) score -= 32;
+
+  if (listing.owners === 1) score += 4;
+  if (listing.owners === 3) score -= 5;
+  if (listing.owners >= 4) score -= 11;
+
+  // Sin smog vigente no se puede transferir en California.
+  if (!listing.documentation.smogCurrent) score -= 12;
+  if (!listing.documentation.registrationCurrent) score -= 6;
+
+  return clamp(score, 20, 100);
+}
+
+/* ---------- Eléctrica y confort ---------- */
+
+function electricalScore(d: DefectReport) {
+  let score = 100;
+
+  if (d.otherWarningLights) score -= 26;
+  if (!d.acWorks) score -= 24;
+  if (!d.heatWorks) score -= 16;
+  if (!d.allWindowsWork) score -= 12;
+
   return clamp(score, 30, 100);
 }
+
+/* ---------- Estética ---------- */
 
 function cosmeticScore(d: DefectReport) {
   let score = 100;
 
-  if (d.hasRust) score -= 20;
-  if (d.glassCracked) score -= 12;
-  if (d.hasDents) score -= 10;
-  if (d.interiorTorn) score -= 8;
-  if (d.smokedIn) score -= 8;
+  // El óxido pesa más que el resto: no es apariencia, es estructura.
+  if (d.hasRust) score -= 30;
+  if (d.glassCracked) score -= 16;
+  if (d.hasDents) score -= 14;
+  if (d.interiorTorn) score -= 12;
+  if (d.smokedIn) score -= 12;
 
-  return clamp(score, 40, 100);
+  return clamp(score, 30, 100);
 }
 
 /* ============================================================
@@ -256,34 +289,34 @@ export interface ScoredListing {
   levelKey: LevelKey;
   confidence: number;
   confidenceLevel: ConfidenceLevel;
-  breakdown: Record<keyof typeof WEIGHTS, number>;
+  /** El desglose por categoría: es lo que se enseña con los medidores. */
+  categories: Record<CategoryKey, number>;
   /** Puntos concretos que el comprador debería revisar en persona. */
   flags: string[];
 }
 
 export function scoreListing(listing: Listing): ScoredListing {
-  const breakdown = {
-    title: titleScore(listing.titleStatus),
-    mechanical: mechanicalScore(listing.defects),
-    miles: milesScore(listing.miles),
-    history: historyScore(listing.owners, listing.reportedAccidents),
-    age: ageScore(listing.year),
+  const categories: Record<CategoryKey, number> = {
+    mechanical: mechanicalScore(listing),
+    legal: legalScore(listing),
+    electrical: electricalScore(listing.defects),
     cosmetic: cosmeticScore(listing.defects),
   };
 
-  const total = (Object.keys(WEIGHTS) as (keyof typeof WEIGHTS)[]).reduce(
-    (sum, key) => sum + breakdown[key] * WEIGHTS[key],
+  const total = (Object.keys(CATEGORY_WEIGHTS) as CategoryKey[]).reduce(
+    (sum, key) => sum + categories[key] * CATEGORY_WEIGHTS[key],
     0
   );
 
+  const score = Math.round(clamp(total, 40, 100));
   const confidence = getConfidence(listing.documentation);
 
   return {
-    score: Math.round(clamp(total, 40, 100)),
-    levelKey: getHDMLevel(Math.round(clamp(total, 40, 100))),
+    score,
+    levelKey: getHDMLevel(score),
     confidence: confidence.score,
     confidenceLevel: confidence.level,
-    breakdown,
+    categories,
     flags: getFlags(listing),
   };
 }

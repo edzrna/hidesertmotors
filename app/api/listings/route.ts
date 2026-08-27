@@ -120,7 +120,7 @@ export async function POST(request: Request) {
       title_status, owners, reported_accidents,
       defects, documentation, known_issues, description, city,
       photos, seller_name, seller_phone, seller_email,
-      score, level_key, confidence, confidence_level, flags,
+      score, level_key, confidence, confidence_level, flags, categories,
       locale, status, edit_token
     ) VALUES (
       ${listing.year}, ${listing.make}, ${listing.model}, ${listing.miles},
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
       ${rawEmail || null},
       ${scored.score}, ${scored.levelKey},
       ${scored.confidence}, ${scored.confidenceLevel},
-      ${JSON.stringify(scored.flags)},
+      ${JSON.stringify(scored.flags)}, ${JSON.stringify(scored.categories)},
       ${body.locale === "en" ? "en" : "es"},
       'pending', ${editToken}
     )

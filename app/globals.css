@@ -2722,3 +2722,178 @@ body {
 .hdm-top {
   padding-bottom: clamp(20px, 4vw, 34px);
 }
+
+/* ============================================================
+   MEDIDORES POR CATEGORÍA
+   ============================================================ */
+
+.gauges {
+  margin-top: 20px;
+}
+
+.gauges-head h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 800;
+}
+
+.gauges-head p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+  max-width: 56ch;
+}
+
+.gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.gauges--compact .gauges-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gauge {
+  margin: 0;
+  padding: 14px 10px 12px;
+  border-radius: 18px;
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line);
+  text-align: center;
+}
+
+.gauges--compact .gauge {
+  padding: 10px 6px 8px;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+  display: block;
+  margin: 0 auto 4px;
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(216, 138, 0, 0.12);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+/* El arco se dibuja al entrar en pantalla. El desfase parte del
+   total y baja hasta el valor: πr = 131.95 con r = 42. */
+.gauge-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-dashoffset: 131.95;
+  transition: stroke-dashoffset 1.1s var(--hdm-ease);
+}
+
+.gauge-svg.is-visible .gauge-fill {
+  stroke-dashoffset: calc(131.95 - 131.95 * (var(--value) / 100));
+}
+
+.gauge-needle {
+  stroke: var(--color-hdm-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transform-origin: 50px 52px;
+  transform: rotate(-90deg);
+  transition: transform 1.1s var(--hdm-ease);
+}
+
+.gauge-svg.is-visible .gauge-needle {
+  transform: rotate(0deg);
+}
+
+.gauge-pin {
+  fill: var(--color-hdm-ink);
+}
+
+.gauge-icon {
+  font-size: 15px;
+}
+
+/* El color se lee antes que el número: es el primer dato. */
+.gauge--good .gauge-fill {
+  stroke: #2e9e5b;
+}
+.gauge--ok .gauge-fill {
+  stroke: var(--color-hdm-orange);
+}
+.gauge--warn .gauge-fill {
+  stroke: #e08a2c;
+}
+.gauge--bad .gauge-fill {
+  stroke: var(--color-hdm-sold);
+}
+
+.gauge--good .gauge-value {
+  color: #2e9e5b;
+}
+.gauge--bad .gauge-value {
+  color: var(--color-hdm-sold);
+}
+
+.gauge figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gauge-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-hdm-brown);
+}
+
+.gauges--compact .gauge-value {
+  font-size: 18px;
+}
+
+.gauge-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-hdm-ink);
+}
+
+.gauges--compact .gauge-label {
+  font-size: 11px;
+}
+
+.gauge-caption {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-hdm-muted);
+  margin-top: 2px;
+}
+
+/* ---------- Grupos del formulario ---------- */
+
+.pub-group legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.pub-group-icon {
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-fill,
+  .gauge-needle {
+    transition: none;
+  }
+}

@@ -173,6 +173,19 @@ const es = {
       "Ningún anuncio se publica solo. Revisamos cada uno antes de que aparezca, y el comprador te contacta directo a tu WhatsApp.",
   },
 
+  categories: {
+    title: "Desglose de la calificación",
+    lead: "Un solo número esconde de qué está hecho. Aquí ves dónde está bien y dónde no.",
+    mechanical: "Mecánica",
+    mechanicalCaption: "Motor, transmisión, frenos y desgaste",
+    legal: "Legal y papeles",
+    legalCaption: "Título, historial, smog y registro",
+    electrical: "Eléctrica",
+    electricalCaption: "Luces, aire, calefacción y ventanas",
+    cosmetic: "Estética",
+    cosmeticCaption: "Óxido, golpes, cristales e interior",
+  },
+
   flags: {
     title_salvage: "Título Salvage",
     title_rebuilt: "Título reconstruido",
@@ -369,6 +382,19 @@ const en: Dictionary = {
     step3Title: "We review it and it goes live",
     step3Body:
       "No listing publishes itself. We review each one before it appears, and buyers contact you directly on your WhatsApp.",
+  },
+
+  categories: {
+    title: "Rating breakdown",
+    lead: "A single number hides what it is made of. Here you see where it is strong and where it is not.",
+    mechanical: "Mechanical",
+    mechanicalCaption: "Engine, transmission, brakes and wear",
+    legal: "Legal and paperwork",
+    legalCaption: "Title, history, smog and registration",
+    electrical: "Electrical",
+    electricalCaption: "Lights, A/C, heat and windows",
+    cosmetic: "Cosmetic",
+    cosmeticCaption: "Rust, dents, glass and interior",
   },
 
   flags: {

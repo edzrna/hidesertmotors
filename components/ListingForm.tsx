@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
+import CategoryGrid from "@/components/CategoryGrid";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/lib/hdm";
@@ -30,28 +31,44 @@ import {
   type TireCondition,
 } from "@/lib/listing-score";
 
-const DEFECT_KEYS = [
-  "checkEngineOn",
-  "otherWarningLights",
-  "transmissionSlips",
-  "overheats",
-  "leaksFluid",
-  "unusualNoises",
-  "hasRust",
-  "hasDents",
-  "glassCracked",
-  "interiorTorn",
-  "smokedIn",
-] as const;
-
-/** Estas se preguntan en positivo: marcar es lo bueno. */
-const WORKS_KEYS = [
-  "startsEveryTime",
-  "acWorks",
-  "heatWorks",
-  "allWindowsWork",
-  "brakesFeelNormal",
-] as const;
+/**
+ * Las casillas agrupadas por la misma categoría que muestran los
+ * medidores. Así el vendedor ve qué medidor mueve cada respuesta.
+ *
+ * `positive` marca las que se preguntan al revés: marcarlas es bueno.
+ */
+const GROUPS = [
+  {
+    key: "mechanical" as const,
+    icon: "⚙️",
+    positive: ["startsEveryTime", "brakesFeelNormal"] as const,
+    negative: [
+      "checkEngineOn",
+      "transmissionSlips",
+      "overheats",
+      "leaksFluid",
+      "unusualNoises",
+    ] as const,
+  },
+  {
+    key: "electrical" as const,
+    icon: "⚡",
+    positive: ["acWorks", "heatWorks", "allWindowsWork"] as const,
+    negative: ["otherWarningLights"] as const,
+  },
+  {
+    key: "cosmetic" as const,
+    icon: "✨",
+    positive: [] as const,
+    negative: [
+      "hasRust",
+      "hasDents",
+      "glassCracked",
+      "interiorTorn",
+      "smokedIn",
+    ] as const,
+  },
+];
 
 const TITLE_OPTIONS: TitleStatus[] = [
   "clean",
@@ -406,6 +423,8 @@ export default function ListingForm({
           </div>
         </div>
 
+        <CategoryGrid dict={dict} categories={result.categories} compact />
+
         <div className="pub-live-conf">
           <div className="pub-live-conf-head">
             <span>{t.score.confidence}</span>
@@ -594,63 +613,76 @@ export default function ListingForm({
           </div>
         </fieldset>
 
-        {/* ---------- Estado real ---------- */}
-        <fieldset className="pub-step">
-          <legend>{t.steps.condition}</legend>
+        {/* ---------- Estado real, por categoría ---------- */}
+        {GROUPS.map((group) => (
+          <fieldset className="pub-step pub-group" key={group.key}>
+            <legend>
+              <span className="pub-group-icon" aria-hidden>
+                {group.icon}
+              </span>
+              {dict.categories[group.key]}
+            </legend>
 
-          <div className="pub-checks">
-            {WORKS_KEYS.map((key) => (
-              <label className="pub-check" key={key}>
-                <input
-                  type="checkbox"
-                  checked={defects[key]}
-                  onChange={(e) => setDefect(key, e.target.checked)}
-                />
-                <span>{t.defects[key]}</span>
-              </label>
-            ))}
-          </div>
+            {group.positive.length > 0 && (
+              <div className="pub-checks">
+                {group.positive.map((key) => (
+                  <label className="pub-check" key={key}>
+                    <input
+                      type="checkbox"
+                      checked={defects[key]}
+                      onChange={(e) => setDefect(key, e.target.checked)}
+                    />
+                    <span>{t.defects[key]}</span>
+                  </label>
+                ))}
+              </div>
+            )}
 
-          <div className="pub-checks pub-checks--negative">
-            {DEFECT_KEYS.map((key) => (
-              <label className="pub-check" key={key}>
-                <input
-                  type="checkbox"
-                  checked={defects[key]}
-                  onChange={(e) => setDefect(key, e.target.checked)}
-                />
-                <span>{t.defects[key]}</span>
-              </label>
-            ))}
-          </div>
-
-          <Field label={t.fields.tires}>
-            <select
-              value={defects.tires}
-              onChange={(e) =>
-                setDefect("tires", e.target.value as TireCondition)
-              }
-            >
-              {TIRE_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {t.tires[option]}
-                </option>
+            <div className="pub-checks pub-checks--negative">
+              {group.negative.map((key) => (
+                <label className="pub-check" key={key}>
+                  <input
+                    type="checkbox"
+                    checked={defects[key]}
+                    onChange={(e) => setDefect(key, e.target.checked)}
+                  />
+                  <span>{t.defects[key]}</span>
+                </label>
               ))}
-            </select>
-          </Field>
+            </div>
 
-          <Field
-            label={t.fields.knownIssues}
-            help={t.fields.knownIssuesHelp}
-            error={errors.knownIssues && t.form.required}
-          >
-            <textarea
-              rows={3}
-              value={form.knownIssues}
-              onChange={(e) => set("knownIssues", e.target.value)}
-            />
-          </Field>
-        </fieldset>
+            {group.key === "mechanical" && (
+              <>
+                <Field label={t.fields.tires}>
+                  <select
+                    value={defects.tires}
+                    onChange={(e) =>
+                      setDefect("tires", e.target.value as TireCondition)
+                    }
+                  >
+                    {TIRE_OPTIONS.map((option) => (
+                      <option key={option} value={option}>
+                        {t.tires[option]}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+
+                <Field
+                  label={t.fields.knownIssues}
+                  help={t.fields.knownIssuesHelp}
+                  error={errors.knownIssues && t.form.required}
+                >
+                  <textarea
+                    rows={3}
+                    value={form.knownIssues}
+                    onChange={(e) => set("knownIssues", e.target.value)}
+                  />
+                </Field>
+              </>
+            )}
+          </fieldset>
+        ))}
 
         {/* ---------- Tu anuncio ---------- */}
         <fieldset className="pub-step">
