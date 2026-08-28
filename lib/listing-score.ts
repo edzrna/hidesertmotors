@@ -30,6 +30,31 @@ export type TitleStatus =
   | "salvage"
   | "no_title";
 
+/**
+ * Carrocería y combustible describen el auto, no su estado. NO entran
+ * en la calificación: un coupé no es mejor ni peor que una SUV, es
+ * otra cosa. Sirven para buscar y para saber qué se está viendo.
+ */
+export type BodyType =
+  | "sedan"
+  | "coupe"
+  | "hatchback"
+  | "suv"
+  | "truck"
+  | "van"
+  | "convertible"
+  | "wagon"
+  | "offroad";
+
+export type FuelType =
+  | "gasoline"
+  | "diesel"
+  | "hybrid"
+  | "plugin_hybrid"
+  | "electric";
+
+export type Transmission = "automatic" | "manual";
+
 export type TireCondition = "new" | "good" | "worn" | "needs_replacing";
 
 /** Cada casilla es un hecho concreto que el comprador puede verificar. */
@@ -94,6 +119,10 @@ export interface Listing {
 
   /** Ciudad donde está el auto. Tampoco entra en la calificación. */
   city: string;
+
+  bodyType: BodyType;
+  fuelType: FuelType;
+  transmission: Transmission;
 }
 
 /* ============================================================
@@ -207,8 +236,13 @@ function legalScore(listing: Listing) {
   if (listing.owners === 3) score -= 5;
   if (listing.owners >= 4) score -= 11;
 
-  // Sin smog vigente no se puede transferir en California.
-  if (!listing.documentation.smogCurrent) score -= 12;
+  /**
+   * Sin smog vigente no se puede transferir en California — pero los
+   * eléctricos están exentos, así que castigarlos por no tenerlo
+   * sería castigarlos por un trámite que la ley no les pide.
+   */
+  const needsSmog = listing.fuelType !== "electric";
+  if (needsSmog && !listing.documentation.smogCurrent) score -= 12;
   if (!listing.documentation.registrationCurrent) score -= 6;
 
   return clamp(score, 20, 100);
@@ -345,7 +379,10 @@ function getFlags(listing: Listing): string[] {
 
   if (listing.reportedAccidents >= 2) flags.push("multiple_accidents");
   if (listing.miles >= 180000) flags.push("high_miles");
-  if (!listing.documentation.smogCurrent) flags.push("no_smog");
+  // Un eléctrico está exento de smog: la bandera sería falsa.
+  if (listing.fuelType !== "electric" && !listing.documentation.smogCurrent) {
+    flags.push("no_smog");
+  }
 
   return flags;
 }

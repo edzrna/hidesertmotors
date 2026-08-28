@@ -13,6 +13,12 @@ import {
   normalizePhone,
 } from "@/lib/locations";
 import {
+  BODY_TYPES,
+  FUEL_TYPES,
+  TRANSMISSIONS,
+  EMPTY_DEFECTS,
+  TIRE_OPTIONS,
+  TITLE_OPTIONS,
   ACCIDENT_OPTIONS,
   DESCRIPTION_MAX,
   MAKES,
@@ -29,6 +35,9 @@ import {
   type Listing,
   type TitleStatus,
   type TireCondition,
+  type BodyType,
+  type FuelType,
+  type Transmission,
 } from "@/lib/listing-score";
 
 /**
@@ -70,40 +79,8 @@ const GROUPS = [
   },
 ];
 
-const TITLE_OPTIONS: TitleStatus[] = [
-  "clean",
-  "clean_lien",
-  "rebuilt",
-  "salvage",
-  "no_title",
-];
 
-const TIRE_OPTIONS: TireCondition[] = [
-  "new",
-  "good",
-  "worn",
-  "needs_replacing",
-];
 
-const EMPTY_DEFECTS: DefectReport = {
-  checkEngineOn: false,
-  otherWarningLights: false,
-  startsEveryTime: true,
-  transmissionSlips: false,
-  overheats: false,
-  leaksFluid: false,
-  unusualNoises: false,
-  acWorks: true,
-  heatWorks: true,
-  allWindowsWork: true,
-  brakesFeelNormal: true,
-  hasRust: false,
-  hasDents: false,
-  glassCracked: false,
-  interiorTorn: false,
-  smokedIn: false,
-  tires: "good",
-};
 
 const MIN_PHOTOS = 3;
 
@@ -121,6 +98,9 @@ export default function ListingForm({
     make: "",
     otherMake: "",
     model: "",
+    bodyType: "sedan",
+    fuelType: "gasoline",
+    transmission: "automatic",
     city: "",
     otherCity: "",
     miles: "",
@@ -245,6 +225,9 @@ export default function ListingForm({
       knownIssues: form.knownIssues,
       description: form.description,
       city: resolvedCity,
+      bodyType: form.bodyType as BodyType,
+      fuelType: form.fuelType as FuelType,
+      transmission: form.transmission as Transmission,
     }),
     [form, resolvedMake, resolvedCity, defects, photos.length]
   );
@@ -543,6 +526,47 @@ export default function ListingForm({
               onChange={(e) => set("model", e.target.value)}
               placeholder="Silverado 1500, Civic EX, F-150…"
             />
+          </Field>
+
+          <div className="pub-row">
+            <Field label={t.fields.bodyType}>
+              <select
+                value={form.bodyType}
+                onChange={(e) => set("bodyType", e.target.value)}
+              >
+                {BODY_TYPES.map((option) => (
+                  <option key={option} value={option}>
+                    {t.bodyTypes[option]}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            <Field label={t.fields.fuelType}>
+              <select
+                value={form.fuelType}
+                onChange={(e) => set("fuelType", e.target.value)}
+              >
+                {FUEL_TYPES.map((option) => (
+                  <option key={option} value={option}>
+                    {t.fuelTypes[option]}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          <Field label={t.fields.transmission}>
+            <select
+              value={form.transmission}
+              onChange={(e) => set("transmission", e.target.value)}
+            >
+              {TRANSMISSIONS.map((option) => (
+                <option key={option} value={option}>
+                  {t.transmissions[option]}
+                </option>
+              ))}
+            </select>
           </Field>
 
           <Field

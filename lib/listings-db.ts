@@ -1,5 +1,10 @@
 import { neon } from "@neondatabase/serverless";
-import type { CategoryKey } from "@/lib/listing-score";
+import type {
+  BodyType,
+  CategoryKey,
+  FuelType,
+  Transmission,
+} from "@/lib/listing-score";
 import {
   getSellerBadge,
   monthsBetween,
@@ -56,6 +61,9 @@ export interface PublicListing {
   description: string;
   knownIssues: string;
   city: string;
+  bodyType: BodyType;
+  fuelType: FuelType;
+  transmission: Transmission;
 
   image: string;
   gallery: string[];
@@ -121,6 +129,9 @@ function mapRow(row: any, locale: Locale): PublicListing {
     description: row.description ?? "",
     knownIssues: row.known_issues ?? "",
     city: row.city ?? "",
+    bodyType: (row.body_type ?? "sedan") as BodyType,
+    fuelType: (row.fuel_type ?? "gasoline") as FuelType,
+    transmission: (row.transmission ?? "automatic") as Transmission,
 
     image: gallery[0] ?? "/logo.png",
     gallery,
@@ -167,6 +178,7 @@ export async function getPublishedListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
+        body_type, fuel_type, transmission,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -202,6 +214,7 @@ export async function getListingById(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
+        body_type, fuel_type, transmission,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -238,6 +251,7 @@ export async function getListingForEdit(id: string, token: string) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
+        body_type, fuel_type, transmission,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status

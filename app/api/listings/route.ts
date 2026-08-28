@@ -65,6 +65,9 @@ export async function POST(request: Request) {
     // a inyección de scripts.
     description: String(body.description ?? "").trim().slice(0, 1200),
     city: String(body.city ?? "").trim().slice(0, 60),
+    bodyType: body.bodyType ?? "sedan",
+    fuelType: body.fuelType ?? "gasoline",
+    transmission: body.transmission ?? "automatic",
   };
 
   const check = validateListing(listing);
@@ -129,6 +132,7 @@ export async function POST(request: Request) {
       ${JSON.stringify(listing.defects)},
       ${JSON.stringify(listing.documentation)},
       ${listing.knownIssues}, ${listing.description}, ${listing.city},
+      ${listing.bodyType}, ${listing.fuelType}, ${listing.transmission},
       ${JSON.stringify(photos)},
       ${name}, ${phone},
       ${rawEmail || null},

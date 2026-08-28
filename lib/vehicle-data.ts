@@ -1,3 +1,12 @@
+import type {
+  BodyType,
+  FuelType,
+  Transmission,
+  DefectReport,
+  TireCondition,
+  TitleStatus,
+} from "@/lib/listing-score";
+
 /**
  * Catálogo para los desplegables del formulario.
  *
@@ -87,3 +96,71 @@ export const QUICK_EMOJI = [
 ];
 
 export const DESCRIPTION_MAX = 1200;
+
+
+/* ============================================================
+   OPCIONES COMPARTIDAS
+
+   Vivían dentro de ListingForm. Ahora las usan también el
+   diagnóstico y la edición: duplicarlas garantizaba que un día
+   se desincronizaran.
+   ============================================================ */
+
+export const TITLE_OPTIONS: TitleStatus[] = [
+  "clean",
+  "clean_lien",
+  "rebuilt",
+  "salvage",
+  "no_title",
+];
+
+export const TIRE_OPTIONS: TireCondition[] = [
+  "new",
+  "good",
+  "worn",
+  "needs_replacing",
+];
+
+export const EMPTY_DEFECTS: DefectReport = {
+  checkEngineOn: false,
+  otherWarningLights: false,
+  startsEveryTime: true,
+  transmissionSlips: false,
+  overheats: false,
+  leaksFluid: false,
+  unusualNoises: false,
+  acWorks: true,
+  heatWorks: true,
+  allWindowsWork: true,
+  brakesFeelNormal: true,
+  hasRust: false,
+  hasDents: false,
+  glassCracked: false,
+  interiorTorn: false,
+  smokedIn: false,
+  tires: "good",
+};
+
+
+/** Carrocerías, en el orden en que la gente las busca por aquí. */
+export const BODY_TYPES: BodyType[] = [
+  "suv",
+  "truck",
+  "sedan",
+  "coupe",
+  "hatchback",
+  "van",
+  "wagon",
+  "convertible",
+  "offroad",
+];
+
+export const FUEL_TYPES: FuelType[] = [
+  "gasoline",
+  "diesel",
+  "hybrid",
+  "plugin_hybrid",
+  "electric",
+];
+
+export const TRANSMISSIONS: Transmission[] = ["automatic", "manual"];

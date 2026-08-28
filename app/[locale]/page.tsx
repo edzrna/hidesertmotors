@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { isLocale } from "@/lib/hdm";
 import { getDictionary } from "@/i18n/dictionaries";
+import { getListingDictionary } from "@/i18n/listing";
 import { getPublishedListings } from "@/lib/listings-db";
 import HomeView from "@/components/HomeView";
 
@@ -21,6 +22,11 @@ export default async function HomePage({
   const listings = await getPublishedListings(locale);
 
   return (
-    <HomeView locale={locale} dict={getDictionary(locale)} listings={listings} />
+    <HomeView
+      locale={locale}
+      dict={getDictionary(locale)}
+      t={getListingDictionary(locale)}
+      listings={listings}
+    />
   );
 }

@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { IconGauge, IconPin } from "@/components/HdmIcons";
 import type { Dictionary } from "@/i18n/dictionaries";
+import type { ListingDictionary } from "@/i18n/listing";
 import type { PublicListing } from "@/lib/listings-db";
 
 /**
@@ -17,28 +18,39 @@ import type { PublicListing } from "@/lib/listings-db";
  */
 export default function SearchBar({
   dict,
+  t,
   listings,
   value,
   onChange,
 }: {
   dict: Dictionary;
+  t: ListingDictionary;
   listings: PublicListing[];
-  value: { make: string; city: string; year: string; maxPrice: string };
+  value: {
+    make: string;
+    bodyType: string;
+    city: string;
+    year: string;
+    maxPrice: string;
+  };
   onChange: (next: typeof value) => void;
 }) {
   const options = useMemo(() => {
     const makes = new Set<string>();
+    const bodies = new Set<string>();
     const cities = new Set<string>();
     const years = new Set<number>();
 
     for (const listing of listings) {
       makes.add(listing.make);
+      bodies.add(listing.bodyType);
       if (listing.city) cities.add(listing.city);
       years.add(listing.year);
     }
 
     return {
       makes: [...makes].sort(),
+      bodies: [...bodies].sort(),
       cities: [...cities].sort(),
       years: [...years].sort((a, b) => b - a),
     };
@@ -56,6 +68,21 @@ export default function SearchBar({
       </div>
 
       <div className="finder-grid">
+        <label className="finder-field">
+          <span>{dict.finder.bodyType}</span>
+          <select
+            value={value.bodyType}
+            onChange={(e) => set("bodyType", e.target.value)}
+          >
+            <option value="">{dict.finder.allBodies}</option>
+            {options.bodies.map((body) => (
+              <option key={body} value={body}>
+                {t.bodyTypes[body as keyof typeof t.bodyTypes]}
+              </option>
+            ))}
+          </select>
+        </label>
+
         <label className="finder-field">
           <span>{dict.finder.make}</span>
           <select value={value.make} onChange={(e) => set("make", e.target.value)}>

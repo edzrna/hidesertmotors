@@ -12,6 +12,7 @@ import AxelIntro from "@/components/AxelIntro";
 import AxelFace from "@/components/AxelFace";
 import SearchBar from "@/components/SearchBar";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
+import type { ListingDictionary } from "@/i18n/listing";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
   MOOD_SCALE,
@@ -35,10 +36,14 @@ import { CONTACT_EMAIL, FACEBOOK_URL, SITE_URL } from "@/lib/site";
 export default function HomeView({
   locale,
   dict,
+  t,
   listings,
 }: {
   locale: Locale;
   dict: Dictionary;
+  /** Diccionario del formulario: trae los nombres de carrocería y
+      combustible, que también se muestran en las tarjetas. */
+  t: ListingDictionary;
   listings: PublicListing[];
 }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -49,6 +54,7 @@ export default function HomeView({
   const [hideSold, setHideSold] = useState(false);
   const [finder, setFinder] = useState({
     make: "",
+    bodyType: "",
     city: "",
     year: "",
     maxPrice: "",
@@ -64,6 +70,7 @@ export default function HomeView({
   const filtered = useMemo(() => {
     return listings.filter((listing) => {
       if (finder.make && listing.make !== finder.make) return false;
+      if (finder.bodyType && listing.bodyType !== finder.bodyType) return false;
       if (finder.city && listing.city !== finder.city) return false;
       if (finder.year && listing.year < Number(finder.year)) return false;
       if (
@@ -304,6 +311,7 @@ export default function HomeView({
         <div className="hdm-shell">
           <SearchBar
             dict={dict}
+            t={t}
             listings={listings}
             value={finder}
             onChange={setFinder}
@@ -423,6 +431,16 @@ export default function HomeView({
                     <dt>{dict.specs.owners}: </dt>
                     <dd>{listing.owners}</dd>
                   </div>
+                  <div>
+                    <dt>{dict.specs.bodyType}: </dt>
+                    <dd>{t.bodyTypes[listing.bodyType]}</dd>
+                  </div>
+                  {listing.fuelType !== "gasoline" && (
+                    <div>
+                      <dt>{dict.specs.fuelType}: </dt>
+                      <dd>{t.fuelTypes[listing.fuelType]}</dd>
+                    </div>
+                  )}
                   {listing.city && (
                     <div>
                       <dt>{dict.specs.city}: </dt>

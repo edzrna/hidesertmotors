@@ -138,6 +138,18 @@ export default function CarView({
               label={dict.specs.accidents}
               value={String(listing.accidents)}
             />
+            <InfoBox
+              label={dict.specs.bodyType}
+              value={t.bodyTypes[listing.bodyType]}
+            />
+            <InfoBox
+              label={dict.specs.fuelType}
+              value={t.fuelTypes[listing.fuelType]}
+            />
+            <InfoBox
+              label={dict.specs.transmission}
+              value={t.transmissions[listing.transmission]}
+            />
             {listing.city && (
               <InfoBox label={dict.specs.city} value={listing.city} />
             )}

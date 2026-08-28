@@ -45,6 +45,9 @@ const es = {
       "Cuéntale al comprador por qué lo vendes, qué le has hecho y cómo lo has cuidado. Puedes usar emojis y varios párrafos.",
     descriptionPlaceholder:
       "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
+    bodyType: "Carrocería",
+    fuelType: "Combustible",
+    transmission: "Transmisión",
     city: "¿Dónde está el auto?",
     cityHelp:
       "Sólo la ciudad, no tu dirección. El comprador necesita saber si le queda cerca.",
@@ -120,6 +123,48 @@ const es = {
       "Calificación calculada con los datos declarados por el vendedor. Hi Desert Motors no ha inspeccionado este vehículo.",
   },
 
+  bodyTypes: {
+    sedan: "Sedán",
+    coupe: "Coupé",
+    hatchback: "Hatchback",
+    suv: "SUV",
+    truck: "Troca / Pickup",
+    van: "Van",
+    convertible: "Convertible",
+    wagon: "Wagon",
+    offroad: "Todo terreno",
+  },
+
+  fuelTypes: {
+    gasoline: "Gasolina",
+    diesel: "Diésel",
+    hybrid: "Híbrido",
+    plugin_hybrid: "Híbrido enchufable",
+    electric: "Eléctrico",
+  },
+
+  transmissions: {
+    automatic: "Automática",
+    manual: "Estándar",
+  },
+  adjustments: {
+    title_clean_lien: "Tiene gravamen: hay que liquidarlo antes de transferir",
+    title_rebuilt: "Título reconstruido",
+    title_salvage: "Título Salvage",
+    title_no_title: "Sin título en mano",
+    miles_low: "Millas por debajo del promedio para su año",
+    miles_above: "Millas arriba del promedio",
+    miles_high: "Millas muy por arriba del promedio",
+    accidents_one: "Un accidente reportado",
+    accidents_many: "Varios accidentes reportados",
+    major_mechanical: "Falla mecánica de fondo: saca al auto del mercado normal",
+    check_engine: "Check engine encendido",
+    rust: "Óxido declarado",
+    no_ac: "Aire acondicionado no enfría",
+    tires: "Llantas por cambiar",
+    one_owner: "Un solo dueño",
+    documented: "Registros de servicio y smog vigente",
+  },
   flags: {
     title: "A revisar antes de pagar",
     title_salvage: "Título Salvage",
@@ -242,6 +287,9 @@ const en: Dict = {
       "Tell the buyer why you're selling, what you've done to it, and how you've looked after it. Emojis and multiple paragraphs are fine.",
     descriptionPlaceholder:
       "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
+    bodyType: "Body type",
+    fuelType: "Fuel",
+    transmission: "Transmission",
     city: "Where is the car?",
     cityHelp:
       "City only, not your address. Buyers need to know if it is close to them.",
@@ -317,6 +365,48 @@ const en: Dict = {
       "Rating calculated from data declared by the seller. Hi Desert Motors has not inspected this vehicle.",
   },
 
+  bodyTypes: {
+    sedan: "Sedan",
+    coupe: "Coupe",
+    hatchback: "Hatchback",
+    suv: "SUV",
+    truck: "Truck / Pickup",
+    van: "Van",
+    convertible: "Convertible",
+    wagon: "Wagon",
+    offroad: "Off-road",
+  },
+
+  fuelTypes: {
+    gasoline: "Gasoline",
+    diesel: "Diesel",
+    hybrid: "Hybrid",
+    plugin_hybrid: "Plug-in hybrid",
+    electric: "Electric",
+  },
+
+  transmissions: {
+    automatic: "Automatic",
+    manual: "Manual",
+  },
+  adjustments: {
+    title_clean_lien: "Has a lien: it must be paid off before transfer",
+    title_rebuilt: "Rebuilt title",
+    title_salvage: "Salvage title",
+    title_no_title: "No title in hand",
+    miles_low: "Mileage below average for its year",
+    miles_above: "Mileage above average",
+    miles_high: "Mileage well above average",
+    accidents_one: "One reported accident",
+    accidents_many: "Several reported accidents",
+    major_mechanical: "Major mechanical fault: takes the car out of the normal market",
+    check_engine: "Check engine light on",
+    rust: "Declared rust",
+    no_ac: "A/C does not cool",
+    tires: "Tires need replacing",
+    one_owner: "Single owner",
+    documented: "Service records and current smog",
+  },
   flags: {
     title: "Check before you pay",
     title_salvage: "Salvage title",
