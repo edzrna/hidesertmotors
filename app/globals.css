@@ -6,30 +6,42 @@
    ============================================================ */
 
 @theme {
+  /* El ámbar y el naranja no se tocan: son la marca. Todo lo
+     demás se invirtió para el tema oscuro. */
   --color-hdm-amber: #f5c542;
-  --color-hdm-orange: #d88a00;
-  --color-hdm-dark: #071018;
-  --color-hdm-ink: #0b1622;
+  --color-hdm-orange: #ff8a1f;
 
-  --color-hdm-surface: #ffffff;
-  --color-hdm-canvas: #f4f7fb;
-  --color-hdm-cream: #fffaf0;
-  --color-hdm-sand: #fff7e6;
+  /* Grises con una pizca de calidez, no azulados: el azul junto al
+     naranja se ve sucio. */
+  --color-hdm-canvas: #0c0d0f;
+  --color-hdm-surface: #16181b;
+  --color-hdm-cream: #1b1d21;
+  --color-hdm-sand: #201d18;
 
-  --color-hdm-muted: #5b6b7f;
-  --color-hdm-brown: #7a4d00;
-  --color-hdm-brown-soft: #8a5a00;
-  --color-hdm-sold: #ff3b4d;
+  /* Antes eran los oscuros; ahora son los claros. Conservan el
+     nombre para no reescribir cada componente. */
+  --color-hdm-dark: #08090b;
+  --color-hdm-ink: #f2f4f7;
+
+  --color-hdm-muted: #98a2b0;
+  --color-hdm-brown: #ffc861;
+  --color-hdm-brown-soft: #e8a33d;
+  --color-hdm-sold: #ff4d5e;
 
   --font-display: var(--font-montserrat), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 :root {
-  --hdm-line: rgba(216, 138, 0, 0.12);
-  --hdm-line-strong: rgba(216, 138, 0, 0.18);
-  --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.06);
-  --hdm-shadow-lift: 0 28px 60px rgba(216, 138, 0, 0.18);
+  /* En oscuro los bordes se hacen con luz, no con sombra. */
+  --hdm-line: rgba(255, 255, 255, 0.09);
+  --hdm-line-strong: rgba(255, 168, 47, 0.28);
+
+  /* Las sombras negras no se ven sobre negro: el relieve lo da un
+     borde superior claro más una sombra profunda. */
+  --hdm-shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.45);
+  --hdm-shadow-lift: 0 22px 54px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 168, 47, 0.16);
   --hdm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --hdm-r: 26px;
   --hdm-r-lg: 30px;
@@ -189,7 +201,7 @@ body {
 }
 
 .hdm-lang:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
 }
 
 .hdm-lang--active {
@@ -717,7 +729,7 @@ body {
 }
 
 .hdm-share-btn:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   transform: translateY(-2px);
 }
 
@@ -842,7 +854,7 @@ body {
   margin-top: 16px;
   padding: 12px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
@@ -1298,7 +1310,7 @@ body {
   padding: 14px;
   border-radius: 16px;
   border: 1px solid var(--hdm-line);
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   min-width: 0;
 }
 
@@ -1403,7 +1415,7 @@ body {
 }
 
 .hdm-toggle:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
 }
 
 .hdm-toggle input {
@@ -1507,7 +1519,7 @@ body {
   border-radius: 18px;
   border: 1px solid var(--hdm-line);
   border-left: 3px solid var(--color-hdm-orange);
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   color: var(--color-hdm-brown);
   font-size: 14px;
   line-height: 1.65;
@@ -1634,7 +1646,7 @@ body {
   margin-top: 18px;
   padding: 14px 16px;
   border-radius: 16px;
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border: 1px solid rgba(255, 59, 77, 0.18);
 }
 
@@ -1657,7 +1669,7 @@ body {
 .pub-live-flags li {
   font-size: 13px;
   line-height: 1.6;
-  color: #8c2230;
+  color: #ff8f9c;
 }
 
 /* ---------- Secciones ---------- */
@@ -1730,7 +1742,7 @@ body {
 .pub-field input:focus,
 .pub-field select:focus,
 .pub-field textarea:focus {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   border-color: var(--color-hdm-orange);
 }
 
@@ -1787,7 +1799,7 @@ body {
   padding: 12px 14px;
   border-radius: 14px;
   border: 1px solid var(--hdm-line);
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   font-size: 14px;
   line-height: 1.45;
   cursor: pointer;
@@ -1795,7 +1807,7 @@ body {
 }
 
 .pub-check:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   border-color: var(--hdm-line-strong);
 }
 
@@ -1811,7 +1823,7 @@ body {
 /* Las casillas de defecto se tiñen al marcarse: marcar aquí es
    declarar un problema, y debe verse distinto a marcar "sí funciona". */
 .pub-checks--negative .pub-check:has(input:checked) {
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border-color: rgba(255, 59, 77, 0.28);
 }
 
@@ -1828,7 +1840,7 @@ body {
   padding: 18px;
   border-radius: 18px;
   border: 1px solid var(--hdm-line-strong);
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   font-size: 14px;
   line-height: 1.65;
   color: var(--color-hdm-brown);
@@ -1837,7 +1849,7 @@ body {
 
 .pub-declaration.has-error {
   border-color: var(--color-hdm-sold);
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
 }
 
 .pub-declaration input {
@@ -1855,9 +1867,9 @@ body {
   gap: 4px;
   padding: 16px 18px;
   border-radius: 18px;
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border: 1px solid rgba(255, 59, 77, 0.22);
-  color: #8c2230;
+  color: #ff8f9c;
   font-size: 14px;
 }
 
@@ -1917,7 +1929,7 @@ body {
   height: 38px;
   border-radius: 11px;
   border: 1px solid var(--hdm-line);
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   font-size: 19px;
   line-height: 1;
   cursor: pointer;
@@ -1925,7 +1937,7 @@ body {
 }
 
 .pub-emoji button:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   transform: translateY(-2px);
 }
 
@@ -1961,7 +1973,7 @@ body {
 }
 
 .pub-file:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   border-color: var(--color-hdm-orange);
 }
 
@@ -1970,8 +1982,8 @@ body {
 }
 
 .pub-count.is-low {
-  background: #fff5f5;
-  color: #8c2230;
+  background: rgba(255, 77, 94, 0.09);
+  color: #ff8f9c;
 }
 
 .pub-photos {
@@ -1990,7 +2002,7 @@ body {
   gap: 12px;
   padding: 9px 12px;
   border-radius: 11px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
   font-size: 13px;
 }
@@ -2065,9 +2077,9 @@ body {
 .hdm-card-flags li {
   padding: 5px 10px;
   border-radius: 999px;
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border: 1px solid rgba(255, 59, 77, 0.2);
-  color: #8c2230;
+  color: #ff8f9c;
   font-size: 12px;
   font-weight: 700;
 }
@@ -2076,7 +2088,7 @@ body {
   margin-top: 16px;
   padding: 14px 16px;
   border-radius: 16px;
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border: 1px solid rgba(255, 59, 77, 0.18);
 }
 
@@ -2098,7 +2110,7 @@ body {
 .hdm-flags li {
   font-size: 13px;
   line-height: 1.65;
-  color: #8c2230;
+  color: #ff8f9c;
 }
 
 /* ---------- Origen del dato ---------- */
@@ -2141,7 +2153,7 @@ body {
   margin-top: 20px;
   padding: 20px;
   border-radius: 20px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
@@ -2158,7 +2170,7 @@ body {
   margin-top: 18px;
   padding: 16px;
   border-radius: 16px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
@@ -2186,7 +2198,7 @@ body {
   margin-top: 8px;
   padding: 16px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
   text-align: center;
 }
@@ -2409,7 +2421,7 @@ body {
   margin-top: 20px;
   padding: 18px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line-strong);
   display: flex;
   flex-direction: column;
@@ -2452,21 +2464,21 @@ body {
 
 .report-box--done {
   text-align: center;
-  background: #f0f9f2;
+  background: rgba(46, 200, 110, 0.1);
   border-color: rgba(34, 139, 68, 0.22);
 }
 
 .report-box--done strong {
   font-family: var(--font-display);
   font-size: 16px;
-  color: #1d6b38;
+  color: #4fd888;
 }
 
 .report-box--done p {
   margin: 8px 0 0;
   font-size: 14px;
   line-height: 1.6;
-  color: #2f7a48;
+  color: #8ae2b0;
 }
 
 /* ============================================================
@@ -2518,7 +2530,7 @@ body {
   margin-bottom: 20px;
   padding: 16px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
@@ -2566,7 +2578,7 @@ body {
   margin: 24px 0 0;
   padding: 20px 22px;
   border-radius: 20px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
   border-left: 3px solid var(--color-hdm-orange);
   font-size: 14px;
@@ -2761,7 +2773,7 @@ body {
   margin: 0;
   padding: 14px 10px 12px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
   text-align: center;
 }
@@ -2822,7 +2834,7 @@ body {
 
 /* El color se lee antes que el número: es el primer dato. */
 .gauge--good .gauge-fill {
-  stroke: #2e9e5b;
+  stroke: #3fcf7f;
 }
 .gauge--ok .gauge-fill {
   stroke: var(--color-hdm-orange);
@@ -2835,7 +2847,7 @@ body {
 }
 
 .gauge--good .gauge-value {
-  color: #2e9e5b;
+  color: #3fcf7f;
 }
 .gauge--bad .gauge-value {
   color: var(--color-hdm-sold);
@@ -2963,7 +2975,7 @@ body {
     width: 9px;
     height: 9px;
     border-radius: 999px;
-    background: #d9d4c8;
+    background: rgba(255,255,255,0.14);
     transition: background 0.3s ease;
   }
 
@@ -2971,7 +2983,7 @@ body {
   .pub-live-dot {
     background: color-mix(
       in srgb,
-      #2e9e5b calc(var(--v, 0) * 1%),
+      #3fcf7f calc(var(--v, 0) * 1%),
       var(--color-hdm-sold)
     );
   }
@@ -3024,9 +3036,9 @@ body {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border: 1px solid rgba(255, 59, 77, 0.2);
-  color: #8c2230;
+  color: #ff8f9c;
   font-weight: 700;
 }
 
@@ -3251,17 +3263,17 @@ body {
   margin-top: 18px;
   padding: 16px 18px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
 .seller--established {
-  background: #f2faf4;
+  background: rgba(46, 200, 110, 0.08);
   border-color: rgba(46, 158, 91, 0.24);
 }
 
 .seller--flagged {
-  background: #fff5f5;
+  background: rgba(255, 77, 94, 0.09);
   border-color: rgba(255, 59, 77, 0.24);
 }
 
@@ -3279,7 +3291,7 @@ body {
 }
 
 .seller--established .seller-icon {
-  color: #2e9e5b;
+  color: #3fcf7f;
 }
 
 .seller--flagged .seller-icon {
@@ -3333,4 +3345,498 @@ body {
   font-size: 11px;
   line-height: 1.55;
   color: var(--color-hdm-muted);
+}
+
+/* ============================================================
+   AJUSTES DEL TEMA OSCURO
+
+   En claro, una tarjeta se separa del fondo con una sombra. En
+   oscuro la sombra no se ve, así que la separación la dan un fondo
+   ligeramente más claro y un borde. Es un lenguaje distinto, no el
+   mismo con los colores cambiados.
+   ============================================================ */
+
+body {
+  background: var(--color-hdm-canvas);
+  color: var(--color-hdm-ink);
+}
+
+/* Las secciones que ya eran oscuras ahora quedarían iguales al
+   fondo. Se les sube el tono para que sigan destacando. */
+.hdm-steps-inner,
+.axel-intro {
+  background: linear-gradient(
+    155deg,
+    #16181b 0%,
+    #101215 55%,
+    #0c0d0f 100%
+  );
+  border: 1px solid var(--hdm-line);
+}
+
+.axel-intro {
+  border-inline: none;
+}
+
+/* Las tarjetas de auto: el borde superior claro simula luz cayendo
+   desde arriba y es lo que las despega del fondo. */
+.hdm-card,
+.hdm-why-card,
+.legal-doc,
+.legal-toc,
+.gauge,
+.seller,
+.pub-step,
+.pub-live {
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    var(--hdm-shadow-soft);
+}
+
+.hdm-card:hover,
+.hdm-why-card:hover {
+  border-color: rgba(255, 168, 47, 0.3);
+}
+
+/* Campos del formulario: hundidos, no elevados. Sobre oscuro, un
+   campo más oscuro que su tarjeta se lee como "aquí se escribe". */
+.pub-field input,
+.pub-field select,
+.pub-field textarea,
+.hdm-select,
+.pub-link-input {
+  background: #0e1013;
+  border: 1px solid var(--hdm-line);
+  color: var(--color-hdm-ink);
+}
+
+.pub-field input:focus,
+.pub-field select:focus,
+.pub-field textarea:focus,
+.hdm-select:focus {
+  border-color: var(--color-hdm-orange);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.16);
+}
+
+.pub-field input::placeholder,
+.pub-field textarea::placeholder {
+  color: #6b7683;
+}
+
+/* El desplegable nativo hereda el tema del sistema: sin esto, las
+   opciones salen blancas sobre blanco en algunos navegadores. */
+.pub-field select option,
+.hdm-select option {
+  background: #16181b;
+  color: #f2f4f7;
+}
+
+/* Casillas: el naranja de marca en vez del azul del sistema. */
+.pub-check input,
+.hdm-toggle input {
+  accent-color: var(--color-hdm-orange);
+}
+
+.pub-check {
+  background: #0e1013;
+  border: 1px solid var(--hdm-line);
+}
+
+.pub-check:has(input:checked) {
+  background: rgba(255, 138, 31, 0.1);
+  border-color: rgba(255, 168, 47, 0.34);
+}
+
+/* El botón fantasma necesita borde propio: sobre oscuro, sin él
+   desaparece. */
+.hdm-btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-ink);
+}
+
+.hdm-btn--ghost:hover {
+  background: rgba(255, 168, 47, 0.1);
+  border-color: var(--color-hdm-orange);
+}
+
+/* El encabezado se funde con el fondo al hacer scroll. */
+.hdm-header {
+  background: rgba(8, 9, 11, 0.82);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hdm-line);
+}
+
+/* El pie ya era oscuro; ahora sólo necesita separarse con una línea. */
+.hdm-footer {
+  background: var(--color-hdm-dark);
+  border-top: 1px solid var(--hdm-line);
+}
+
+/* Los medidores: la pista tenue se pierde sobre oscuro. */
+.gauge-track {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+.gauge-needle,
+.gauge-pin {
+  stroke: var(--color-hdm-ink);
+  fill: var(--color-hdm-ink);
+}
+
+.gauge-pin {
+  stroke: none;
+}
+
+/* El anillo de calificación sobre tarjeta oscura. */
+.hdm-ring-track {
+  stroke: rgba(255, 255, 255, 0.08);
+}
+
+/* Las banderas rojas necesitan más presencia sobre oscuro. */
+.hdm-card-flags li,
+.hdm-flags li {
+  background: rgba(255, 77, 94, 0.12);
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  color: #ff9aa6;
+}
+
+/* Bloque de datos congelados: gris azulado sobre el fondo. */
+.edit-locked {
+  background: #191b1e;
+  border-color: var(--hdm-line);
+}
+
+.edit-locked-grid > div {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--hdm-line);
+}
+
+/* Las fotos y galerías: marco tenue en vez de sombra. */
+.hdm-gallery,
+.hdm-thumb,
+.edit-thumb {
+  border: 1px solid var(--hdm-line);
+}
+
+/* Selección de texto en naranja de marca. */
+::selection {
+  background: rgba(255, 138, 31, 0.3);
+  color: #ffffff;
+}
+
+/* La barra de desplazamiento también: en oscuro, una barra clara
+   es lo primero que delata un tema mal terminado. */
+* {
+  scrollbar-color: rgba(255, 168, 47, 0.3) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 168, 47, 0.26);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 168, 47, 0.42);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* El navegador necesita saber que es tema oscuro para pintar los
+   controles nativos —fechas, archivos— del color correcto. */
+:root {
+  color-scheme: dark;
+}
+
+/* ============================================================
+   BUSCADOR EN BARRA
+   ============================================================ */
+
+/* Se monta sobre la presentación de Axel: parte encima del bloque
+   oscuro, como en la referencia. Da sensación de capa, no de lista. */
+.finder {
+  position: relative;
+  margin-top: calc(clamp(20px, 4vw, 34px) * -1 - 26px);
+  margin-bottom: clamp(24px, 4vw, 38px);
+  padding: clamp(16px, 2.6vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 18px 44px rgba(0, 0, 0, 0.55);
+  z-index: 2;
+}
+
+.finder-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.finder-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.finder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr));
+  gap: 10px;
+}
+
+.finder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.finder-field > span {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+}
+
+.finder-field select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 13px;
+  background: #0e1013;
+  border: 1px solid var(--hdm-line);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.finder-field select:focus {
+  border-color: var(--color-hdm-orange);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.16);
+}
+
+.finder-field select option {
+  background: #16181b;
+  color: #f2f4f7;
+}
+
+.finder-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s var(--hdm-ease), box-shadow 0.2s var(--hdm-ease);
+}
+
+.finder-go:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(255, 138, 31, 0.3);
+}
+
+.finder-go-icon {
+  width: 17px;
+  height: 17px;
+}
+
+@media (min-width: 861px) {
+  /* En escritorio el botón vuelve a la fila, como en la referencia. */
+  .finder-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+  }
+
+  .finder-go {
+    width: auto;
+    margin-top: 0;
+    padding-inline: 26px;
+    align-self: end;
+    height: 42px;
+  }
+}
+
+/* ============================================================
+   ISLA CLARA: PUBLICAR Y EDITAR
+
+   El sitio es oscuro, pero llenar un formulario largo sobre negro
+   cansa: el texto claro sobre fondo oscuro sangra en los bordes y
+   leer 16 casillas así es incómodo.
+
+   Estas dos páginas conservan el tema claro. Las variables se
+   redefinen en el contenedor y todo lo de adentro las hereda, sin
+   tocar un solo componente.
+   ============================================================ */
+
+.theme-light {
+  --color-hdm-canvas: #f4f7fb;
+  --color-hdm-surface: #ffffff;
+  --color-hdm-cream: #fffaf0;
+  --color-hdm-sand: #fff7e6;
+
+  --color-hdm-ink: #0b1622;
+  --color-hdm-muted: #5b6b7f;
+  --color-hdm-brown: #7a4d00;
+  --color-hdm-brown-soft: #8a5a00;
+
+  --hdm-line: rgba(216, 138, 0, 0.12);
+  --hdm-line-strong: rgba(216, 138, 0, 0.18);
+  --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.06);
+  --hdm-shadow-lift: 0 28px 60px rgba(216, 138, 0, 0.18);
+
+  /* El navegador tiene que saberlo o pinta los controles nativos
+     en oscuro dentro de la isla clara. */
+  color-scheme: light;
+
+  background: var(--color-hdm-canvas);
+  color: var(--color-hdm-ink);
+
+  /* Cubre hasta abajo aunque el formulario sea corto. */
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* Deshacer los ajustes que el tema oscuro impuso a mano. */
+.theme-light .pub-step,
+.theme-light .pub-live,
+.theme-light .gauge,
+.theme-light .seller {
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.theme-light .pub-field input,
+.theme-light .pub-field select,
+.theme-light .pub-field textarea,
+.theme-light .pub-link-input {
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-ink);
+}
+
+.theme-light .pub-field input::placeholder,
+.theme-light .pub-field textarea::placeholder {
+  color: #9aa7b6;
+}
+
+.theme-light .pub-field select option {
+  background: #ffffff;
+  color: #0b1622;
+}
+
+.theme-light .pub-check {
+  background: #fffdf8;
+  border: 1px solid var(--hdm-line);
+}
+
+.theme-light .pub-check:has(input:checked) {
+  background: #fff7e6;
+  border-color: rgba(216, 138, 0, 0.34);
+}
+
+.theme-light .gauge,
+.theme-light .pub-link,
+.theme-light .pub-duration,
+.theme-light .edit-sold-box {
+  background: #fffdf8;
+}
+
+.theme-light .gauge-track,
+.theme-light .hdm-ring-track {
+  stroke: rgba(216, 138, 0, 0.12);
+}
+
+.theme-light .gauge-needle {
+  stroke: #0b1622;
+}
+
+.theme-light .gauge-pin {
+  fill: #0b1622;
+}
+
+.theme-light .hdm-card-flags li,
+.theme-light .hdm-flags li,
+.theme-light .pub-live-flags li {
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.2);
+  color: #8c2230;
+}
+
+.theme-light .pub-error {
+  background: #fff5f5;
+  border-color: rgba(255, 59, 77, 0.24);
+  color: #8c2230;
+}
+
+.theme-light .edit-saved {
+  background: #f0f9f2;
+  border-color: rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+}
+
+.theme-light .edit-locked {
+  background: #f2f0ec;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+.theme-light .edit-locked-grid > div {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(11, 22, 34, 0.07);
+}
+
+.theme-light .hdm-btn--ghost {
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-brown);
+}
+
+.theme-light .hdm-btn--ghost:hover {
+  background: #fff7e6;
+  border-color: var(--color-hdm-orange);
+}
+
+.theme-light .hdm-back {
+  color: var(--color-hdm-brown-soft);
+}
+
+/* La barra de desplazamiento vuelve a la normalidad dentro de la
+   isla. */
+.theme-light * {
+  scrollbar-color: rgba(216, 138, 0, 0.3) transparent;
 }
