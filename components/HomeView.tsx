@@ -10,6 +10,7 @@ import InventoryControls from "@/components/InventoryControls";
 import WhySection from "@/components/WhySection";
 import AxelIntro from "@/components/AxelIntro";
 import AxelFace from "@/components/AxelFace";
+import SearchBar from "@/components/SearchBar";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
@@ -46,12 +47,39 @@ export default function HomeView({
   const [sort, setSort] = useState<SortKey>(DEFAULT_SORT);
   const [make, setMake] = useState<string | null>(null);
   const [hideSold, setHideSold] = useState(false);
+  const [finder, setFinder] = useState({
+    make: "",
+    city: "",
+    year: "",
+    maxPrice: "",
+  });
 
   const makes = useMemo(() => getMakes(listings), [listings]);
 
+  /**
+   * El buscador se aplica encima del orden, no en su lugar: quien
+   * filtra por marca sigue queriendo ver primero los mejor
+   * calificados.
+   */
+  const filtered = useMemo(() => {
+    return listings.filter((listing) => {
+      if (finder.make && listing.make !== finder.make) return false;
+      if (finder.city && listing.city !== finder.city) return false;
+      if (finder.year && listing.year < Number(finder.year)) return false;
+      if (
+        finder.maxPrice &&
+        listing.priceValue &&
+        listing.priceValue > Number(finder.maxPrice)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [listings, finder]);
+
   const visible = useMemo(
-    () => applyInventoryView(listings, { sort, make, hideSold, locale }),
-    [listings, sort, make, hideSold, locale]
+    () => applyInventoryView(filtered, { sort, make, hideSold, locale }),
+    [filtered, sort, make, hideSold, locale]
   );
 
   const available = useMemo(() => listings.filter((l) => !l.sold), [listings]);
@@ -271,6 +299,17 @@ export default function HomeView({
       </div>
 
       <AxelIntro locale={locale} dict={dict} />
+
+      {listings.length > 0 && (
+        <div className="hdm-shell">
+          <SearchBar
+            dict={dict}
+            listings={listings}
+            value={finder}
+            onChange={setFinder}
+          />
+        </div>
+      )}
 
       <WhySection locale={locale} dict={dict} />
 

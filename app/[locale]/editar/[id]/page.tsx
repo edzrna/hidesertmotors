@@ -40,6 +40,7 @@ export default async function EditPage({
 
   if (!listing) {
     return (
+      <div className="theme-light">
       <main className="hdm-shell hdm-detail">
         <div className="pub-done">
           <h2>{texts.form.edit.notFound}</h2>
@@ -52,16 +53,19 @@ export default async function EditPage({
           </Link>
         </div>
       </main>
+      </div>
     );
   }
 
   return (
-    <EditListingView
+    <div className="theme-light">
+      <EditListingView
       locale={locale}
       dict={dict}
       t={texts}
       listing={listing}
-      token={token!}
-    />
+        token={token!}
+      />
+    </div>
   );
 }

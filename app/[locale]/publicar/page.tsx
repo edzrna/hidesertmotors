@@ -36,6 +36,7 @@ export default async function PublishPage({ params }: { params: Params }) {
   const t = getListingDictionary(locale);
 
   return (
+    <div className="theme-light">
     <main className="hdm-shell hdm-detail">
       <Link href={localePath(locale, "/")} className="hdm-back">
         ← {dict.vehicle.back}
@@ -49,9 +50,11 @@ export default async function PublishPage({ params }: { params: Params }) {
         {/* Va arriba y a la vista, no escondido en el pie: es lo que
             deja claro que el sitio no es parte de la venta. */}
         <p className="pub-disclaimer">{t.page.disclaimer}</p>
+        <p className="pub-duration">{t.page.duration}</p>
       </header>
 
       <ListingForm locale={locale} dict={dict} t={t} />
     </main>
+    </div>
   );
 }

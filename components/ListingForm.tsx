@@ -152,6 +152,12 @@ export default function ListingForm({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [progress, setProgress] = useState("");
   const [editLink, setEditLink] = useState("");
+  /**
+   * En móvil el panel arranca colapsado: ver el número moverse es lo
+   * que importa, el detalle es opcional. Expandido ocupaba media
+   * pantalla y dejaba el formulario sin aire.
+   */
+  const [panelOpen, setPanelOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
@@ -411,7 +417,38 @@ export default function ListingForm({
     <form className="pub-form" onSubmit={handleSubmit} noValidate>
       <RingGradientDefs />
 
-      <aside className="pub-live">
+      <aside className={`pub-live${panelOpen ? " is-open" : ""}`}>
+        {/* Resumen que se ve siempre en móvil. En escritorio se oculta. */}
+        <button
+          type="button"
+          className="pub-live-toggle"
+          onClick={() => setPanelOpen((prev) => !prev)}
+          aria-expanded={panelOpen}
+        >
+          <span className="pub-live-mini">
+            <strong>{result.score}</strong>
+            <span>{dict.levels[result.levelKey]}</span>
+          </span>
+
+          <span className="pub-live-dots">
+            {(
+              ["mechanical", "legal", "electrical", "cosmetic"] as const
+            ).map((key) => (
+              <span
+                key={key}
+                className="pub-live-dot"
+                style={{ "--v": result.categories[key] } as React.CSSProperties}
+                aria-hidden
+              />
+            ))}
+          </span>
+
+          <span className="pub-live-chevron" aria-hidden>
+            ▾
+          </span>
+        </button>
+
+        <div className="pub-live-body">
         <div className="pub-live-ring">
           <HDMRing
             score={result.score}
@@ -448,6 +485,7 @@ export default function ListingForm({
             </ul>
           </div>
         )}
+        </div>
       </aside>
 
       <div className="pub-fields">

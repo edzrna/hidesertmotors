@@ -13,6 +13,8 @@ const es = {
     kicker: "Publica tu auto",
     title: "Publica tu auto y recibe su calificación HDM",
     lede: "Llena los datos con honestidad. La calificación se calcula sola con lo que declares, y la ves cambiar mientras escribes.",
+    duration:
+      "Tu anuncio queda publicado 30 días. Al vencer deja de aparecer y, si el auto sigue a la venta, puedes publicarlo de nuevo.",
     disclaimer:
       "Hi Desert Motors es un tablero de anuncios. No compramos, vendemos ni intermediamos: el comprador trata directamente contigo. No inspeccionamos los vehículos, y la calificación se basa únicamente en lo que tú declaras aquí.",
   },
@@ -188,6 +190,9 @@ const es = {
       notFound: "Enlace no válido",
       notFoundBody:
         "Este enlace no corresponde a ningún anuncio activo. Revisa que lo hayas copiado completo.",
+      expiresOn: "Tu anuncio vence el {date}",
+      expiredNotice:
+        "Este anuncio ya venció y no aparece en el sitio. Si el auto sigue a la venta, publícalo de nuevo.",
       pendingNotice:
         "Tu anuncio todavía está en revisión. Los cambios que hagas aquí se verán cuando lo publiquemos.",
     },
@@ -205,6 +210,8 @@ const en: Dict = {
     kicker: "List your car",
     title: "List your car and get its HDM rating",
     lede: "Fill this in honestly. The rating is calculated from what you declare, and you'll watch it move as you type.",
+    duration:
+      "Your listing stays up for 30 days. When it expires it stops appearing, and if the car is still for sale you can post it again.",
     disclaimer:
       "Hi Desert Motors is a listings board. We do not buy, sell, or broker: the buyer deals directly with you. We do not inspect vehicles, and the rating is based solely on what you declare here.",
   },
@@ -380,6 +387,9 @@ const en: Dict = {
       notFound: "Invalid link",
       notFoundBody:
         "This link does not match any active listing. Check that you copied it in full.",
+      expiresOn: "Your listing expires on {date}",
+      expiredNotice:
+        "This listing has expired and no longer appears on the site. If the car is still for sale, post it again.",
       pendingNotice:
         "Your listing is still under review. Changes you make here will show once we publish it.",
     },

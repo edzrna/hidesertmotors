@@ -181,6 +181,24 @@ const es = {
       "Ningún anuncio se publica solo. Revisamos cada uno antes de que aparezca, y el comprador te contacta directo a tu WhatsApp.",
   },
 
+  finder: {
+    title: "Encuentra tu auto",
+    make: "Marca",
+    allMakes: "Todas",
+    city: "Ciudad",
+    allCities: "Todas",
+    year: "Año",
+    anyYear: "Cualquiera",
+    orNewer: "o más nuevo",
+    maxPrice: "Precio máximo",
+    noLimit: "Sin límite",
+    jump: "Ver resultados",
+    results: "{n} autos",
+    oneResult: "1 auto",
+    noResults: "Ningún auto coincide con ese filtro.",
+    clear: "Quitar filtros",
+  },
+
   seller: {
     new: "Vendedor nuevo",
     returning: "Ya ha publicado aquí",
@@ -422,6 +440,24 @@ const en: Dictionary = {
     step3Title: "We review it and it goes live",
     step3Body:
       "No listing publishes itself. We review each one before it appears, and buyers contact you directly on your WhatsApp.",
+  },
+
+  finder: {
+    title: "Find your car",
+    make: "Make",
+    allMakes: "All",
+    city: "City",
+    allCities: "All",
+    year: "Year",
+    anyYear: "Any",
+    orNewer: "or newer",
+    maxPrice: "Max price",
+    noLimit: "No limit",
+    jump: "See results",
+    results: "{n} cars",
+    oneResult: "1 car",
+    noResults: "No cars match that filter.",
+    clear: "Clear filters",
   },
 
   seller: {
