@@ -31,13 +31,13 @@ function polar(value: number) {
 export default function CategoryGauge({
   value,
   label,
-  icon,
+  Icon,
   caption,
 }: {
   value: number;
   label: string;
-  /** Emoji o carácter corto. Se muestra dentro del arco. */
-  icon: string;
+  /** Icono propio del sitio. Se dibuja dentro del arco. */
+  Icon: (props: { className?: string }) => React.JSX.Element;
   caption?: string;
 }) {
   const ref = useRef<SVGSVGElement>(null);
@@ -102,9 +102,10 @@ export default function CategoryGauge({
         />
         <circle cx={CX} cy={CY} r="4" className="gauge-pin" />
 
-        <text x={CX} y="30" textAnchor="middle" className="gauge-icon">
-          {icon}
-        </text>
+        {/* El icono va dentro del arco, escalado al viewBox del medidor. */}
+        <g transform="translate(38 14) scale(1)" className="gauge-icon">
+          <Icon />
+        </g>
       </svg>
 
       <figcaption>

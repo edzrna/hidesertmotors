@@ -1,6 +1,12 @@
 "use client";
 
 import CategoryGauge from "@/components/CategoryGauge";
+import {
+  IconCosmetic,
+  IconElectrical,
+  IconLegal,
+  IconMechanical,
+} from "@/components/HdmIcons";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { CategoryKey } from "@/lib/listing-score";
 
@@ -10,11 +16,14 @@ import type { CategoryKey } from "@/lib/listing-score";
  * El orden no es alfabético: va de lo que más cuesta arreglar a lo
  * que menos. Quien sólo mire el primero ya vio lo importante.
  */
-const ORDER: { key: CategoryKey; icon: string }[] = [
-  { key: "mechanical", icon: "⚙️" },
-  { key: "legal", icon: "📄" },
-  { key: "electrical", icon: "⚡" },
-  { key: "cosmetic", icon: "✨" },
+const ORDER: {
+  key: CategoryKey;
+  Icon: (props: { className?: string }) => React.JSX.Element;
+}[] = [
+  { key: "mechanical", Icon: IconMechanical },
+  { key: "legal", Icon: IconLegal },
+  { key: "electrical", Icon: IconElectrical },
+  { key: "cosmetic", Icon: IconCosmetic },
 ];
 
 export default function CategoryGrid({
@@ -37,12 +46,12 @@ export default function CategoryGrid({
       )}
 
       <div className="gauges-grid">
-        {ORDER.map(({ key, icon }) => (
+        {ORDER.map(({ key, Icon }) => (
           <CategoryGauge
             key={key}
             value={categories[key] ?? 0}
             label={dict.categories[key]}
-            icon={icon}
+            Icon={Icon}
             caption={
               compact
                 ? undefined

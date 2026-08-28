@@ -1,6 +1,12 @@
 import { neon } from "@neondatabase/serverless";
 import type { CategoryKey } from "@/lib/listing-score";
 import {
+  getSellerBadge,
+  monthsBetween,
+  type SellerBadge,
+  type SellerHistory,
+} from "@/lib/seller-history";
+import {
   getLevelIcon,
   type LevelKey,
   type Locale,
@@ -67,6 +73,9 @@ export interface PublicListing {
 
   sold: boolean;
   publishedAt: string | null;
+  expiresAt: string | null;
+  /** Días que le quedan al anuncio. Null si no tiene caducidad. */
+  daysLeft: number | null;
 }
 
 function formatPrice(value: number | null, locale: Locale) {
@@ -136,6 +145,15 @@ function mapRow(row: any, locale: Locale): PublicListing {
 
     sold: row.status === "sold",
     publishedAt: row.published_at ? String(row.published_at) : null,
+    expiresAt: row.expires_at ? String(row.expires_at) : null,
+    daysLeft: row.expires_at
+      ? Math.max(
+          0,
+          Math.ceil(
+            (new Date(row.expires_at).getTime() - Date.now()) / 86_400_000
+          )
+        )
+      : null,
   };
 }
 
@@ -151,9 +169,10 @@ export async function getPublishedListings(locale: Locale) {
         description, known_issues, city, photos,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
-        status, published_at
+        status, published_at, expires_at
       FROM listings
       WHERE status IN ('published', 'sold')
+        AND (expires_at IS NULL OR expires_at > NOW())
       ORDER BY
         CASE WHEN status = 'sold' THEN 1 ELSE 0 END,
         score DESC,
@@ -185,10 +204,11 @@ export async function getListingById(id: string, locale: Locale) {
         description, known_issues, city, photos,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
-        status, published_at
+        status, published_at, expires_at
       FROM listings
       WHERE id = ${numeric}
         AND status IN ('published', 'sold')
+        AND (expires_at IS NULL OR expires_at > NOW())
       LIMIT 1
     `;
 
@@ -268,6 +288,53 @@ export async function getListingForEdit(id: string, token: string) {
 export type EditableListing = NonNullable<
   Awaited<ReturnType<typeof getListingForEdit>>
 >;
+
+/**
+ * Historial de un vendedor, contado desde sus propios anuncios.
+ *
+ * Se agrupa por teléfono porque es lo único estable que tenemos sin
+ * cuentas. No es infalible —alguien puede cambiar de número— pero
+ * cambiar de número también borra tu historial, así que el incentivo
+ * apunta al lado correcto.
+ */
+export async function getSellerHistory(
+  phone: string
+): Promise<{ history: SellerHistory; badge: SellerBadge } | null> {
+  if (!phone) return null;
+
+  try {
+    const sql = getSql();
+    if (!sql) return null;
+
+    const rows = await sql`
+      SELECT
+        COUNT(*)::int AS total,
+        COUNT(*) FILTER (WHERE status = 'sold')::int AS sold,
+        COUNT(*) FILTER (WHERE status = 'published')::int AS active,
+        COUNT(*) FILTER (WHERE status = 'rejected')::int AS rejected,
+        MIN(created_at) AS first_at
+      FROM listings
+      WHERE seller_phone = ${phone}
+    `;
+
+    const row = rows[0];
+    const firstAt = row.first_at ? new Date(row.first_at) : null;
+
+    const history: SellerHistory = {
+      totalListings: row.total ?? 0,
+      sold: row.sold ?? 0,
+      active: row.active ?? 0,
+      rejected: row.rejected ?? 0,
+      firstListingAt: firstAt ? firstAt.toISOString() : null,
+      monthsActive: firstAt ? monthsBetween(firstAt) : 0,
+    };
+
+    return { history, badge: getSellerBadge(history) };
+  } catch (error) {
+    console.error("getSellerHistory failed", error);
+    return null;
+  }
+}
 
 /** Enlace de WhatsApp al vendedor del anuncio, no al sitio. */
 export function sellerWhatsAppUrl(phone: string, message: string) {

@@ -5,6 +5,9 @@ import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import CategoryGrid from "@/components/CategoryGrid";
+import SellerBadgeView from "@/components/SellerBadge";
+import AxelFace from "@/components/AxelFace";
+import type { SellerBadge, SellerHistory } from "@/lib/seller-history";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { LegalDictionary } from "@/i18n/legal";
@@ -19,12 +22,14 @@ export default function CarView({
   t,
   legal,
   listing,
+  seller,
 }: {
   locale: Locale;
   dict: Dictionary;
   t: ListingDictionary;
   legal: LegalDictionary;
   listing: PublicListing;
+  seller: { history: SellerHistory; badge: SellerBadge } | null;
 }) {
   const path = localePath(locale, `/car/${listing.id}`);
   const shareUrl =
@@ -78,6 +83,7 @@ export default function CarView({
             />
             <div>
               <div className="hdm-score-level">
+                <AxelFace level={listing.levelKey} size="sm" />
                 {dict.levels[listing.levelKey]}
               </div>
               <div className="hdm-score-caption">
@@ -144,6 +150,15 @@ export default function CarView({
             </section>
           )}
 
+          {seller && (
+            <SellerBadgeView
+              dict={dict}
+              badge={seller.badge}
+              history={seller.history}
+              name={listing.sellerName}
+            />
+          )}
+
           {!listing.sold && (
             <>
               <a
@@ -162,6 +177,13 @@ export default function CarView({
                 {fill(dict.vehicle.soldBy, { name: listing.sellerName })}
               </p>
             </>
+          )}
+
+          {!listing.sold && listing.daysLeft !== null && (
+            <p className="hdm-expires">
+              {dict.specs.expires}{" "}
+              {fill(dict.specs.daysLeft, { n: listing.daysLeft })}
+            </p>
           )}
 
           <ShareButtons url={shareUrl} text={listing.name} dict={dict} extended />

@@ -83,6 +83,14 @@ const es = {
     title: "Título",
     owners: "Dueños",
     city: "Ubicación",
+    published: "Publicado",
+    expires: "Vence en",
+    daysLeft: "{n} días",
+    oneDayLeft: "1 día",
+    lastDay: "Último día",
+    today: "hoy",
+    yesterday: "ayer",
+    daysAgo: "hace {n} días",
     accidents: "Accidentes",
     condition: "Condición",
   },
@@ -171,6 +179,30 @@ const es = {
     step3Title: "Lo revisamos y sale publicado",
     step3Body:
       "Ningún anuncio se publica solo. Revisamos cada uno antes de que aparezca, y el comprador te contacta directo a tu WhatsApp.",
+  },
+
+  seller: {
+    new: "Vendedor nuevo",
+    returning: "Ya ha publicado aquí",
+    established: "Vendedor con historial",
+    flagged: "Ha tenido anuncios retirados",
+    published: "Anuncios",
+    sold: "Vendidos",
+    since: "Antigüedad",
+    monthsShort: " m",
+    note: "Este historial lo lleva el sitio con lo que ha observado. No son opiniones ni estrellas: son anuncios contados.",
+  },
+
+  axel: {
+    kicker: "Conoce a Axel",
+    titleTop: "Alguien tenía que revisar",
+    titleAccent: "letra por letra.",
+    lead: "Axel es quien califica los autos de Hi Desert Motors. No los maneja ni los inspecciona — lee lo que declara cada vendedor y lo convierte en un número que puedes comparar contra cualquier otro anuncio.",
+    point1: "Cada auto pasa por el mismo cálculo. Sin favoritos, sin destacados pagados.",
+    point2: "Lo que está mal aparece en la tarjeta, no escondido en la descripción.",
+    point3: "Y si el vendedor no respalda lo que dice, Axel también te lo advierte.",
+    alt: "Axel, el perro robot de Hi Desert Motors",
+    caption: "Axel · Calificación HDM",
   },
 
   categories: {
@@ -294,6 +326,14 @@ const en: Dictionary = {
     title: "Title",
     owners: "Owners",
     city: "Location",
+    published: "Posted",
+    expires: "Expires in",
+    daysLeft: "{n} days",
+    oneDayLeft: "1 day",
+    lastDay: "Last day",
+    today: "today",
+    yesterday: "yesterday",
+    daysAgo: "{n} days ago",
     accidents: "Accidents",
     condition: "Condition",
   },
@@ -382,6 +422,30 @@ const en: Dictionary = {
     step3Title: "We review it and it goes live",
     step3Body:
       "No listing publishes itself. We review each one before it appears, and buyers contact you directly on your WhatsApp.",
+  },
+
+  seller: {
+    new: "New seller",
+    returning: "Has posted here before",
+    established: "Seller with history",
+    flagged: "Has had listings removed",
+    published: "Listings",
+    sold: "Sold",
+    since: "Active for",
+    monthsShort: " mo",
+    note: "This history is kept by the site from what it has observed. Not opinions, not stars: counted listings.",
+  },
+
+  axel: {
+    kicker: "Meet Axel",
+    titleTop: "Someone had to read",
+    titleAccent: "the fine print.",
+    lead: "Axel is who rates the cars on Hi Desert Motors. He does not drive them or inspect them — he reads what each seller declares and turns it into a number you can compare against any other listing.",
+    point1: "Every car goes through the same math. No favorites, no paid features.",
+    point2: "What is wrong shows up on the card, not buried in the description.",
+    point3: "And if the seller cannot back up what they say, Axel tells you that too.",
+    alt: "Axel, the robot dog of Hi Desert Motors",
+    caption: "Axel · HDM Rating",
   },
 
   categories: {

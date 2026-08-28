@@ -8,6 +8,8 @@ import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import InventoryControls from "@/components/InventoryControls";
 import WhySection from "@/components/WhySection";
+import AxelIntro from "@/components/AxelIntro";
+import AxelFace from "@/components/AxelFace";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
@@ -268,6 +270,8 @@ export default function HomeView({
         )}
       </div>
 
+      <AxelIntro locale={locale} dict={dict} />
+
       <WhySection locale={locale} dict={dict} />
 
       {/* ============ INVENTARIO ============ */}
@@ -337,6 +341,7 @@ export default function HomeView({
                   />
                   <div>
                     <div className="hdm-score-level">
+                      <AxelFace level={listing.levelKey} size="sm" />
                       {dict.levels[listing.levelKey]}
                     </div>
                     <div className="hdm-score-caption">
@@ -386,6 +391,25 @@ export default function HomeView({
                     </div>
                   )}
                 </dl>
+
+                {/* La antigüedad importa: un anuncio de ayer y uno de
+                    hace tres semanas se leen distinto. */}
+                {!listing.sold && listing.daysLeft !== null && (
+                  <p className="hdm-card-age">
+                    {listing.daysLeft <= 3 ? (
+                      <span className="is-soon">
+                        {listing.daysLeft <= 1
+                          ? dict.specs.lastDay
+                          : fill(dict.specs.daysLeft, { n: listing.daysLeft })}
+                      </span>
+                    ) : (
+                      <span>
+                        {dict.specs.expires}{" "}
+                        {fill(dict.specs.daysLeft, { n: listing.daysLeft })}
+                      </span>
+                    )}
+                  </p>
+                )}
 
                 <div className="hdm-actions">
                   <Link
