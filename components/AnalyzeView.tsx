@@ -14,6 +14,11 @@ import type {
   TireCondition,
   TitleStatus,
 } from "@/lib/listing-score";
+import {
+  PAYLOAD_LIMIT,
+  dataUrlBytes,
+  downscaleToDataUrl,
+} from "@/lib/downscale";
 import { kbbUrl } from "@/lib/price-guide";
 import {
   ACCIDENT_OPTIONS,
@@ -99,6 +104,7 @@ export default function AnalyzeView({
   const [status, setStatus] = useState<"idle" | "running" | "done">("idle");
   const [result, setResult] = useState<AnalyzeResponse | null>(null);
   const [error, setError] = useState("");
+  const [preparing, setPreparing] = useState(false);
 
   const years = useMemo(() => getYears(), []);
   const resolvedMake =
@@ -147,22 +153,47 @@ export default function AnalyzeView({
   }
 
   async function readFiles(files: File[]) {
-    const out: { name: string; data: string }[] = [];
+    setError("");
+    setPreparing(true);
 
-    for (const file of files.slice(0, 6)) {
-      if (file.size > 4 * 1024 * 1024) continue;
+    try {
+      const out: { name: string; data: string }[] = [];
 
-      const data = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
+      for (const file of files.slice(0, 6)) {
+        if (!file.type.startsWith("image/")) continue;
+
+        // Se encoge aquí, no al enviar: así el peso acumulado ya es
+        // el real cuando se decide si cabe.
+        const data = await downscaleToDataUrl(file);
+        out.push({ name: file.name, data });
+      }
+
+      setPhotos((prev) => {
+        const merged = [...prev, ...out].slice(0, 6);
+
+        // Aunque estén reducidas, seis fotos pueden acercarse al
+        // límite. Se cortan por peso, no por número.
+        const kept: typeof merged = [];
+        let total = 0;
+
+        for (const photo of merged) {
+          const bytes = dataUrlBytes(photo.data);
+          if (total + bytes > PAYLOAD_LIMIT) break;
+          total += bytes;
+          kept.push(photo);
+        }
+
+        if (kept.length < merged.length) {
+          setError(dict.analyze.photosTrimmed);
+        }
+
+        return kept;
       });
-
-      out.push({ name: file.name, data });
+    } catch {
+      setError(dict.analyze.photoReadFailed);
+    } finally {
+      setPreparing(false);
     }
-
-    setPhotos((prev) => [...prev, ...out].slice(0, 6));
   }
 
   async function handleAnalyze() {
@@ -466,7 +497,7 @@ export default function AnalyzeView({
       <button
         type="button"
         className="hdm-btn hdm-btn--primary pub-submit"
-        disabled={!ready || status === "running"}
+        disabled={!ready || status === "running" || preparing}
         onClick={handleAnalyze}
       >
         {status === "running" ? dict.analyze.running : dict.analyze.cta}

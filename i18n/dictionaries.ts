@@ -212,7 +212,10 @@ const es = {
     photoNotesTitle: "Lo que se alcanza a ver",
     photoTipsTitle: "Fotos que te faltan",
     photoDisclaimer: "Axel sólo ve lo que la foto muestra. No detecta fallas mecánicas, ni óxido bajo el auto, ni nada que la cámara no alcance. Son observaciones para revisar en persona, no un peritaje.",
-    photosOptional: "Opcional. Si subes fotos, Axel también las revisa.",
+    photosOptional: "Opcional. Si subes fotos, Axel también las revisa. Se reducen en tu teléfono antes de enviarse, así que no gastas datos de más.",
+    photosPreparing: "Preparando fotos…",
+    photosTrimmed: "Se dejaron sólo las primeras fotos: entre todas pesaban demasiado.",
+    photoReadFailed: "No se pudo leer una de las fotos. Intenta con otra.",
 
     publishTitle: "¿Lo publicas?",
     publishBody: "Puedes publicar este auto con los mismos datos que acabas de capturar. Es gratis y toma un minuto más.",
@@ -515,7 +518,10 @@ const en: Dictionary = {
     photoNotesTitle: "What can be seen",
     photoTipsTitle: "Photos you are missing",
     photoDisclaimer: "Axel only sees what the photo shows. He cannot detect mechanical faults, rust under the car, or anything the camera does not reach. These are observations to check in person, not an inspection.",
-    photosOptional: "Optional. If you upload photos, Axel reviews those too.",
+    photosOptional: "Optional. If you upload photos, Axel reviews those too. They are resized on your phone before sending, so you do not burn extra data.",
+    photosPreparing: "Preparing photos…",
+    photosTrimmed: "Only the first photos were kept: together they were too large.",
+    photoReadFailed: "One of the photos could not be read. Try another one.",
 
     publishTitle: "Want to post it?",
     publishBody: "You can post this car with the same details you just entered. It is free and takes one more minute.",

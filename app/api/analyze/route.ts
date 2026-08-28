@@ -64,9 +64,21 @@ export async function POST(request: Request) {
     const body = await request.json();
     const listing = body.listing as Listing;
     const locale = body.locale === "en" ? "en" : "es";
-    const photos: string[] = Array.isArray(body.photos)
-      ? body.photos.slice(0, 6)
-      : [];
+    /**
+     * El navegador ya las encoge, pero eso es una cortesía, no una
+     * garantía: cualquiera puede mandar el POST a mano. Aquí se
+     * descartan las que se pasen, en vez de dejar que la petición
+     * entera reviente con un error que no dice nada.
+     */
+    const MAX_PHOTO_BYTES = 900_000;
+
+    const photos: string[] = (Array.isArray(body.photos) ? body.photos : [])
+      .filter((photo: unknown): photo is string => typeof photo === "string")
+      .filter((photo: string) => {
+        const base64 = photo.split(",")[1] ?? "";
+        return Math.ceil((base64.length * 3) / 4) <= MAX_PHOTO_BYTES;
+      })
+      .slice(0, 6);
 
     if (!listing?.make || !listing?.year) {
       return NextResponse.json({ error: "incomplete" }, { status: 422 });
