@@ -90,12 +90,22 @@ export default function WhySection({
             <h2 className="hdm-h2">{dict.why.sellerTitle}</h2>
             <p className="hdm-why-lead">{dict.why.sellerLead}</p>
 
-            <Link
-              href={localePath(locale, "/publicar")}
-              className="hdm-btn hdm-btn--primary hdm-steps-cta"
-            >
-              {dict.nav.publish}
-            </Link>
+            <div className="hdm-steps-cta">
+              <Link
+                href={localePath(locale, "/publicar")}
+                className="hdm-btn hdm-btn--primary"
+              >
+                {dict.nav.publish}
+              </Link>
+
+              {/* Para quien todavía no sabe si quiere publicar. */}
+              <Link
+                href={localePath(locale, "/analiza")}
+                className="hdm-btn hdm-btn--ghost"
+              >
+                {dict.analyze.navLabel}
+              </Link>
+            </div>
           </div>
 
           <ol className="hdm-steps-list">

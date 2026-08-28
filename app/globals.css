@@ -3840,3 +3840,353 @@ body {
 .theme-light * {
   scrollbar-color: rgba(216, 138, 0, 0.3) transparent;
 }
+
+/* ============================================================
+   DIAGNÓSTICO DE AXEL
+   ============================================================ */
+
+.diag {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diag-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.diag-head h2 {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+@media (max-width: 560px) {
+  .diag-head {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .diag-head > div {
+    flex-basis: 100%;
+    order: 3;
+  }
+}
+
+.diag-block {
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-block h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.diag-block h3 svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-hdm-brown-soft);
+  flex-shrink: 0;
+}
+
+.diag-block h4 {
+  margin: 16px 0 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Lo que dice Axel se destaca: es la parte que la gente lee. */
+.diag-narrative {
+  border-left: 3px solid var(--color-hdm-orange);
+}
+
+.diag-narrative p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+.diag-lead {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Precio ---------- */
+
+.diag-range {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-sand);
+  border: 1px solid var(--hdm-line-strong);
+  margin-bottom: 14px;
+}
+
+.diag-range strong {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-hdm-brown);
+}
+
+.diag-range span {
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-factors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-factors li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.diag-factor-value {
+  flex-shrink: 0;
+  min-width: 92px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.diag-factors .is-down .diag-factor-value {
+  color: var(--color-hdm-sold);
+}
+
+.diag-factors .is-up .diag-factor-value {
+  color: #3fcf7f;
+}
+
+.diag-clean {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* El número real no sale de aquí, y se dice con claridad. */
+.diag-kbb {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.diag-kbb strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.diag-kbb p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Comparables ---------- */
+
+.diag-comps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-comps a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s var(--hdm-ease);
+}
+
+.diag-comps a:hover {
+  border-color: var(--color-hdm-orange);
+}
+
+.diag-comp-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.diag-comp-meta {
+  grid-column: 1;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-comp-price {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}
+
+.diag-empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Fotos ---------- */
+
+.diag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.diag-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diag-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-hdm-brown-soft);
+}
+
+.diag-list--tips li::before {
+  background: var(--color-hdm-orange);
+}
+
+/* El límite de la vista por IA se dice en tamaño legible, no en
+   letra chica: es lo que evita que alguien confíe de más. */
+.diag-note {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-brown-soft);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-note--final {
+  border-left-color: var(--color-hdm-line);
+}
+
+/* ---------- Publicar ---------- */
+
+.diag-publish {
+  border-color: var(--hdm-line-strong);
+  background: var(--color-hdm-sand);
+}
+
+.diag-publish p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-reset {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--hdm-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-hdm-muted);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.diag-reset:hover {
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-brown);
+}
+
+.pub-photo-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+/* Los dos botones de la sección de vendedores, en fila. */
+.hdm-steps-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
