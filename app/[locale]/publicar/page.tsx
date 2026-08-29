@@ -42,15 +42,20 @@ export default async function PublishPage({ params }: { params: Params }) {
         ← {dict.vehicle.back}
       </Link>
 
-      <header className="pub-head">
-        <div className="hdm-kicker">{t.page.kicker}</div>
-        <h1 className="hdm-h2">{t.page.title}</h1>
-        <p className="pub-lede">{t.page.lede}</p>
+      {/* Encabezado oscuro con el mismo lenguaje que "Encuentra el
+          auto correcto": píldora ámbar, título grande, segunda línea
+          en acento. El formulario sigue claro debajo. */}
+      <header className="pub-hero">
+        <span className="pub-hero-pill">{t.page.kicker}</span>
+        <h1 className="pub-hero-title">{t.page.title}</h1>
+        <p className="pub-hero-lead">{t.page.lede}</p>
 
         {/* Va arriba y a la vista, no escondido en el pie: es lo que
             deja claro que el sitio no es parte de la venta. */}
-        <p className="pub-disclaimer">{t.page.disclaimer}</p>
-        <p className="pub-duration">{t.page.duration}</p>
+        <div className="pub-hero-notes">
+          <p>{t.page.disclaimer}</p>
+          <p>{t.page.duration}</p>
+        </div>
       </header>
 
       <ListingForm locale={locale} dict={dict} t={t} />
