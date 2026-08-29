@@ -43,10 +43,10 @@ export default async function AnalyzePage({ params }: { params: Params }) {
           ← {dict.vehicle.back}
         </Link>
 
-        <header className="pub-head">
-          <div className="hdm-kicker">{dict.analyze.kicker}</div>
-          <h1 className="hdm-h2">{dict.analyze.title}</h1>
-          <p className="pub-lede">{dict.analyze.lead}</p>
+        <header className="pub-hero">
+          <span className="pub-hero-pill">{dict.analyze.kicker}</span>
+          <h1 className="pub-hero-title">{dict.analyze.title}</h1>
+          <p className="pub-hero-lead">{dict.analyze.lead}</p>
         </header>
 
         <AnalyzeView locale={locale} dict={dict} t={t} />
