@@ -30,7 +30,21 @@ interface NewListingInfo {
   editUrl: string;
 }
 
-async function sendEmail(to: string, subject: string, html: string) {
+/**
+ * Destinatarios administrativos.
+ *
+ * NOTIFY_ADMIN_EMAIL acepta varios separados por coma, así todo lo
+ * que llega al correo del sitio llega también al personal sin
+ * depender de que el reenvío del dominio esté bien configurado.
+ */
+function adminRecipients(): string[] {
+  return (process.env.NOTIFY_ADMIN_EMAIL ?? "")
+    .split(",")
+    .map((address) => address.trim())
+    .filter(Boolean);
+}
+
+async function sendEmail(to: string | string[], subject: string, html: string) {
   const key = process.env.RESEND_API_KEY;
   const from = process.env.NOTIFY_FROM;
 
@@ -64,8 +78,8 @@ async function sendEmail(to: string, subject: string, html: string) {
    ============================================================ */
 
 async function notifyAdmin(listing: NewListingInfo) {
-  const to = process.env.NOTIFY_ADMIN_EMAIL;
-  if (!to) return;
+  const to = adminRecipients();
+  if (!to.length) return;
 
   const price = listing.price
     ? `$${listing.price.toLocaleString("en-US")}`
@@ -226,6 +240,68 @@ async function sendEditLink(listing: NewListingInfo, locale: "es" | "en") {
             ""
           )}</a>
         </p>
+      </div>
+    `
+  );
+}
+
+/* ============================================================
+   REPORTES DE ANUNCIOS
+   ============================================================ */
+
+/**
+ * Un reporte que se queda sólo en la base es un reporte que nadie
+ * lee. Si alguien avisa que un auto es robado, enterarte tres
+ * semanas después al consultar la tabla no sirve de nada.
+ */
+export async function notifyReport(report: {
+  listingId: string | number;
+  listingName: string;
+  reason: string;
+  detail: string;
+  contact: string | null;
+}) {
+  const to = adminRecipients();
+  if (!to.length) return;
+
+  await sendEmail(
+    to,
+    `Reporte: ${report.listingName}`,
+    `
+      <div style="font-family:system-ui,-apple-system,sans-serif;max-width:540px;line-height:1.55">
+        <p style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#c0392b;margin:0 0 8px">
+          Anuncio reportado
+        </p>
+
+        <h2 style="margin:0 0 4px;font-size:21px">${escapeHtml(
+          report.listingName
+        )}</h2>
+        <p style="margin:0 0 20px;color:#666">Anuncio #${report.listingId}</p>
+
+        <table style="border-collapse:collapse;width:100%;font-size:14px">
+          <tr>
+            <td style="padding:7px 0;color:#777;width:110px">Motivo</td>
+            <td style="font-weight:700">${escapeHtml(report.reason)}</td>
+          </tr>
+          <tr>
+            <td style="padding:7px 0;color:#777;vertical-align:top">Detalle</td>
+            <td>${escapeHtml(report.detail)}</td>
+          </tr>
+          <tr>
+            <td style="padding:7px 0;color:#777">Contacto</td>
+            <td>${escapeHtml(report.contact ?? "no dejó")}</td>
+          </tr>
+        </table>
+
+        <p style="margin:24px 0 8px;color:#777;font-size:13px">
+          Para retirar el anuncio mientras lo revisas:
+        </p>
+        <pre style="background:#f5f4f1;padding:14px;border-radius:10px;font-size:12px;overflow-x:auto;margin:0"><code>UPDATE listings SET status = 'rejected' WHERE id = ${report.listingId};</code></pre>
+
+        <p style="margin:14px 0 8px;color:#777;font-size:13px">
+          Para marcar el reporte como atendido:
+        </p>
+        <pre style="background:#f5f4f1;padding:14px;border-radius:10px;font-size:12px;overflow-x:auto;margin:0"><code>UPDATE reports SET status = 'actioned' WHERE listing_id = ${report.listingId};</code></pre>
       </div>
     `
   );

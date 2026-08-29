@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import { notifyReport } from "@/lib/notify";
 
 /**
  * Recibe reportes de anuncios.
@@ -77,6 +78,24 @@ export async function POST(request: Request) {
       INSERT INTO reports (listing_id, reason, detail, contact)
       VALUES (${listingId}, ${reason}, ${detail}, ${contact})
     `;
+
+    // El nombre del auto va en el aviso: "Reporte: anuncio #7" no
+    // dice nada al abrirlo desde el celular.
+    const [listing] = await sql`
+      SELECT year, make, model FROM listings WHERE id = ${listingId} LIMIT 1
+    `;
+
+    const listingName = listing
+      ? `${listing.year} ${listing.make} ${listing.model}`.trim()
+      : `#${listingId}`;
+
+    await notifyReport({
+      listingId,
+      listingName,
+      reason,
+      detail,
+      contact,
+    });
 
     return NextResponse.json({ ok: true });
   } catch (error) {

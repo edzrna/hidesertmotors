@@ -11,19 +11,23 @@
   --color-hdm-amber: #f5c542;
   --color-hdm-orange: #ff8a1f;
 
-  /* Grises con una pizca de calidez, no azulados: el azul junto al
-     naranja se ve sucio. */
-  --color-hdm-canvas: #0c0d0f;
-  --color-hdm-surface: #16181b;
-  --color-hdm-cream: #1b1d21;
-  --color-hdm-sand: #201d18;
+  /* Azul oscuro, la familia de #071018 que ya usabas en el hero y en
+     la sección de Axel. Los grises neutros que probé antes chocaban
+     con ese fondo: el sitio se veía cosido de dos paletas.
+
+     El azul frío también hace que el ámbar se lea más caliente por
+     contraste, que es justo lo que quieres de un acento. */
+  --color-hdm-canvas: #070f16;
+  --color-hdm-surface: #0e1922;
+  --color-hdm-cream: #121f2a;
+  --color-hdm-sand: #17222d;
 
   /* Antes eran los oscuros; ahora son los claros. Conservan el
      nombre para no reescribir cada componente. */
-  --color-hdm-dark: #08090b;
-  --color-hdm-ink: #f2f4f7;
+  --color-hdm-dark: #050b11;
+  --color-hdm-ink: #eef3f8;
 
-  --color-hdm-muted: #98a2b0;
+  --color-hdm-muted: #8ea0b3;
   --color-hdm-brown: #ffc861;
   --color-hdm-brown-soft: #e8a33d;
   --color-hdm-sold: #ff4d5e;
@@ -3367,9 +3371,9 @@ body {
 .axel-intro {
   background: linear-gradient(
     155deg,
-    #16181b 0%,
-    #101215 55%,
-    #0c0d0f 100%
+    #12202c 0%,
+    #0b151e 55%,
+    #070f16 100%
   );
   border: 1px solid var(--hdm-line);
 }
@@ -3407,7 +3411,7 @@ body {
 .pub-field textarea,
 .hdm-select,
 .pub-link-input {
-  background: #0e1013;
+  background: #091420;
   border: 1px solid var(--hdm-line);
   color: var(--color-hdm-ink);
 }
@@ -3430,8 +3434,8 @@ body {
    opciones salen blancas sobre blanco en algunos navegadores. */
 .pub-field select option,
 .hdm-select option {
-  background: #16181b;
-  color: #f2f4f7;
+  background: #0e1922;
+  color: #eef3f8;
 }
 
 /* Casillas: el naranja de marca en vez del azul del sistema. */
@@ -3441,7 +3445,7 @@ body {
 }
 
 .pub-check {
-  background: #0e1013;
+  background: #091420;
   border: 1px solid var(--hdm-line);
 }
 
@@ -3465,7 +3469,7 @@ body {
 
 /* El encabezado se funde con el fondo al hacer scroll. */
 .hdm-header {
-  background: rgba(8, 9, 11, 0.82);
+  background: rgba(5, 11, 17, 0.84);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--hdm-line);
 }
@@ -3506,7 +3510,7 @@ body {
 
 /* Bloque de datos congelados: gris azulado sobre el fondo. */
 .edit-locked {
-  background: #191b1e;
+  background: #101b25;
   border-color: var(--hdm-line);
 }
 
@@ -3623,7 +3627,7 @@ body {
   width: 100%;
   padding: 11px 12px;
   border-radius: 13px;
-  background: #0e1013;
+  background: #091420;
   border: 1px solid var(--hdm-line);
   color: var(--color-hdm-ink);
   font-family: var(--font-sans);
@@ -3639,8 +3643,8 @@ body {
 }
 
 .finder-field select option {
-  background: #16181b;
-  color: #f2f4f7;
+  background: #0e1922;
+  color: #eef3f8;
 }
 
 .finder-go {
