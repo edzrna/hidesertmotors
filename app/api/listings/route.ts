@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { isValidEmail, normalizePhone } from "@/lib/locations";
-import { createEditToken } from "@/lib/edit-token";
+import { createEditToken, editUrl } from "@/lib/edit-token";
+import { notifyNewListing } from "@/lib/notify";
+import { SITE_URL } from "@/lib/site";
 import {
   scoreListing,
   validateListing,
@@ -99,8 +101,9 @@ export async function POST(request: Request) {
     );
   }
 
+  // Obligatorio: es el respaldo del enlace de edición.
   const rawEmail = String(body.seller?.email ?? "").trim();
-  if (rawEmail && !isValidEmail(rawEmail)) {
+  if (!rawEmail || !isValidEmail(rawEmail)) {
     return NextResponse.json({ error: "invalid_email" }, { status: 422 });
   }
 
@@ -154,6 +157,38 @@ export async function POST(request: Request) {
     )
     RETURNING id
   `;
+
+    const locale = body.locale === "en" ? "en" : "es";
+
+    /**
+     * Los avisos van DESPUÉS de que la fila está guardada y con
+     * `await`: en una función serverless, lo que no se espera se
+     * corta cuando la respuesta se va.
+     *
+     * Aun así no pueden tumbar la publicación — notifyNewListing
+     * atrapa todo por dentro. Si el correo falla, el anuncio ya
+     * existe, y eso es lo que importa.
+     */
+    await notifyNewListing(
+      {
+        id: row.id,
+        name: `${listing.year} ${listing.make} ${listing.model}`.trim(),
+        price: body.price ? Number(body.price) : null,
+        city: listing.city,
+        score: scored.score,
+        confidence: scored.confidence,
+        flags: scored.flags,
+        sellerName: name,
+        sellerPhone: phone,
+        sellerEmail: rawEmail || null,
+        editUrl: editUrl(
+          locale === "en" ? `${SITE_URL}/en` : SITE_URL,
+          row.id,
+          editToken
+        ),
+      },
+      locale
+    );
 
   return NextResponse.json({
       ok: true,

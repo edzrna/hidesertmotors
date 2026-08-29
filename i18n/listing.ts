@@ -65,7 +65,9 @@ const es = {
     photosHelp: "Mínimo 3. Con 12 o más subes tu nivel de respaldo.",
     name: "Tu nombre",
     phone: "Teléfono o WhatsApp",
-    email: "Correo (no se publica)",
+    email: "Correo",
+    emailHelp:
+      "No se publica. Te mandamos ahí el enlace para editar tu anuncio, que es la única forma de recuperarlo si lo pierdes.",
   },
 
   titleStatus: {
@@ -307,7 +309,9 @@ const en: Dict = {
     photosHelp: "Minimum 3. Twelve or more raises your backing level.",
     name: "Your name",
     phone: "Phone or WhatsApp",
-    email: "Email (not published)",
+    email: "Email",
+    emailHelp:
+      "Not published. We send your edit link there, which is the only way to recover it if you lose it.",
   },
 
   titleStatus: {

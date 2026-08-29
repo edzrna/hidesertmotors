@@ -252,7 +252,15 @@ export default function ListingForm({
     // lleva a ningún lado, y el vendedor nunca sabe por qué no le llaman.
     if (!normalizePhone(form.phone)) found.phone = t.fields.phone;
 
-    if (form.email.trim() && !isValidEmail(form.email))
+    /**
+     * El correo pasó de opcional a obligatorio.
+     *
+     * Es el único respaldo del enlace de edición: sin él, quien no
+     * copie el enlace de la pantalla lo pierde para siempre y su
+     * única salida es escribirte para que le retires el anuncio a
+     * mano. Sigue sin publicarse.
+     */
+    if (!form.email.trim() || !isValidEmail(form.email))
       found.email = t.fields.email;
     if (form.vin && !/^[A-HJ-NPR-Z0-9]{17}$/i.test(form.vin))
       found.vin = t.fields.vin;
@@ -891,6 +899,7 @@ export default function ListingForm({
 
           <Field
             label={t.fields.email}
+            help={t.fields.emailHelp}
             error={errors.email && t.form.invalidEmail}
           >
             <input
