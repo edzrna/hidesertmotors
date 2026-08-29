@@ -35,6 +35,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_json" }, { status: 400 });
   }
 
+  /**
+   * Todo lo demás va dentro de un try.
+   *
+   * Sin esto, cualquier fallo de la base —una columna que no existe,
+   * una restricción violada— sale como un 500 mudo, y el formulario
+   * sólo puede decir "falló". Diagnosticar eso cuesta horas; el
+   * mensaje real cuesta una línea.
+   */
+  try {
   const listing: Listing = {
     id: "new",
     year: Number(body.year),
@@ -146,10 +155,21 @@ export async function POST(request: Request) {
   `;
 
   return NextResponse.json({
-    ok: true,
-    id: row.id,
-    score: scored.score,
-    confidence: scored.confidence,
-    editToken,
-  });
+      ok: true,
+      id: row.id,
+      score: scored.score,
+      confidence: scored.confidence,
+      editToken,
+    });
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error("create listing failed:", detail);
+
+    // El mensaje de Postgres va al cliente: es lo que convirtió
+    // varias sesiones de adivinanza en un diagnóstico inmediato.
+    return NextResponse.json(
+      { error: "insert_failed", detail },
+      { status: 500 }
+    );
+  }
 }
