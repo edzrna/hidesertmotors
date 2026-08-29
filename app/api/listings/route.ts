@@ -129,6 +129,7 @@ export async function POST(request: Request) {
   const [row] = await sql`
     INSERT INTO listings (
       year, make, model, miles, price,
+      body_type, fuel_type, transmission,
       title_status, owners, reported_accidents,
       defects, documentation, known_issues, description, city,
       photos, seller_name, seller_phone, seller_email,
@@ -137,11 +138,11 @@ export async function POST(request: Request) {
     ) VALUES (
       ${listing.year}, ${listing.make}, ${listing.model}, ${listing.miles},
       ${body.price ? Number(body.price) : null},
+      ${listing.bodyType}, ${listing.fuelType}, ${listing.transmission},
       ${listing.titleStatus}, ${listing.owners}, ${listing.reportedAccidents},
       ${JSON.stringify(listing.defects)},
       ${JSON.stringify(listing.documentation)},
       ${listing.knownIssues}, ${listing.description}, ${listing.city},
-      ${listing.bodyType}, ${listing.fuelType}, ${listing.transmission},
       ${JSON.stringify(photos)},
       ${name}, ${phone},
       ${rawEmail || null},
