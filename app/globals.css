@@ -4190,3 +4190,288 @@ body {
   gap: 10px;
   margin-top: 24px;
 }
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+
+.hdm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+  transition: padding 0.3s var(--hdm-ease);
+}
+
+.hdm-header.is-scrolled .hdm-header-inner {
+  padding-block: 8px;
+}
+
+.hdm-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* El logo con presencia real. Antes competía de tú a tú con el
+   eslogan; ahora manda, que es su trabajo. */
+.hdm-logo {
+  width: clamp(96px, 15vw, 168px);
+  height: auto;
+  flex-shrink: 0;
+  transition: width 0.3s var(--hdm-ease);
+}
+
+/* Al hacer scroll baja, pero sigue siendo grande: encogerlo a un
+   sello ilegible es lo que hace que un sitio se sienta genérico. */
+.hdm-header.is-scrolled .hdm-logo {
+  width: clamp(78px, 11vw, 124px);
+}
+
+.hdm-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.9vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--color-hdm-ink);
+}
+
+/* El eslogan desaparece al hacer scroll: quedan logo e idioma y
+   botón, como pediste. */
+.hdm-header.is-scrolled .hdm-tagline {
+  display: none;
+}
+
+.hdm-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* ---------- Idioma como texto ---------- */
+
+.hdm-lang-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hdm-lang {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--color-hdm-muted);
+  text-decoration: none;
+  padding: 2px 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hdm-lang:hover {
+  color: var(--color-hdm-ink);
+}
+
+/* El activo se marca con una línea, no con una píldora: pesa menos
+   y no compite con el botón. */
+.hdm-lang.is-active {
+  color: var(--color-hdm-amber);
+  border-bottom-color: var(--color-hdm-amber);
+}
+
+.hdm-lang-sep {
+  color: rgba(255, 255, 255, 0.22);
+  font-size: 12px;
+}
+
+/* ---------- Botón de publicar ---------- */
+
+.hdm-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 22px;
+  white-space: nowrap;
+}
+
+.hdm-publish-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+/* Al hacer scroll queda sólo el icono: redondo, compacto, y el logo
+   recupera todo el protagonismo. */
+.hdm-header.is-scrolled .hdm-publish {
+  padding: 11px;
+  border-radius: 999px;
+  gap: 0;
+}
+
+.hdm-header.is-scrolled .hdm-publish-text {
+  display: none;
+}
+
+/* En pantallas chicas el texto del botón estorba desde el inicio. */
+@media (max-width: 560px) {
+  .hdm-publish {
+    padding: 11px;
+    border-radius: 999px;
+    gap: 0;
+  }
+  .hdm-publish-text {
+    display: none;
+  }
+  .hdm-tagline {
+    display: none;
+  }
+}
+
+/* ============================================================
+   PIE DE PÁGINA
+   ============================================================ */
+
+.hdm-footer {
+  margin-top: clamp(40px, 8vw, 72px);
+  padding-block: clamp(36px, 6vw, 56px) 24px;
+  background: var(--color-hdm-dark);
+  border-top: 1px solid var(--hdm-line);
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 44px);
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--hdm-line);
+}
+
+@media (max-width: 860px) {
+  .foot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+  .foot-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+.foot-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 14px;
+}
+
+.foot-tagline {
+  margin: 0 0 4px;
+  max-width: 32ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9c6d6;
+}
+
+.foot-city {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.foot-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.foot-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hdm-line);
+  color: #c9d2df;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.foot-social a:hover {
+  background: rgba(255, 168, 47, 0.12);
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-amber);
+}
+
+.foot-social svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------- Columnas de enlaces ---------- */
+
+.foot-col {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.foot-col h3 {
+  margin: 0 0 3px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-amber);
+}
+
+.foot-col a {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #b9c6d6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.foot-col a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* ---------- Deslinde y línea final ---------- */
+
+.foot-notice {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--color-hdm-brown-soft);
+  max-width: 82ch;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #98a2b0;
+}
+
+.foot-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hdm-line);
+  font-size: 12px;
+  color: #7d8896;
+}
+
+.foot-credit {
+  color: var(--color-hdm-brown-soft);
+}

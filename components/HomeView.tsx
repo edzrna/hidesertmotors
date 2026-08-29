@@ -12,6 +12,7 @@ import AxelIntro from "@/components/AxelIntro";
 import AxelFace from "@/components/AxelFace";
 import SearchBar from "@/components/SearchBar";
 import { WhatsAppGlyph, FacebookGlyph, MailGlyph } from "@/components/Icons";
+import { IconPublish } from "@/components/HdmIcons";
 import type { ListingDictionary } from "@/i18n/listing";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
 import {
@@ -152,33 +153,42 @@ export default function HomeView({
       {/* ============ HEADER ============ */}
       <header className={`hdm-header${isScrolled ? " is-scrolled" : ""}`}>
         <div className="hdm-shell hdm-header-inner">
-          <div className="hdm-brand">
+          {/* El logo manda: es lo que identifica al sitio de un
+              vistazo, y al hacer scroll es lo único que queda además
+              del botón de publicar. */}
+          <Link href={localePath(locale, "/")} className="hdm-brand">
             <img src="/logo.png" alt="HI DESERT MOTORS" className="hdm-logo" />
             <span className="hdm-tagline">{dict.nav.tagline}</span>
-          </div>
+          </Link>
 
           <nav className="hdm-nav">
-            <span className="hdm-lang hdm-lang--active" aria-current="page">
-              {locale.toUpperCase()}
-            </span>
+            {/* Idioma como texto, sin burbujas: es un cambio de
+                estado, no una acción principal, y las píldoras le
+                daban el mismo peso visual que al botón de publicar. */}
+            <div className="hdm-lang-group">
+              <span className="hdm-lang is-active" aria-current="page">
+                {locale.toUpperCase()}
+              </span>
+              <span className="hdm-lang-sep" aria-hidden>
+                /
+              </span>
+              <Link
+                href={localePath(otherLocale, "/")}
+                className="hdm-lang"
+                hrefLang={otherLocale}
+              >
+                {otherLocale.toUpperCase()}
+              </Link>
+            </div>
 
-            <Link
-              href={localePath(otherLocale, "/")}
-              className="hdm-lang"
-              hrefLang={otherLocale}
-            >
-              {otherLocale.toUpperCase()}
-            </Link>
-
-            <a href="#inventario" className="hdm-btn hdm-btn--primary">
-              {dict.nav.inventory}
-            </a>
-
+            {/* Un solo botón. "Ver inventario" competía con él y
+                además el inventario ya está a un scroll de distancia. */}
             <Link
               href={localePath(locale, "/publicar")}
-              className="hdm-btn hdm-btn--ghost"
+              className="hdm-btn hdm-btn--primary hdm-publish"
             >
-              {dict.nav.publish}
+              <IconPublish className="hdm-publish-icon" />
+              <span className="hdm-publish-text">{dict.nav.publish}</span>
             </Link>
           </nav>
         </div>
@@ -516,50 +526,81 @@ export default function HomeView({
 
       {/* ============ PIE ============ */}
       <footer className="hdm-footer">
-        <div className="hdm-shell hdm-footer-grid">
-          <div className="hdm-footer-brand">
-            <img src="/logo.png" alt="" className="hdm-logo hdm-logo--footer" />
+        <div className="hdm-shell">
+          {/* Cuatro columnas con propósito distinto cada una, en vez
+              de dos bloques sueltos: marca, navegación, ayuda al
+              vendedor, y contacto. */}
+          <div className="foot-grid">
+            <div className="foot-brand">
+              <img src="/logo.png" alt="" className="foot-logo" />
+              <p className="foot-tagline">{dict.footer.tagline}</p>
+              <p className="foot-city">{dict.footer.city}</p>
 
-            <div>
-              <div className="hdm-footer-name">HI DESERT MOTORS</div>
-              <p className="hdm-footer-text">
-                {dict.footer.tagline}
-                <br />
-                {dict.footer.city}
-              </p>
+              <div className="foot-social">
+                <a
+                  href={`mailto:${CONTACT_EMAIL}`}
+                  aria-label={dict.footer.email}
+                >
+                  <MailGlyph />
+                </a>
+                <a
+                  href={FACEBOOK_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Facebook"
+                >
+                  <FacebookGlyph />
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div className="hdm-contact-card">
-            <div className="hdm-eyebrow">{dict.footer.contact}</div>
+            <nav className="foot-col">
+              <h3>{dict.footer.exploreTitle}</h3>
+              <a href="#inventario">{dict.nav.inventory}</a>
+              <Link href={localePath(locale, "/analiza")}>
+                {dict.analyze.navLabel}
+              </Link>
+              <Link href={localePath(otherLocale, "/")} hrefLang={otherLocale}>
+                {dict.nav.switchTo}
+              </Link>
+            </nav>
 
-            {/* Ya no hay teléfono del sitio. El contacto de cada auto
-                es su vendedor; este correo es sólo para el sitio. */}
-            <p className="hdm-footer-text">{dict.footer.noPhoneNotice}</p>
+            <nav className="foot-col">
+              <h3>{dict.footer.sellTitle}</h3>
+              <Link href={localePath(locale, "/publicar")}>
+                {dict.nav.publish}
+              </Link>
+              <Link href={localePath(locale, "/analiza")}>
+                {dict.footer.freeDiagnosis}
+              </Link>
+              <a href={`mailto:${CONTACT_EMAIL}`}>{dict.footer.lostLink}</a>
+            </nav>
 
-            <nav className="hdm-footer-links">
+            {/* Las políticas en su propia columna: enterradas entre
+                los demás enlaces parecen relleno, y son justo lo que
+                alguien busca cuando duda si confiar en el sitio. */}
+            <nav className="foot-col foot-col--legal">
+              <h3>{dict.footer.legalTitle}</h3>
               <Link href={localePath(locale, "/terminos")}>
                 {dict.footer.terms}
               </Link>
               <Link href={localePath(locale, "/privacidad")}>
                 {dict.footer.privacy}
               </Link>
+              <a href={`mailto:${CONTACT_EMAIL}`}>{dict.footer.reportListing}</a>
             </nav>
+          </div>
 
-            <div className="hdm-social">
-              <a href={`mailto:${CONTACT_EMAIL}`} aria-label={dict.footer.email}>
-                <MailGlyph />
-              </a>
+          {/* El deslinde va aquí, completo y legible. Es la frase que
+              define qué es este sitio, no una nota al pie. */}
+          <p className="foot-notice">{dict.footer.noPhoneNotice}</p>
 
-              <a
-                href={FACEBOOK_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Facebook"
-              >
-                <FacebookGlyph />
-              </a>
-            </div>
+          <div className="foot-bottom">
+            <span>
+              © {new Date().getFullYear()} Hi Desert Motors.{" "}
+              {dict.footer.rights}
+            </span>
+            <span className="foot-credit">{dict.footer.builtBy}</span>
           </div>
         </div>
       </footer>

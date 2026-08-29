@@ -120,3 +120,22 @@ export function IconClock({ className }: Props) {
     </svg>
   );
 }
+
+/**
+ * Publicar: una llave de auto con un signo de más.
+ *
+ * No es un "+" genérico ni una cámara: la acción es entregar tu auto
+ * al tablero, y la llave es el objeto que lo representa.
+ */
+export function IconPublish({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <circle cx="8" cy="8.5" r="4" />
+      <circle cx="8" cy="8.5" r="1.2" />
+      <path d="M11 11.4 17.5 18" />
+      <path d="m15.2 15.7 1.8 1.8" />
+      <path d="M17.5 18v2.2h2.2" />
+      <path d="M18.5 4.5v4M16.5 6.5h4" />
+    </svg>
+  );
+}
