@@ -2806,6 +2806,7 @@ body {
 .gauge-fill {
   fill: none;
   stroke-width: 8;
+  /* El color lo pone el gradiente del SVG. */
   stroke-linecap: round;
   stroke-dashoffset: 131.95;
   transition: stroke-dashoffset 1.1s var(--hdm-ease);
@@ -2836,25 +2837,27 @@ body {
   font-size: 15px;
 }
 
-/* El color se lee antes que el número: es el primer dato. */
-.gauge--good .gauge-fill {
-  stroke: #3fcf7f;
-}
-.gauge--ok .gauge-fill {
-  stroke: var(--color-hdm-orange);
-}
-.gauge--warn .gauge-fill {
-  stroke: #e08a2c;
-}
-.gauge--bad .gauge-fill {
-  stroke: var(--color-hdm-sold);
+/* Gama de marca: naranja profundo abajo, ámbar claro arriba. El
+   valor se sigue leyendo en el tono sin recurrir al verde, que
+   desentonaba con todo lo demás del sitio. */
+.gauge--brand {
+  --gauge-from: #e2670a;
+  --gauge-to: #ffd166;
 }
 
-.gauge--good .gauge-value {
-  color: #3fcf7f;
+/* El rojo se conserva sólo debajo de 50. Un auto con la transmisión
+   patinando debe alarmar, no combinar. */
+.gauge--bad {
+  --gauge-from: #c02535;
+  --gauge-to: #ff6b7a;
 }
+
+.gauge--brand .gauge-value {
+  color: var(--color-hdm-amber);
+}
+
 .gauge--bad .gauge-value {
-  color: var(--color-hdm-sold);
+  color: #ff8f9c;
 }
 
 .gauge figcaption {
@@ -4478,4 +4481,152 @@ body {
 
 .foot-credit {
   color: var(--color-hdm-brown-soft);
+}
+
+/* ============================================================
+   ENCABEZADO OSCURO EN PUBLICAR Y ANALIZAR
+
+   Mismo lenguaje que "Encuentra el auto correcto": el bloque oscuro
+   presenta, el formulario claro debajo es donde se trabaja. La
+   isla clara empieza después del encabezado.
+   ============================================================ */
+
+.pub-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 6px 0 26px;
+  padding: clamp(26px, 5vw, 44px);
+  border-radius: var(--hdm-r-lg);
+  background: linear-gradient(155deg, #12202c 0%, #0b151e 55%, #070f16 100%);
+  border: 1px solid rgba(255, 168, 47, 0.14);
+  color: #ffffff;
+}
+
+/* El mismo resplandor ámbar del hero y de la sección de Axel: es lo
+   que hace que los tres bloques oscuros se lean como familia. */
+.pub-hero::before {
+  content: "";
+  position: absolute;
+  inset: -55% -25% auto -25%;
+  height: 110%;
+  z-index: -1;
+  background: radial-gradient(
+    52% 58% at 22% 34%,
+    rgba(245, 197, 66, 0.2),
+    transparent 70%
+  );
+}
+
+.pub-hero-pill {
+  display: inline-block;
+  padding: 7px 15px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.12);
+  border: 1px solid rgba(245, 197, 66, 0.28);
+  color: var(--color-hdm-amber);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pub-hero-title {
+  margin: 0 0 14px;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(27px, 5.2vw, 44px);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.pub-hero-lead {
+  margin: 0;
+  max-width: 56ch;
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.65;
+  color: #c3cede;
+}
+
+.pub-hero-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.pub-hero-notes p {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--color-hdm-orange);
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.68;
+  color: #a8b6c6;
+}
+
+/* ============================================================
+   PESTAÑAS DE SECCIÓN
+
+   Cada bloque del formulario lleva su pestaña naranja arriba a la
+   izquierda. Antes las secciones se distinguían sólo por el espacio
+   entre ellas, y en un formulario largo eso no basta para saber en
+   cuál vas.
+   ============================================================ */
+
+.pub-step {
+  position: relative;
+  margin-top: 30px;
+  padding-top: clamp(26px, 4vw, 32px);
+  border-radius: var(--hdm-r);
+}
+
+.pub-step > legend {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  float: none;
+  width: auto;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(255, 138, 31, 0.28);
+  white-space: nowrap;
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* El icono de categoría hereda el oscuro de la pestaña. */
+.pub-group-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .pub-step > legend {
+    left: 14px;
+    padding: 7px 13px;
+    font-size: 11px;
+  }
 }
