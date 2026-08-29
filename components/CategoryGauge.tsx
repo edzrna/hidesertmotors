@@ -63,11 +63,18 @@ export default function CategoryGauge({
   const needle = polar(value);
 
   /**
-   * El color del arco cambia con el valor. No es decoración: es el
-   * dato que se lee primero, antes que el número.
+   * El arco va en la gama de la marca: naranja profundo abajo, ámbar
+   * claro arriba. El verde desentonaba con todo lo demás.
+   *
+   * El tono sigue diciendo algo: un 95 se ve dorado y un 60 se ve
+   * naranja quemado, así que el valor se lee sin leer el número. Y el
+   * rojo se conserva sólo para lo grave —debajo de 50— porque un auto
+   * con la transmisión patinando debe alarmar, no combinar.
    */
-  const tone =
-    value >= 85 ? "good" : value >= 70 ? "ok" : value >= 55 ? "warn" : "bad";
+  const tone = value < 50 ? "bad" : "brand";
+
+  /** Cada medidor necesita su propio id o comparten el gradiente. */
+  const gradientId = `gauge-${label.replace(/\W+/g, "")}-${value}`;
 
   return (
     <figure className={`gauge gauge--${tone}`}>
@@ -85,10 +92,23 @@ export default function CategoryGauge({
           className="gauge-track"
         />
 
+        <defs>
+          {/* El gradiente se inclina con el valor: mientras más alto,
+              más peso tiene el ámbar claro. */}
+          <linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="var(--gauge-from)" />
+            <stop
+              offset={`${Math.max(30, Math.min(95, value))}%`}
+              stopColor="var(--gauge-to)"
+            />
+          </linearGradient>
+        </defs>
+
         {/* Arco relleno hasta el valor */}
         <path
           d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`}
           className="gauge-fill"
+          stroke={`url(#${gradientId})`}
           strokeDasharray={ARC}
         />
 
