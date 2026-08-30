@@ -189,30 +189,7 @@ body {
   flex-wrap: wrap;
 }
 
-.hdm-lang {
-  display: inline-flex;
-  align-items: center;
-  padding: 9px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--hdm-line-strong);
-  background: var(--color-hdm-cream);
-  color: #5a3900;
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 13px;
-  transition: background 0.25s ease;
-}
-
-.hdm-lang:hover {
-  background: var(--color-hdm-surface);
-}
-
-.hdm-lang--active {
-  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
-  color: var(--color-hdm-dark);
-  border-color: transparent;
-}
+/* Las píldoras de idioma se retiraron: ahora es texto. Ver más abajo. */
 
 .hdm-wa {
   display: inline-flex;
@@ -4227,7 +4204,7 @@ body {
 /* El logo con presencia real. Antes competía de tú a tú con el
    eslogan; ahora manda, que es su trabajo. */
 .hdm-logo {
-  width: clamp(96px, 15vw, 168px);
+  width: clamp(132px, 21vw, 230px);
   height: auto;
   flex-shrink: 0;
   transition: width 0.3s var(--hdm-ease);
@@ -4236,7 +4213,7 @@ body {
 /* Al hacer scroll baja, pero sigue siendo grande: encogerlo a un
    sello ilegible es lo que hace que un sitio se sienta genérico. */
 .hdm-header.is-scrolled .hdm-logo {
-  width: clamp(78px, 11vw, 124px);
+  width: clamp(104px, 15vw, 160px);
 }
 
 .hdm-tagline {
@@ -4269,15 +4246,18 @@ body {
   gap: 6px;
 }
 
+/* Discreto a propósito: cambiar de idioma es algo que se hace una
+   vez, no en cada visita. Compitiendo con el logo y el botón,
+   estorbaba. */
 .hdm-lang {
   font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: var(--color-hdm-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.42);
   text-decoration: none;
-  padding: 2px 0;
-  border-bottom: 2px solid transparent;
+  padding: 1px 0;
+  border-bottom: 1.5px solid transparent;
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 
@@ -4288,13 +4268,13 @@ body {
 /* El activo se marca con una línea, no con una píldora: pesa menos
    y no compite con el botón. */
 .hdm-lang.is-active {
-  color: var(--color-hdm-amber);
-  border-bottom-color: var(--color-hdm-amber);
+  color: rgba(245, 197, 66, 0.85);
+  border-bottom-color: rgba(245, 197, 66, 0.5);
 }
 
 .hdm-lang-sep {
-  color: rgba(255, 255, 255, 0.22);
-  font-size: 12px;
+  color: rgba(255, 255, 255, 0.16);
+  font-size: 10px;
 }
 
 /* ---------- Botón de publicar ---------- */
@@ -4668,4 +4648,45 @@ body {
   background: #f0f9f2;
   border-color: rgba(34, 139, 68, 0.22);
   color: #1d6b38;
+}
+
+/* ============================================================
+   TARJETAS MÁS COMPACTAS
+
+   Con la descripción fuera, la tarjeta se cierra: menos aire entre
+   bloques para que quepan más anuncios por pantalla sin apretarse.
+   ============================================================ */
+
+.hdm-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+.hdm-specs > div {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+}
+
+.hdm-specs dt {
+  color: var(--color-hdm-muted);
+}
+
+.hdm-specs dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-hdm-ink);
+}
+
+/* La calificación y las banderas mandan: son lo que decide si abres
+   el anuncio. */
+.hdm-card-flags {
+  margin-top: 12px;
+}
+
+.hdm-card-age {
+  margin-top: 10px;
 }
