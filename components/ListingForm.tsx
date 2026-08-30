@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import { MailGlyph } from "@/components/Icons";
+import { downscaleForUpload } from "@/lib/downscale";
 import CategoryGrid from "@/components/CategoryGrid";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -84,6 +85,22 @@ const GROUPS = [
 
 
 const MIN_PHOTOS = 3;
+
+/** Reintenta sólo los fallos de red, no los rechazos del servidor. */
+async function fetchWithRetry(url: string, init: RequestInit, tries = 3) {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < tries; attempt++) {
+    try {
+      return await fetch(url, init);
+    } catch (error) {
+      lastError = error;
+      await new Promise((resolve) => setTimeout(resolve, 700 * (attempt + 1)));
+    }
+  }
+
+  throw lastError;
+}
 
 export default function ListingForm({
   locale,
@@ -295,27 +312,68 @@ export default function ListingForm({
       for (const [index, file] of photos.entries()) {
         setProgress(`${index + 1} / ${photos.length}`);
 
+        /**
+         * Se reduce antes de subir.
+         *
+         * Una foto de celular pesa 3-5 MB. Once de esas por red móvil
+         * es una subida de minutos, y cualquier microcorte la tumba
+         * entera con "Failed to fetch". Reducida a 1600px pesa unos
+         * 300 KB y sube en segundos, sin que se note en pantalla.
+         */
+        const blob = await downscaleForUpload(file);
+
         const body = new FormData();
-        body.append("file", file);
+        body.append("file", blob, file.name.replace(/\.\w+$/, ".jpg"));
 
-        const res = await fetch("/api/upload", { method: "POST", body });
+        /**
+         * Dos reintentos. En red móvil un fallo aislado es normal, y
+         * volver a intentar cuesta menos que hacer que la persona
+         * llene el formulario de nuevo.
+         */
+        let url = "";
+        let lastError = "";
 
-        if (!res.ok) {
-          // El endpoint responde con un código propio: se muestra tal
-          // cual para poder diagnosticar sin abrir los registros.
-          const detail = await res.text().catch(() => "");
-          throw new Error(
-            `${t.form.uploadFailed} (${res.status}) ${file.name} ${detail.slice(0, 140)}`
-          );
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            const res = await fetch("/api/upload", {
+              method: "POST",
+              body,
+            });
+
+            if (!res.ok) {
+              const detail = await res.text().catch(() => "");
+              lastError = `${res.status} ${detail.slice(0, 120)}`;
+              continue;
+            }
+
+            const data = await res.json();
+            url = data.url;
+            break;
+          } catch (networkError) {
+            // "Failed to fetch": no llegó al servidor. Se reintenta
+            // tras una pausa que crece.
+            lastError =
+              networkError instanceof Error
+                ? networkError.message
+                : String(networkError);
+            await new Promise((resolve) =>
+              setTimeout(resolve, 800 * (attempt + 1))
+            );
+          }
         }
 
-        const { url } = await res.json();
+        if (!url) {
+          throw new Error(`${t.form.uploadFailed} ${file.name} — ${lastError}`);
+        }
+
         photoUrls.push(url);
       }
 
       setProgress("");
 
-      const res = await fetch("/api/listings", {
+      // El guardado también se reintenta: el formulario entero se
+      // pierde si falla justo aquí, después de subir las fotos.
+      const res = await fetchWithRetry("/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -352,9 +410,19 @@ export default function ListingForm({
     } catch (error) {
       setStatus("idle");
       setProgress("");
-      setSubmitError(
-        error instanceof Error ? error.message : t.form.saveFailed
-      );
+      /**
+       * "Failed to fetch" es el mensaje del navegador cuando la
+       * petición no sale. A quien está publicando su auto no le dice
+       * nada; lo que necesita saber es que fue la conexión y que
+       * puede reintentar sin perder lo escrito.
+       */
+      const raw = error instanceof Error ? error.message : "";
+      const esFalloDeRed =
+        raw.includes("Failed to fetch") ||
+        raw.includes("NetworkError") ||
+        raw.includes("Load failed");
+
+      setSubmitError(esFalloDeRed ? t.form.networkError : raw || t.form.saveFailed);
       requestAnimationFrame(() => {
         document
           .querySelector(".pub-error")

@@ -12,7 +12,9 @@ import { put } from "@vercel/blob";
  */
 
 export const runtime = "nodejs";
-export const maxDuration = 30;
+// 60s: una subida por red móvil lenta puede pasar de 30, y cortarla
+// a la mitad produce un "Failed to fetch" sin explicación.
+export const maxDuration = 60;
 
 const MAX_BYTES = 8 * 1024 * 1024; // 8 MB
 const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/heic"];

@@ -197,6 +197,8 @@ const es = {
     sendErrorTitle: "No se pudo enviar el anuncio",
     uploadFailed: "Falló la subida de una foto",
     saveFailed: "Falló el guardado del anuncio",
+    networkError:
+      "Se perdió la conexión mientras se enviaba. No se perdió nada de lo que llenaste: vuelve a tocar Publicar cuando tengas mejor señal.",
     uploading: "Subiendo fotos",
     charsLeft: "caracteres restantes",
     addPhotos: "Agregar fotos",
@@ -442,6 +444,8 @@ const en: Dict = {
     sendErrorTitle: "The listing could not be sent",
     uploadFailed: "A photo failed to upload",
     saveFailed: "Saving the listing failed",
+    networkError:
+      "The connection dropped while sending. Nothing you filled in was lost: tap Publish again when you have better signal.",
     uploading: "Uploading photos",
     charsLeft: "characters left",
     addPhotos: "Add photos",
