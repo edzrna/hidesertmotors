@@ -419,38 +419,25 @@ export default function HomeView({
                   </ul>
                 )}
 
-                <p className="hdm-card-text">
-                  {listing.description.slice(0, 160)}
-                  {listing.description.length > 160 ? "…" : ""}
-                </p>
+                {/* La descripción no va en la tarjeta.
+                    En la portada compite consigo misma: cinco anuncios
+                    con párrafo cada uno son cinco pantallas de scroll
+                    y ninguna decisión. Lo que decide si abres un
+                    anuncio es la calificación, las banderas y el
+                    precio — eso se queda. El texto está a un toque. */}
 
+                {/* Sólo lo que ayuda a descartar de un vistazo. El
+                    resto —dueños, transmisión, combustible— está en la
+                    ficha, que es donde se compara en serio. */}
                 <dl className="hdm-specs">
-                  <div>
-                    <dt>{dict.specs.year}: </dt>
-                    <dd>{listing.year}</dd>
-                  </div>
                   <div>
                     <dt>{dict.specs.miles}: </dt>
                     <dd>{formatMiles(listing.miles, locale)}</dd>
                   </div>
                   <div>
-                    <dt>{dict.specs.title}: </dt>
-                    <dd>{dict.titles[listing.titleStatus]}</dd>
-                  </div>
-                  <div>
-                    <dt>{dict.specs.owners}: </dt>
-                    <dd>{listing.owners}</dd>
-                  </div>
-                  <div>
                     <dt>{dict.specs.bodyType}: </dt>
                     <dd>{t.bodyTypes[listing.bodyType]}</dd>
                   </div>
-                  {listing.fuelType !== "gasoline" && (
-                    <div>
-                      <dt>{dict.specs.fuelType}: </dt>
-                      <dd>{t.fuelTypes[listing.fuelType]}</dd>
-                    </div>
-                  )}
                   {listing.city && (
                     <div>
                       <dt>{dict.specs.city}: </dt>
