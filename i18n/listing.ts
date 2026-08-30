@@ -204,7 +204,8 @@ const es = {
     photosSelected: "fotos seleccionadas",
     successTitle: "Anuncio recibido",
     successBody:
-      "Lo revisamos y lo publicamos en cuanto esté listo. Te avisamos al teléfono que dejaste.",
+      "Lo revisamos y lo publicamos en cuanto esté listo.",
+    editLinkSent: "También te lo mandamos por correo a",
     editLinkTitle: "Guarda este enlace",
     editLinkWarn:
       "Es la única forma de editar o retirar tu anuncio. No lo compartas con nadie y no lo pierdas: por seguridad no podemos volver a generarlo.",
@@ -449,6 +450,7 @@ const en: Dict = {
     successTitle: "Listing received",
     successBody:
       "We'll review it and publish it shortly. We'll let you know at the number you left.",
+    editLinkSent: "We also emailed it to",
     editLinkTitle: "Save this link",
     editLinkWarn:
       "It is the only way to edit or withdraw your listing. Do not share it, and do not lose it: for security reasons we cannot generate it again.",

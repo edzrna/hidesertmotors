@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
+import { MailGlyph } from "@/components/Icons";
 import CategoryGrid from "@/components/CategoryGrid";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -132,6 +133,7 @@ export default function ListingForm({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [progress, setProgress] = useState("");
   const [editLink, setEditLink] = useState("");
+  const [sentTo, setSentTo] = useState("");
   /**
    * En móvil el panel arranca colapsado: ver el número moverse es lo
    * que importa, el detalle es opcional. Expandido ocupaba media
@@ -337,6 +339,7 @@ export default function ListingForm({
       }
 
       const data = await res.json();
+      setSentTo(form.email.trim());
       if (data.editToken) {
         setEditLink(
           `${window.location.origin}${
@@ -365,6 +368,20 @@ export default function ListingForm({
       <div className="pub-done">
         <h2>{t.form.successTitle}</h2>
         <p>{t.form.successBody}</p>
+
+        {/* Que el enlace también fue por correo se dice ANTES del
+            enlace mismo: quita la presión de copiarlo bien a la
+            primera, que es justo cuando la gente se equivoca. */}
+        {sentTo && (
+          <p className="pub-sent">
+            <span className="pub-sent-icon" aria-hidden>
+              <MailGlyph />
+            </span>
+            <span>
+              {t.form.editLinkSent} <strong>{sentTo}</strong>
+            </span>
+          </p>
+        )}
 
         {editLink && (
           <div className="pub-link">

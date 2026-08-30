@@ -4630,3 +4630,42 @@ body {
     font-size: 11px;
   }
 }
+
+/* Aviso de que el enlace también salió por correo. Va antes del
+   enlace: quita la presión de copiarlo bien a la primera, que es
+   justo cuando la gente se equivoca. */
+.pub-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4fd888;
+  text-align: left;
+}
+
+.pub-sent-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.pub-sent-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.pub-sent strong {
+  word-break: break-all;
+}
+
+.theme-light .pub-sent {
+  background: #f0f9f2;
+  border-color: rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+}
