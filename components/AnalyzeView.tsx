@@ -27,7 +27,9 @@ import {
   FUEL_TYPES,
   TRANSMISSIONS,
   MAKES,
-  MILE_STEPS,
+  MILE_HINTS,
+  MAX_MILES,
+  COLORS,
   OTHER_MAKE,
   OWNER_OPTIONS,
   TIRE_OPTIONS,
@@ -92,6 +94,7 @@ export default function AnalyzeView({
     model: "",
     miles: "",
     bodyType: "sedan",
+    color: "white",
     fuelType: "gasoline",
     transmission: "automatic",
     titleStatus: "clean" as TitleStatus,
@@ -132,6 +135,7 @@ export default function AnalyzeView({
       knownIssues: "",
       description: "",
       city: "",
+      color: form.color,
       bodyType: form.bodyType as BodyType,
       fuelType: form.fuelType as FuelType,
       transmission: form.transmission as Transmission,
@@ -309,6 +313,20 @@ export default function AnalyzeView({
           </label>
 
           <label className="pub-field">
+            <span className="pub-label">{t.fields.color}</span>
+            <select
+              value={form.color}
+              onChange={(e) => set("color", e.target.value)}
+            >
+              {COLORS.map((option) => (
+                <option key={option} value={option}>
+                  {t.colors[option]}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="pub-field">
             <span className="pub-label">{t.fields.fuelType}</span>
             <select
               value={form.fuelType}
@@ -339,14 +357,22 @@ export default function AnalyzeView({
 
         <label className="pub-field">
           <span className="pub-label">{t.fields.miles}</span>
-          <select value={form.miles} onChange={(e) => set("miles", e.target.value)}>
-            <option value="">{t.fields.selectPlaceholder}</option>
-            {MILE_STEPS.map((step) => (
-              <option key={step} value={step}>
-                {step.toLocaleString(locale)}
-              </option>
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={MAX_MILES}
+            value={form.miles}
+            placeholder="87,430"
+            list="mile-hints-analyze"
+            onChange={(e) => set("miles", e.target.value)}
+          />
+          <datalist id="mile-hints-analyze">
+            {MILE_HINTS.map((hint) => (
+              <option key={hint} value={hint} />
             ))}
-          </select>
+          </datalist>
+          <span className="pub-help">{t.fields.milesHelp}</span>
         </label>
       </fieldset>
 

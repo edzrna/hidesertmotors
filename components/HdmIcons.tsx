@@ -139,3 +139,67 @@ export function IconPublish({ className }: Props) {
     </svg>
   );
 }
+
+/** Candado: lo que ya no se puede cambiar. */
+export function IconLock({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+      <circle cx="12" cy="15" r="1.3" />
+      <path d="M12 16.3v1.4" />
+    </svg>
+  );
+}
+
+/** Cámara: la sección de fotos. */
+export function IconCamera({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M3.5 8.5h3l1.4-2.2h7.2L16.5 8.5h4a1 1 0 0 1 1 1v8.5a1 1 0 0 1-1 1h-17a1 1 0 0 1-1-1V9.5a1 1 0 0 1 1-1Z" />
+      <circle cx="12" cy="13.6" r="3.4" />
+    </svg>
+  );
+}
+
+/** Persona: los datos del vendedor. */
+export function IconSeller({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <circle cx="12" cy="8" r="3.6" />
+      <path d="M5 20c0-3.6 3.1-5.6 7-5.6s7 2 7 5.6" />
+    </svg>
+  );
+}
+
+/** Volante: la ficha del vehículo. */
+export function IconVehicle({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <circle cx="12" cy="12" r="8.5" />
+      <circle cx="12" cy="12" r="2.6" />
+      <path d="M12 3.5v5.9M4.2 14.2l5.4-1.5M19.8 14.2l-5.4-1.5" />
+    </svg>
+  );
+}
+
+/** Historial: reloj con documento. */
+export function IconHistory({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1" />
+      <path d="M3.5 4.5v3.6h3.6" />
+      <path d="M12 7.6V12l3 1.8" />
+    </svg>
+  );
+}
+
+/** Escritura: la descripción del anuncio. */
+export function IconWrite({ className }: Props) {
+  return (
+    <svg {...base} className={className} aria-hidden>
+      <path d="M4 20h4.2L19 9.2a2.1 2.1 0 0 0-3-3L5.2 17v3" />
+      <path d="M14.6 7.4l3 3" />
+    </svg>
+  );
+}

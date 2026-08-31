@@ -6,6 +6,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import type { ListingDictionary } from "@/i18n/listing";
 import { localePath, formatMiles, type Locale } from "@/lib/hdm";
 import type { EditableListing } from "@/lib/listings-db";
+import { IconLock } from "@/components/HdmIcons";
 import { CITIES, OTHER_CITY, isValidEmail, normalizePhone } from "@/lib/locations";
 import { DESCRIPTION_MAX, QUICK_EMOJI } from "@/lib/vehicle-data";
 
@@ -65,6 +66,24 @@ export default function EditListingView({
     requestAnimationFrame(() => {
       el.focus();
       el.setSelectionRange(start + emoji.length, start + emoji.length);
+    });
+  }
+
+  /**
+   * Mueve una foto una posición.
+   *
+   * Botones y no arrastrar: en móvil el arrastre pelea con el scroll
+   * de la página, y basta un dedo torpe para soltar la foto en otra
+   * parte. Dos flechas siempre funcionan.
+   */
+  function movePhoto(from: number, to: number) {
+    if (to < 0 || to >= photos.length) return;
+
+    setPhotos((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(to, 0, moved);
+      return next;
     });
   }
 
@@ -210,10 +229,10 @@ export default function EditListingView({
         ← {dict.vehicle.back}
       </Link>
 
-      <header className="pub-head">
-        <div className="hdm-kicker">{listing.name}</div>
-        <h1 className="hdm-h2">{t.form.edit.title}</h1>
-        <p className="pub-lede">{t.form.edit.lead}</p>
+      <header className="pub-hero">
+        <span className="pub-hero-pill">{listing.name}</span>
+        <h1 className="pub-hero-title">{t.form.edit.title}</h1>
+        <p className="pub-hero-lead">{t.form.edit.lead}</p>
 
         {listing.status === "pending" && (
           <p className="pub-disclaimer">{t.form.edit.pendingNotice}</p>
@@ -227,9 +246,7 @@ export default function EditListingView({
       {/* ---------- Lo que quedó fijo ---------- */}
       <section className="edit-locked">
         <div className="edit-locked-head">
-          <span className="edit-lock-icon" aria-hidden>
-            🔒
-          </span>
+          <IconLock className="edit-lock-icon" />
           <div>
             <h2>{t.form.edit.lockedTitle}</h2>
             <p>{t.form.edit.lockedBody}</p>
@@ -340,21 +357,53 @@ export default function EditListingView({
         <fieldset className="pub-step">
           <legend>{t.fields.photos}</legend>
 
-          <ul className="pub-photos">
+          {/* Rejilla de miniaturas en vez de lista.
+              Con once fotos, una lista de nombres de archivo es
+              ilegible y no dice cuál es cuál. */}
+          <ul className="photo-grid">
             {photos.map((url, index) => (
-              <li key={url}>
-                <img src={url} alt="" className="edit-thumb" />
-                <button
-                  type="button"
-                  onClick={() =>
-                    setPhotos((prev) => prev.filter((_, i) => i !== index))
-                  }
-                >
-                  {t.form.removePhoto}
-                </button>
+              <li key={url} className={index === 0 ? "is-cover" : undefined}>
+                <img src={url} alt="" />
+
+                {index === 0 && (
+                  <span className="photo-cover-tag">{t.form.coverPhoto}</span>
+                )}
+
+                <div className="photo-actions">
+                  <button
+                    type="button"
+                    onClick={() => movePhoto(index, index - 1)}
+                    disabled={index === 0}
+                    aria-label={t.form.moveLeft}
+                  >
+                    ‹
+                  </button>
+
+                  <button
+                    type="button"
+                    className="photo-remove"
+                    onClick={() =>
+                      setPhotos((prev) => prev.filter((_, i) => i !== index))
+                    }
+                    aria-label={t.form.removePhoto}
+                  >
+                    ×
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => movePhoto(index, index + 1)}
+                    disabled={index === photos.length - 1}
+                    aria-label={t.form.moveRight}
+                  >
+                    ›
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
+
+          <p className="pub-help">{t.form.reorderHelp}</p>
 
           <label className="pub-file">
             <input

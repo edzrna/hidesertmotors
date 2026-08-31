@@ -76,6 +76,7 @@ export async function POST(request: Request) {
     // a inyección de scripts.
     description: String(body.description ?? "").trim().slice(0, 1200),
     city: String(body.city ?? "").trim().slice(0, 60),
+    color: String(body.color ?? "other").slice(0, 20),
     bodyType: body.bodyType ?? "sedan",
     fuelType: body.fuelType ?? "gasoline",
     transmission: body.transmission ?? "automatic",
@@ -132,7 +133,7 @@ export async function POST(request: Request) {
   const [row] = await sql`
     INSERT INTO listings (
       year, make, model, miles, price,
-      body_type, fuel_type, transmission,
+      body_type, fuel_type, transmission, color,
       title_status, owners, reported_accidents,
       defects, documentation, known_issues, description, city,
       photos, seller_name, seller_phone, seller_email,
@@ -142,6 +143,7 @@ export async function POST(request: Request) {
       ${listing.year}, ${listing.make}, ${listing.model}, ${listing.miles},
       ${body.price ? Number(body.price) : null},
       ${listing.bodyType}, ${listing.fuelType}, ${listing.transmission},
+      ${listing.color},
       ${listing.titleStatus}, ${listing.owners}, ${listing.reportedAccidents},
       ${JSON.stringify(listing.defects)},
       ${JSON.stringify(listing.documentation)},
@@ -181,6 +183,10 @@ export async function POST(request: Request) {
         sellerName: name,
         sellerPhone: phone,
         sellerEmail: rawEmail || null,
+        photoCount: photos.length,
+        reviewUrl: process.env.ADMIN_TOKEN
+          ? `${SITE_URL}/revisar/${row.id}?k=${process.env.ADMIN_TOKEN}`
+          : null,
         editUrl: editUrl(
           locale === "en" ? `${SITE_URL}/en` : SITE_URL,
           row.id,

@@ -147,6 +147,10 @@ export default function CarView({
               value={t.fuelTypes[listing.fuelType]}
             />
             <InfoBox
+              label={t.fields.color}
+              value={t.colors[listing.color as keyof typeof t.colors] ?? listing.color}
+            />
+            <InfoBox
               label={dict.specs.transmission}
               value={t.transmissions[listing.transmission]}
             />

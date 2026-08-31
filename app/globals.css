@@ -4690,3 +4690,422 @@ body {
 .hdm-card-age {
   margin-top: 10px;
 }
+
+/* ============================================================
+   REJILLA DE FOTOS EN EDICIÓN
+
+   Miniaturas en vez de lista de nombres: con once fotos, una lista
+   de "mazda3-2017-7.jpg" es ilegible y no dice cuál es cuál.
+   ============================================================ */
+
+.photo-grid {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.photo-grid li {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+  background: #0b1520;
+}
+
+/* La portada se marca: es la que decide si alguien abre el anuncio. */
+.photo-grid li.is-cover {
+  border-color: var(--color-hdm-orange);
+  box-shadow: 0 0 0 2px rgba(255, 138, 31, 0.25);
+}
+
+.photo-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-cover-tag {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Los controles viven sobre la foto, en una franja legible. */
+.photo-actions {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.photo-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.photo-actions button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.photo-actions button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.photo-actions .photo-remove:hover {
+  background: var(--color-hdm-sold);
+}
+
+/* En el tema claro, la franja sigue oscura: las fotos son de autos
+   y casi siempre traen zonas claras donde un control blanco
+   desaparece. */
+.theme-light .photo-grid li {
+  background: #eef1f5;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+/* ============================================================
+   BLOQUE DE DATOS CONGELADOS — corrección
+
+   La rejilla no se estaba aplicando dentro de la isla clara y los
+   pares quedaban apilados a lo largo. El selector necesita ganar
+   sobre las reglas generales de dl/dt/dd.
+   ============================================================ */
+
+.edit-locked .edit-locked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.edit-locked .edit-locked-grid > div {
+  display: block;
+  padding: 11px 13px;
+  border-radius: 12px;
+}
+
+.edit-locked .edit-locked-grid dt {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  margin-bottom: 3px;
+}
+
+.edit-locked .edit-locked-grid dd {
+  display: block;
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* El candado y su texto, alineados de verdad. */
+.edit-locked-head {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+.edit-lock-icon {
+  font-size: 20px;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   TARJETA CLICABLE
+
+   La foto y el título llevan a la ficha. Se usan enlaces reales y no
+   un onClick en la tarjeta entera: así el botón de compartir sigue
+   funcionando, se puede abrir en pestaña nueva, y el teclado y los
+   lectores de pantalla lo entienden.
+   ============================================================ */
+
+.hdm-card-media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hdm-card-media-link img {
+  transition: transform 0.5s var(--hdm-ease);
+}
+
+.hdm-card:hover .hdm-card-media-link img {
+  transform: scale(1.04);
+}
+
+.hdm-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hdm-card-title a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* Los iconos de las pestañas heredan el oscuro de la píldora. */
+.pub-group-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PÁGINA DE REVISIÓN
+   ============================================================ */
+
+.review {
+  padding-block: 20px clamp(40px, 8vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.review-head h1 {
+  margin: 8px 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.review-meta {
+  margin: 0;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+}
+
+.review-status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.review-status.is-pending {
+  background: rgba(255, 168, 47, 0.14);
+  border: 1px solid rgba(255, 168, 47, 0.4);
+  color: var(--color-hdm-amber);
+}
+
+.review-status.is-published {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.34);
+  color: #4fd888;
+}
+
+.review-status.is-rejected {
+  background: rgba(255, 77, 94, 0.12);
+  border: 1px solid rgba(255, 77, 94, 0.34);
+  color: #ff8f9c;
+}
+
+.review-block,
+.review-photos,
+.review-score {
+  padding: clamp(16px, 3vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-block h2,
+.review-photos h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Miniaturas numeradas: se abre cada una a tamaño real. Revisar
+   fotos en una galería pequeña no sirve para lo que importa. */
+.review-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.review-thumbs a {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+}
+
+.review-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-thumbs span {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.review-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.review-score {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.review-score > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-score strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.review-score span {
+  color: var(--color-hdm-muted);
+  font-size: 14px;
+}
+
+.review-data {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.review-data > div {
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-data dt {
+  font-size: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+  margin-bottom: 3px;
+}
+
+.review-data dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.review-text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-hdm-ink);
+}
+
+.review-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 16px 0;
+  background: linear-gradient(transparent, var(--color-hdm-canvas) 28%);
+}
+
+.review-reject {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  border-radius: 999px;
+  background: none;
+  color: #ff8f9c;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-reject:hover {
+  background: rgba(255, 77, 94, 0.1);
+}
+
+.review-done {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.review-done.is-ok {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.3);
+  color: #4fd888;
+}
+
+.review-done.is-no {
+  background: rgba(255, 77, 94, 0.1);
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  color: #ff8f9c;
+}

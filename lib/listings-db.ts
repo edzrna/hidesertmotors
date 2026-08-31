@@ -62,6 +62,7 @@ export interface PublicListing {
   knownIssues: string;
   city: string;
   bodyType: BodyType;
+  color: string;
   fuelType: FuelType;
   transmission: Transmission;
 
@@ -130,6 +131,7 @@ function mapRow(row: any, locale: Locale): PublicListing {
     knownIssues: row.known_issues ?? "",
     city: row.city ?? "",
     bodyType: (row.body_type ?? "sedan") as BodyType,
+    color: row.color ?? "other",
     fuelType: (row.fuel_type ?? "gasoline") as FuelType,
     transmission: (row.transmission ?? "automatic") as Transmission,
 
@@ -178,7 +180,7 @@ export async function getPublishedListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission,
+        body_type, fuel_type, transmission, color,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -214,7 +216,7 @@ export async function getListingById(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission,
+        body_type, fuel_type, transmission, color,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -251,7 +253,7 @@ export async function getListingForEdit(id: string, token: string) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission,
+        body_type, fuel_type, transmission, color,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status
@@ -301,6 +303,53 @@ export async function getListingForEdit(id: string, token: string) {
 
 export type EditableListing = NonNullable<
   Awaited<ReturnType<typeof getListingForEdit>>
+>;
+
+/**
+ * Un anuncio en cualquier estado, para revisarlo antes de publicar.
+ *
+ * A diferencia de las consultas públicas, no filtra por status: el
+ * punto es ver justamente lo que todavía no está publicado. El
+ * control de acceso vive en la página, con ADMIN_TOKEN.
+ */
+export async function getListingForReview(id: string, locale: Locale) {
+  const numeric = Number(id);
+  if (!Number.isInteger(numeric) || numeric <= 0) return null;
+
+  try {
+    const sql = getSql();
+    if (!sql) return null;
+
+    const rows = await sql`
+      SELECT
+        id, year, make, model, miles, price,
+        title_status, owners, reported_accidents,
+        description, known_issues, city, photos,
+        body_type, fuel_type, transmission, color,
+        score, level_key, confidence, confidence_level, flags, categories,
+        seller_name, seller_phone, seller_email,
+        status, published_at, expires_at, created_at
+      FROM listings
+      WHERE id = ${numeric}
+      LIMIT 1
+    `;
+
+    if (!rows.length) return null;
+
+    return {
+      ...mapRow(rows[0], locale),
+      sellerEmail: (rows[0].seller_email ?? "") as string,
+      status: rows[0].status as string,
+      createdAt: rows[0].created_at ? String(rows[0].created_at) : null,
+    };
+  } catch (error) {
+    console.error("getListingForReview failed", error);
+    return null;
+  }
+}
+
+export type ReviewListing = NonNullable<
+  Awaited<ReturnType<typeof getListingForReview>>
 >;
 
 /**

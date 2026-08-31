@@ -28,6 +28,8 @@ interface NewListingInfo {
   sellerPhone: string;
   sellerEmail: string | null;
   editUrl: string;
+  reviewUrl: string | null;
+  photoCount: number;
 }
 
 /**
@@ -134,8 +136,28 @@ async function notifyAdmin(listing: NewListingInfo) {
           }
         </table>
 
+        ${
+          listing.reviewUrl
+            ? `<div style="margin:26px 0;padding:20px;background:#fff7e6;border:1px solid #f0d9a8;border-radius:14px">
+                 <p style="margin:0 0 6px;font-weight:700;font-size:15px">
+                   Revísalo antes de publicar
+                 </p>
+                 <p style="margin:0 0 14px;font-size:13px;color:#5a5348">
+                   Trae ${listing.photoCount} ${
+                     listing.photoCount === 1 ? "foto" : "fotos"
+                   }. Ábrelas todas antes de aprobar: es el único filtro
+                   que hay contra lo que no debería publicarse.
+                 </p>
+                 <a href="${listing.reviewUrl}"
+                    style="display:inline-block;background:#ff8a1f;color:#fff;padding:13px 26px;border-radius:999px;text-decoration:none;font-weight:700;font-size:15px">
+                   Ver y aprobar
+                 </a>
+               </div>`
+            : ""
+        }
+
         <p style="margin:24px 0 8px;color:#777;font-size:13px">
-          Para publicarlo, pega esto en el SQL Editor de Neon:
+          O directo en el SQL Editor de Neon:
         </p>
         <pre style="background:#f5f4f1;padding:14px;border-radius:10px;font-size:12px;overflow-x:auto;margin:0"><code>UPDATE listings
 SET status = 'published',

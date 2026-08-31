@@ -3,6 +3,16 @@
 import { useMemo, useRef, useState } from "react";
 import HDMRing, { RingGradientDefs } from "@/components/HDMRing";
 import { MailGlyph } from "@/components/Icons";
+import {
+  IconCamera,
+  IconCosmetic,
+  IconElectrical,
+  IconHistory,
+  IconMechanical,
+  IconSeller,
+  IconVehicle,
+  IconWrite,
+} from "@/components/HdmIcons";
 import { downscaleForUpload } from "@/lib/downscale";
 import CategoryGrid from "@/components/CategoryGrid";
 import type { ListingDictionary } from "@/i18n/listing";
@@ -24,7 +34,9 @@ import {
   ACCIDENT_OPTIONS,
   DESCRIPTION_MAX,
   MAKES,
-  MILE_STEPS,
+  MILE_HINTS,
+  MAX_MILES,
+  COLORS,
   OTHER_MAKE,
   OWNER_OPTIONS,
   QUICK_EMOJI,
@@ -51,7 +63,7 @@ import {
 const GROUPS = [
   {
     key: "mechanical" as const,
-    icon: "⚙️",
+    Icon: IconMechanical,
     positive: ["startsEveryTime", "brakesFeelNormal"] as const,
     negative: [
       "checkEngineOn",
@@ -63,13 +75,13 @@ const GROUPS = [
   },
   {
     key: "electrical" as const,
-    icon: "⚡",
+    Icon: IconElectrical,
     positive: ["acWorks", "heatWorks", "allWindowsWork"] as const,
     negative: ["otherWarningLights"] as const,
   },
   {
     key: "cosmetic" as const,
-    icon: "✨",
+    Icon: IconCosmetic,
     positive: [] as const,
     negative: [
       "hasRust",
@@ -117,6 +129,7 @@ export default function ListingForm({
     otherMake: "",
     model: "",
     bodyType: "sedan",
+    color: "white",
     fuelType: "gasoline",
     transmission: "automatic",
     city: "",
@@ -244,6 +257,7 @@ export default function ListingForm({
       knownIssues: form.knownIssues,
       description: form.description,
       city: resolvedCity,
+      color: form.color,
       bodyType: form.bodyType as BodyType,
       fuelType: form.fuelType as FuelType,
       transmission: form.transmission as Transmission,
@@ -567,7 +581,10 @@ export default function ListingForm({
       <div className="pub-fields">
         {/* ---------- El vehículo ---------- */}
         <fieldset className="pub-step">
-          <legend>{t.steps.vehicle}</legend>
+          <legend>
+            <IconVehicle className="pub-group-icon" />
+            {t.steps.vehicle}
+          </legend>
 
           <div className="pub-row">
             <Field label={t.fields.year} error={errors.year && t.form.required}>
@@ -635,6 +652,19 @@ export default function ListingForm({
               </select>
             </Field>
 
+            <Field label={t.fields.color}>
+              <select
+                value={form.color}
+                onChange={(e) => set("color", e.target.value)}
+              >
+                {COLORS.map((option) => (
+                  <option key={option} value={option}>
+                    {t.colors[option]}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
             <Field label={t.fields.fuelType}>
               <select
                 value={form.fuelType}
@@ -693,22 +723,28 @@ export default function ListingForm({
           <div className="pub-row">
             <Field
               label={t.fields.miles}
+              help={t.fields.milesHelp}
               error={errors.miles && t.form.required}
             >
-              <select
+              <input
+                type="number"
+                inputMode="numeric"
+                min={0}
+                max={MAX_MILES}
+                step={1}
                 value={form.miles}
+                placeholder="87,430"
+                list="mile-hints"
                 onChange={(e) => set("miles", e.target.value)}
-              >
-                <option value="">{t.fields.selectPlaceholder}</option>
-                {MILE_STEPS.map((step, index) => (
-                  <option key={step} value={step}>
-                    {step.toLocaleString(locale === "en" ? "en-US" : "es-MX")}
-                    {index === MILE_STEPS.length - 1
-                      ? ` ${t.fields.milesOver}`
-                      : ""}
-                  </option>
+              />
+              {/* Sugerencias, no opciones: el campo acepta cualquier
+                  número. Antes el desplegable saltaba de 60,000 a
+                  70,000 y obligaba a redondear. */}
+              <datalist id="mile-hints">
+                {MILE_HINTS.map((hint) => (
+                  <option key={hint} value={hint} />
                 ))}
-              </select>
+              </datalist>
             </Field>
 
             <Field label={t.fields.price}>
@@ -724,7 +760,10 @@ export default function ListingForm({
 
         {/* ---------- Historial y título ---------- */}
         <fieldset className="pub-step">
-          <legend>{t.steps.history}</legend>
+          <legend>
+            <IconHistory className="pub-group-icon" />
+            {t.steps.history}
+          </legend>
 
           <Field label={t.fields.titleStatus}>
             <select
@@ -772,9 +811,7 @@ export default function ListingForm({
         {GROUPS.map((group) => (
           <fieldset className="pub-step pub-group" key={group.key}>
             <legend>
-              <span className="pub-group-icon" aria-hidden>
-                {group.icon}
-              </span>
+              <group.Icon className="pub-group-icon" />
               {dict.categories[group.key]}
             </legend>
 
@@ -841,7 +878,10 @@ export default function ListingForm({
 
         {/* ---------- Tu anuncio ---------- */}
         <fieldset className="pub-step">
-          <legend>{t.fields.description}</legend>
+          <legend>
+            <IconWrite className="pub-group-icon" />
+            {t.fields.description}
+          </legend>
 
           <Field
             label={t.fields.description}
@@ -960,7 +1000,10 @@ export default function ListingForm({
 
         {/* ---------- Contacto ---------- */}
         <fieldset className="pub-step">
-          <legend>{t.steps.contact}</legend>
+          <legend>
+            <IconSeller className="pub-group-icon" />
+            {t.steps.contact}
+          </legend>
 
           <div className="pub-row">
             <Field label={t.fields.name} error={errors.name && t.form.required}>

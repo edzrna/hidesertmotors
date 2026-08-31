@@ -374,7 +374,13 @@ export default function HomeView({
               }`}
             >
               <div className="hdm-card-media">
-                <img src={listing.image} alt={listing.name} loading="lazy" />
+                <Link
+                  href={localePath(locale, `/car/${listing.id}`)}
+                  className="hdm-card-media-link"
+                  aria-label={listing.name}
+                >
+                  <img src={listing.image} alt={listing.name} loading="lazy" />
+                </Link>
                 {listing.sold && (
                   <span className="hdm-badge-sold">{dict.vehicle.soldBadge}</span>
                 )}
@@ -382,7 +388,11 @@ export default function HomeView({
 
               <div className="hdm-card-body">
                 <div className="hdm-card-head">
-                  <h3 className="hdm-card-title">{listing.name}</h3>
+                  <h3 className="hdm-card-title">
+                    <Link href={localePath(locale, `/car/${listing.id}`)}>
+                      {listing.name}
+                    </Link>
+                  </h3>
                   <span className="hdm-card-price">{listing.priceText}</span>
                 </div>
 

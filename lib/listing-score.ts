@@ -42,9 +42,19 @@ export type BodyType =
   | "suv"
   | "truck"
   | "van"
+  | "minivan"
   | "convertible"
   | "wagon"
-  | "offroad";
+  | "offroad"
+  | "motorhome"
+  | "travel_trailer"
+  | "camper"
+  | "commercial"
+  | "motorcycle"
+  | "atv"
+  | "boat"
+  | "trailer"
+  | "other";
 
 export type FuelType =
   | "gasoline"
@@ -123,6 +133,8 @@ export interface Listing {
   bodyType: BodyType;
   fuelType: FuelType;
   transmission: Transmission;
+  /** Color exterior. No entra en la calificación. */
+  color: string;
 }
 
 /* ============================================================

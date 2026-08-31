@@ -71,10 +71,19 @@ export function getYears(currentYear = new Date().getFullYear()) {
 }
 
 /** Rangos de millaje: elegir de una lista es más rápido que teclear. */
-export const MILE_STEPS = [
-  0, 10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000,
-  120000, 140000, 160000, 180000, 200000,
+/**
+ * Las millas ya no salen de una lista.
+ *
+ * Un odómetro marca un número exacto, y saltar de 60,000 a 70,000
+ * obligaba a mentir o a redondear. Ahora es un campo numérico libre;
+ * estos valores quedan sólo como sugerencias rápidas.
+ */
+export const MILE_HINTS = [
+  30000, 60000, 90000, 120000, 150000, 180000,
 ];
+
+/** Tope razonable: arriba de esto casi siempre es un dedazo. */
+export const MAX_MILES = 500000;
 
 export const OWNER_OPTIONS = [1, 2, 3, 4, 5];
 export const ACCIDENT_OPTIONS = [0, 1, 2, 3];
@@ -150,10 +159,44 @@ export const BODY_TYPES: BodyType[] = [
   "coupe",
   "hatchback",
   "van",
+  "minivan",
   "wagon",
   "convertible",
   "offroad",
+  "motorhome",
+  "travel_trailer",
+  "camper",
+  "commercial",
+  "motorcycle",
+  "atv",
+  "boat",
+  "trailer",
+  "other",
 ];
+
+/**
+ * Colores. Lista cerrada como las marcas: si se escribe a mano salen
+ * "gris", "Gris", "plata", "silver" y "gris plata" para el mismo
+ * color, y el filtro deja de servir.
+ */
+export const COLORS = [
+  "white",
+  "black",
+  "silver",
+  "gray",
+  "blue",
+  "red",
+  "green",
+  "brown",
+  "beige",
+  "gold",
+  "orange",
+  "yellow",
+  "purple",
+  "other",
+] as const;
+
+export type CarColor = (typeof COLORS)[number];
 
 export const FUEL_TYPES: FuelType[] = [
   "gasoline",
