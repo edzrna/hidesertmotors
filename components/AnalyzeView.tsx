@@ -19,7 +19,8 @@ import {
   dataUrlBytes,
   downscaleToDataUrl,
 } from "@/lib/downscale";
-import { kbbUrl } from "@/lib/price-guide";
+import { hagertyUrl, kbbUrl } from "@/lib/price-guide";
+import { isClassicEligible } from "@/lib/listing-score";
 import {
   ACCIDENT_OPTIONS,
   BODY_TYPES,
@@ -95,6 +96,7 @@ export default function AnalyzeView({
     miles: "",
     bodyType: "sedan",
     color: "white",
+    isClassic: false,
     fuelType: "gasoline",
     transmission: "automatic",
     titleStatus: "clean" as TitleStatus,
@@ -136,6 +138,7 @@ export default function AnalyzeView({
       description: "",
       city: "",
       color: form.color,
+      isClassic: Boolean(form.isClassic),
       bodyType: form.bodyType as BodyType,
       fuelType: form.fuelType as FuelType,
       transmission: form.transmission as Transmission,
@@ -145,7 +148,7 @@ export default function AnalyzeView({
 
   const ready = Boolean(form.year && resolvedMake && form.model && form.miles);
 
-  function set(key: keyof typeof form, value: string) {
+  function set(key: keyof typeof form, value: string | boolean) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
@@ -240,7 +243,8 @@ export default function AnalyzeView({
         dict={dict}
         t={t}
         result={result}
-        kbbHref={kbbUrl(listing)}
+        kbbHref={listing.isClassic ? hagertyUrl() : kbbUrl(listing)}
+        isClassic={listing.isClassic}
         onReset={() => {
           setResult(null);
           setStatus("idle");
@@ -354,6 +358,22 @@ export default function AnalyzeView({
             ))}
           </select>
         </label>
+
+          {/* Sólo aparece si el año lo permite: ofrecerlo en un auto
+              de 2020 invitaría a marcarlo por marcarlo. */}
+          {isClassicEligible(Number(form.year) || new Date().getFullYear()) && (
+            <label className="pub-check pub-check--wide">
+              <input
+                type="checkbox"
+                checked={form.isClassic}
+                onChange={(e) => set("isClassic", e.target.checked)}
+              />
+              <span>
+                <strong>{t.fields.isClassic}</strong>
+                <small>{t.fields.isClassicHelp}</small>
+              </span>
+            </label>
+          )}
 
         <label className="pub-field">
           <span className="pub-label">{t.fields.miles}</span>
@@ -494,20 +514,26 @@ export default function AnalyzeView({
 
         <span className="pub-help">{dict.analyze.photosOptional}</span>
 
+        {/* Rejilla de miniaturas, la misma que en editar. Antes se
+            mostraban a tamaño completo y seis fotos empujaban el
+            formulario media pantalla hacia abajo. */}
         {photos.length > 0 && (
-          <ul className="pub-photos">
+          <ul className="photo-grid">
             {photos.map((photo, index) => (
               <li key={index}>
-                <img src={photo.data} alt="" className="edit-thumb" />
-                <span className="pub-photo-name">{photo.name}</span>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setPhotos((prev) => prev.filter((_, i) => i !== index))
-                  }
-                >
-                  {t.form.removePhoto}
-                </button>
+                <img src={photo.data} alt="" />
+                <div className="photo-actions photo-actions--single">
+                  <button
+                    type="button"
+                    className="photo-remove"
+                    onClick={() =>
+                      setPhotos((prev) => prev.filter((_, i) => i !== index))
+                    }
+                    aria-label={t.form.removePhoto}
+                  >
+                    ×
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

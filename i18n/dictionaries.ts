@@ -200,6 +200,10 @@ const es = {
     priceRange: "Entre {min}% y {max}%",
     priceVsClean: "respecto de uno equivalente sin problemas",
     priceNoAdjust: "Tu auto no tiene factores que castiguen el precio. Se puede comparar directo contra el mercado.",
+    classicTitle: "Este es un clásico",
+    classicBody:
+      "Las reglas de precio de un auto usado no aplican aquí. En el mercado de colección, un auto de 40 años con muchas millas puede valer más que uno de 20 con pocas: depende del modelo, la originalidad y el estado de la lámina. Lo que sí sigue pesando igual es un título salvage o una falla mecánica de fondo.",
+    classicCta: "Consultar en Hagerty",
     kbbTitle: "El número exacto",
     kbbBody: "Para una cifra en dólares usa Kelley Blue Book, que trabaja con transacciones reales. Aplícale el ajuste de arriba y tendrás un precio defendible.",
     kbbCta: "Consultar en KBB",
@@ -514,6 +518,10 @@ const en: Dictionary = {
     priceRange: "Between {min}% and {max}%",
     priceVsClean: "compared to an equivalent with no issues",
     priceNoAdjust: "Your car has no factors that push the price down. It compares straight against the market.",
+    classicTitle: "This is a classic",
+    classicBody:
+      "Used car pricing rules do not apply here. On the collector market a 40-year-old car with high miles can be worth more than a 20-year-old with low miles: it depends on the model, originality and the state of the sheet metal. What still counts the same is a salvage title or a major mechanical fault.",
+    classicCta: "Check on Hagerty",
     kbbTitle: "The exact number",
     kbbBody: "For a dollar figure use Kelley Blue Book, which works from real transactions. Apply the adjustment above and you will have a price you can defend.",
     kbbCta: "Check on KBB",

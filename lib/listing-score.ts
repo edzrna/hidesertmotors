@@ -135,6 +135,16 @@ export interface Listing {
   transmission: Transmission;
   /** Color exterior. No entra en la calificación. */
   color: string;
+
+  /**
+   * Declarado por el vendedor: es un clásico o de colección.
+   *
+   * Sólo se ofrece para vehículos de 25 años o más. No basta con ser
+   * viejo — un Corolla del 98 con 300 mil millas es un auto viejo,
+   * no un clásico — así que la distinción la hace el dueño, que es
+   * quien sabe si lo está vendiendo como pieza o como transporte.
+   */
+  isClassic: boolean;
 }
 
 /* ============================================================
@@ -172,7 +182,35 @@ function milesPenalty(miles: number) {
   return 30;
 }
 
-function agePenalty(year: number, currentYear = new Date().getFullYear()) {
+/** Un vehículo puede declararse clásico a partir de esta edad. */
+export const CLASSIC_MIN_AGE = 25;
+
+export function isClassicEligible(
+  year: number,
+  currentYear = new Date().getFullYear()
+) {
+  return currentYear - year >= CLASSIC_MIN_AGE;
+}
+
+function agePenalty(
+  year: number,
+  isClassic: boolean,
+  currentYear = new Date().getFullYear()
+) {
+  /**
+   * En un clásico la antigüedad deja de ser un defecto.
+   *
+   * El castigo por edad existe porque un auto viejo se acerca al
+   * final de su vida útil. Un clásico no se compra para eso: se
+   * compra por lo que es, y ahí 40 años no restan — a veces suman.
+   *
+   * No se premia la edad, sólo se deja de castigar. Premiarla sería
+   * afirmar que un clásico vale más por ser viejo, y eso depende del
+   * modelo, del estado y de la originalidad, cosas que este cálculo
+   * no puede saber.
+   */
+  if (isClassic) return 0;
+
   const age = currentYear - year;
   if (age <= 2) return 0;
   if (age <= 5) return 3;
@@ -210,8 +248,17 @@ function mechanicalScore(listing: Listing) {
   score -= tirePenalty[d.tires];
 
   // Millas y año no son defectos, pero predicen desgaste.
-  score -= milesPenalty(listing.miles);
-  score -= agePenalty(listing.year);
+  /**
+   * En un clásico las millas también pesan distinto. Un auto de
+   * colección con 120 mil millas en 45 años recorrió menos de tres
+   * mil al año — es un auto poco usado, no uno gastado. El castigo se
+   * reduce a un tercio en vez de eliminarse: las millas sí desgastan,
+   * sólo que su lectura cambia.
+   */
+  const miles = milesPenalty(listing.miles);
+  score -= listing.isClassic ? Math.round(miles / 3) : miles;
+
+  score -= agePenalty(listing.year, listing.isClassic);
 
   return clamp(score, 20, 100);
 }
@@ -391,6 +438,10 @@ function getFlags(listing: Listing): string[] {
 
   if (listing.reportedAccidents >= 2) flags.push("multiple_accidents");
   if (listing.miles >= 180000) flags.push("high_miles");
+  // No es una advertencia: le dice al comprador que este auto se
+  // valora con otras reglas.
+  if (listing.isClassic) flags.push("classic");
+
   // Un eléctrico está exento de smog: la bandera sería falsa.
   if (listing.fuelType !== "electric" && !listing.documentation.smogCurrent) {
     flags.push("no_smog");

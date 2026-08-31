@@ -48,6 +48,9 @@ const es = {
       "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
     bodyType: "Carrocería",
     color: "Color",
+    isClassic: "Es un clásico o de colección",
+    isClassicHelp:
+      "Márcalo sólo si lo vendes como pieza de colección, no como transporte diario. Cambia cómo se calcula la calificación: en un clásico la antigüedad deja de contar en contra.",
     fuelType: "Combustible",
     transmission: "Transmisión",
     city: "¿Dónde está el auto?",
@@ -211,6 +214,7 @@ const es = {
     multiple_accidents: "Dos o más accidentes reportados",
     high_miles: "Millaje muy alto",
     no_smog: "Sin smog vigente",
+    classic: "Clásico / colección",
   },
 
   form: {
@@ -329,6 +333,9 @@ const en: Dict = {
       "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
     bodyType: "Body type",
     color: "Color",
+    isClassic: "It is a classic or collector vehicle",
+    isClassicHelp:
+      "Check this only if you are selling it as a collector piece, not as daily transport. It changes how the rating is calculated: on a classic, age stops counting against it.",
     fuelType: "Fuel",
     transmission: "Transmission",
     city: "Where is the car?",
@@ -492,6 +499,7 @@ const en: Dict = {
     multiple_accidents: "Two or more reported accidents",
     high_miles: "Very high mileage",
     no_smog: "No current smog certification",
+    classic: "Classic / collector",
   },
 
   form: {

@@ -41,6 +41,7 @@ export default function AnalyzeResult({
   t,
   result,
   kbbHref,
+  isClassic,
   onReset,
 }: {
   locale: Locale;
@@ -48,6 +49,7 @@ export default function AnalyzeResult({
   t: ListingDictionary;
   result: AnalyzeResponse;
   kbbHref: string;
+  isClassic: boolean;
   onReset: () => void;
 }) {
   const hasAdjustments = result.adjustments.length > 0;
@@ -139,16 +141,22 @@ export default function AnalyzeResult({
         )}
 
         {/* El número duro no sale de aquí, y se dice. */}
+        {/* Un clásico no se tasa en KBB: su guía cubre autos usados
+            corrientes y para un modelo de 1980 devuelve poco o nada. */}
         <div className="diag-kbb">
-          <strong>{dict.analyze.kbbTitle}</strong>
-          <p>{dict.analyze.kbbBody}</p>
+          <strong>
+            {isClassic ? dict.analyze.classicTitle : dict.analyze.kbbTitle}
+          </strong>
+          <p>
+            {isClassic ? dict.analyze.classicBody : dict.analyze.kbbBody}
+          </p>
           <a
             href={kbbHref}
             target="_blank"
             rel="noopener noreferrer"
             className="hdm-btn hdm-btn--ghost"
           >
-            {dict.analyze.kbbCta}
+            {isClassic ? dict.analyze.classicCta : dict.analyze.kbbCta}
           </a>
         </div>
       </section>

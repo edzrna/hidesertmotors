@@ -63,6 +63,7 @@ export interface PublicListing {
   city: string;
   bodyType: BodyType;
   color: string;
+  isClassic: boolean;
   fuelType: FuelType;
   transmission: Transmission;
 
@@ -132,6 +133,7 @@ function mapRow(row: any, locale: Locale): PublicListing {
     city: row.city ?? "",
     bodyType: (row.body_type ?? "sedan") as BodyType,
     color: row.color ?? "other",
+    isClassic: Boolean(row.is_classic),
     fuelType: (row.fuel_type ?? "gasoline") as FuelType,
     transmission: (row.transmission ?? "automatic") as Transmission,
 
@@ -180,7 +182,7 @@ export async function getPublishedListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color,
+        body_type, fuel_type, transmission, color, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -216,7 +218,7 @@ export async function getListingById(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color,
+        body_type, fuel_type, transmission, color, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -253,7 +255,7 @@ export async function getListingForEdit(id: string, token: string) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color,
+        body_type, fuel_type, transmission, color, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status
@@ -325,7 +327,7 @@ export async function getListingForReview(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color,
+        body_type, fuel_type, transmission, color, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status, published_at, expires_at, created_at

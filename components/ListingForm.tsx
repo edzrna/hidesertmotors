@@ -52,6 +52,7 @@ import {
   type BodyType,
   type FuelType,
   type Transmission,
+  isClassicEligible,
 } from "@/lib/listing-score";
 
 /**
@@ -130,6 +131,7 @@ export default function ListingForm({
     model: "",
     bodyType: "sedan",
     color: "white",
+    isClassic: false,
     fuelType: "gasoline",
     transmission: "automatic",
     city: "",
@@ -258,6 +260,7 @@ export default function ListingForm({
       description: form.description,
       city: resolvedCity,
       color: form.color,
+      isClassic: Boolean(form.isClassic),
       bodyType: form.bodyType as BodyType,
       fuelType: form.fuelType as FuelType,
       transmission: form.transmission as Transmission,
@@ -691,6 +694,22 @@ export default function ListingForm({
               ))}
             </select>
           </Field>
+
+          {/* Sólo aparece si el año lo permite: ofrecerlo en un auto
+              de 2020 invitaría a marcarlo por marcarlo. */}
+          {isClassicEligible(Number(form.year) || new Date().getFullYear()) && (
+            <label className="pub-check pub-check--wide">
+              <input
+                type="checkbox"
+                checked={form.isClassic}
+                onChange={(e) => set("isClassic", e.target.checked)}
+              />
+              <span>
+                <strong>{t.fields.isClassic}</strong>
+                <small>{t.fields.isClassicHelp}</small>
+              </span>
+            </label>
+          )}
 
           <Field
             label={t.fields.city}

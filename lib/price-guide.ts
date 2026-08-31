@@ -37,6 +37,44 @@ const TITLE_ADJUSTMENT: Record<TitleStatus, [number, number] | null> = {
 export function getPriceAdjustments(listing: Listing): PriceAdjustment[] {
   const out: PriceAdjustment[] = [];
 
+  /**
+   * En un clásico, los ajustes de abajo dejan de aplicar casi todos.
+   *
+   * Las reglas de este archivo son de mercado de autos usados: millas
+   * altas restan, un accidente resta, la edad resta. En el mercado de
+   * colección eso no funciona igual — un auto de 40 años con 150 mil
+   * millas puede valer más que uno de 20 con 80 mil, según el modelo
+   * y la originalidad.
+   *
+   * Lo honesto es no fingir que sabemos: se devuelve sólo lo que
+   * sigue siendo cierto en cualquier mercado (un título salvage
+   * castiga siempre, una falla mecánica grave también) y se marca
+   * que aquí hace falta una tasación especializada.
+   */
+  if (listing.isClassic) {
+    const title = TITLE_ADJUSTMENT[listing.titleStatus];
+    if (title) {
+      out.push({
+        key: `title_${listing.titleStatus}`,
+        min: title[0],
+        max: title[1],
+      });
+    }
+
+    const d = listing.defects;
+    if (d.transmissionSlips || d.overheats || !d.startsEveryTime) {
+      out.push({ key: "major_mechanical", min: -50, max: -25 });
+    }
+    if (d.hasRust) {
+      // En un clásico el óxido pesa más, no menos: la lámina
+      // original es buena parte de lo que se está comprando.
+      out.push({ key: "rust_classic", min: -35, max: -15 });
+    }
+
+    out.push({ key: "classic_market", min: 0, max: 0 });
+    return out;
+  }
+
   const title = TITLE_ADJUSTMENT[listing.titleStatus];
   if (title) {
     out.push({ key: `title_${listing.titleStatus}`, min: title[0], max: title[1] });
@@ -101,6 +139,19 @@ export function getTotalAdjustment(adjustments: PriceAdjustment[]) {
  * —su formulario cambia— pero llegar a la marca correcta ahorra
  * pasos.
  */
+/**
+ * Los clásicos no se tasan en KBB: su guía cubre el mercado de autos
+ * usados corrientes y para un modelo de 1980 devuelve poco o nada.
+ * Hagerty es el referente de colección.
+ */
+export function isClassicPricing(listing: Listing) {
+  return listing.isClassic;
+}
+
+export function hagertyUrl() {
+  return "https://www.hagerty.com/valuation-tools";
+}
+
 export function kbbUrl(listing: Listing) {
   const slug = (value: string) =>
     value
