@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { LOCALES, isLocale } from "@/lib/hdm";
 import { getDictionary } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
+import LightTracker from "@/components/LightTracker";
 import "../globals.css";
 
 /**
@@ -110,7 +111,12 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${montserrat.variable} ${inter.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {/* Mueve la fuente de luz con el cursor. No pinta nada:
+            sólo escribe dos variables CSS. */}
+        <LightTracker />
+        {children}
+      </body>
     </html>
   );
 }

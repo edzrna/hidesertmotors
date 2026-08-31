@@ -24,6 +24,8 @@ export default function AxelIntro({
 }) {
   return (
     <section className="axel-intro">
+      <span className="light-pass" aria-hidden />
+
       <div className="axel-intro-bg" aria-hidden>
         <img src="/axel/lineup.webp" alt="" />
       </div>

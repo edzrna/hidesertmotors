@@ -85,6 +85,7 @@ export default function WhySection({
       {/* ---------- Para quien vende ---------- */}
       <section className="hdm-shell hdm-steps">
         <div className="hdm-steps-inner">
+          <span className="light-pass" aria-hidden />
           <div className="hdm-steps-copy">
             <div className="hdm-kicker">{dict.why.sellerKicker}</div>
             <h2 className="hdm-h2">{dict.why.sellerTitle}</h2>

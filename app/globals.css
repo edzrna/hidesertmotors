@@ -5109,3 +5109,235 @@ body {
   border: 1px solid rgba(255, 77, 94, 0.3);
   color: #ff8f9c;
 }
+
+/* ============================================================
+   SUPERFICIE METÁLICA CON LUZ FIJA
+
+   Dos capas independientes:
+
+   1. La rejilla: líneas de 1px que se mueven CON el bloque. Es la
+      textura del material.
+
+   2. La luz: un resplandor anclado al viewport, no al bloque. La
+      luz no se mueve — el bloque pasa por delante de ella al hacer
+      scroll, y por eso parece que la iluminación le pega de frente
+      y va cambiando.
+
+   Se usa position: fixed en un pseudo-elemento dentro de un padre
+   con overflow: hidden, en vez de background-attachment: fixed.
+   Ese último lo ignora Safari en móvil y ahorca el scroll en varios
+   navegadores.
+   ============================================================ */
+
+.metal {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #0a121a;
+}
+
+/* --- Capa 1: la rejilla --- */
+.metal::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+
+  /* Líneas horizontales de 1px cada 3px. Más juntas se ve como
+     ruido; más separadas, como persiana. */
+  background-image: repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.028) 0px,
+      rgba(255, 255, 255, 0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    /* Una vertical mucho más tenue le da grano de metal cepillado
+       sin que se lea como cuadrícula. */
+      repeating-linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.014) 0px,
+        rgba(255, 255, 255, 0.014) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+}
+
+/* --- Capa 2: la luz fija --- */
+.metal::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  /*
+   * Mate, no brillante. Un brillo especular tiene núcleo blanco y
+   * caída corta; este tiene el color apagado y una caída muy larga,
+   * que es como se comporta la luz sobre una superficie sin pulir.
+   *
+   * Tres capas de distinto tamaño en lugar de una: una sola se ve
+   * como un círculo. Superpuestas se ve como iluminación.
+   */
+  background:
+    radial-gradient(
+      68vw 52vh at var(--light-x, 50%) var(--light-y, 18%),
+      rgba(255, 178, 62, 0.1),
+      transparent 62%
+    ),
+    radial-gradient(
+      42vw 34vh at var(--light-x, 50%) var(--light-y, 18%),
+      rgba(255, 196, 96, 0.075),
+      transparent 58%
+    ),
+    radial-gradient(
+      100vw 80vh at var(--light-x, 50%) var(--light-y, 18%),
+      rgba(120, 160, 210, 0.035),
+      transparent 70%
+    );
+}
+
+/* El contenido tiene que quedar arriba de las dos capas. */
+.metal > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Dónde se aplica ---------- */
+
+.hdm-header,
+.hdm-footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #080f16;
+}
+
+.hdm-header::before,
+.hdm-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.015) 0px,
+      rgba(255, 255, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+
+.hdm-header::after,
+.hdm-footer::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      64vw 50vh at var(--light-x, 76%) var(--light-y, 14%),
+      rgba(255, 178, 62, 0.11),
+      transparent 60%
+    ),
+    radial-gradient(
+      38vw 30vh at var(--light-x, 76%) var(--light-y, 14%),
+      rgba(255, 200, 110, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      100vw 76vh at var(--light-x, 76%) var(--light-y, 14%),
+      rgba(120, 160, 210, 0.03),
+      transparent 68%
+    );
+}
+
+.hdm-header > *,
+.hdm-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* El encabezado sigue necesitando su desenfoque al hacer scroll,
+   pero ya no su fondo plano: lo pone la superficie. */
+.hdm-header {
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--hdm-line);
+}
+
+/*
+ * El encabezado va pegado arriba, así que la luz fija no se mueve
+ * respecto de él: ahí el efecto de barrido no existe. Se compensa
+ * con el seguimiento del cursor, que sí lo anima en escritorio.
+ *
+ * En el pie ocurre lo contrario y es donde mejor se ve: al hacer
+ * scroll hacia abajo, el pie entra en la zona iluminada y el
+ * resplandor lo recorre de arriba abajo.
+ */
+
+/* ---------- Los demás bloques oscuros ---------- */
+
+/*
+ * La sección de Axel y los encabezados de publicar/analizar/editar
+ * también son superficie. Aquí el barrido SÍ se aprecia: están a
+ * media página, así que al hacer scroll entran y salen de la zona
+ * iluminada.
+ */
+.axel-intro,
+.hdm-steps-inner,
+.pub-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.axel-intro::after,
+.hdm-steps-inner::after,
+.pub-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.022) 0px,
+    rgba(255, 255, 255, 0.022) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* El resplandor fijo se añade sin quitar el que ya tenían: ese es
+   parte de su composición y hace de luz de relleno. */
+.axel-intro > .light-pass,
+.hdm-steps-inner > .light-pass,
+.pub-hero > .light-pass {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    58vw 46vh at var(--light-x, 50%) var(--light-y, 16%),
+    rgba(255, 178, 62, 0.085),
+    transparent 62%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metal::after,
+  .hdm-header::after,
+  .hdm-footer::after {
+    transition: none;
+  }
+}
