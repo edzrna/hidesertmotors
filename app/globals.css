@@ -3595,8 +3595,10 @@ body {
   width: 100%;
   padding: 11px 12px;
   border-radius: 13px;
-  background: #091420;
-  border: 1px solid var(--hdm-line);
+  /* Blanco, no el azul oscuro que traía del tema anterior: la barra
+     del buscador flota sobre el cuerpo claro. */
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
   color: var(--color-hdm-ink);
   font-family: var(--font-sans);
   font-size: 14px;
@@ -3607,12 +3609,12 @@ body {
 .finder-field select:focus {
   border-color: var(--color-hdm-orange);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.16);
+  box-shadow: 0 0 0 3px rgba(216, 138, 0, 0.14);
 }
 
 .finder-field select option {
-  background: #0e1922;
-  color: #eef3f8;
+  background: #ffffff;
+  color: #0b1622;
 }
 
 .finder-go {
@@ -4078,7 +4080,9 @@ body {
   font-weight: 800;
   letter-spacing: -0.015em;
   line-height: 1.2;
-  color: var(--color-hdm-ink);
+  /* Claro y fijo: el encabezado es oscuro, así que heredar la tinta
+     del cuerpo lo volvía invisible. */
+  color: #eef3f8;
 }
 
 /* El eslogan desaparece al hacer scroll: quedan logo e idioma y
@@ -4568,7 +4572,7 @@ body {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--hdm-line);
-  background: #0b1520;
+  background: #eef1f5;
 }
 
 /* La portada se marca: es la que decide si alguien abre el anuncio. */
@@ -5101,8 +5105,10 @@ body {
   width: 100%;
   padding: 11px 12px;
   border-radius: 13px;
-  background: #091420;
-  border: 1px solid var(--hdm-line);
+  /* Blanco, no el azul oscuro que traía del tema anterior: la barra
+     del buscador flota sobre el cuerpo claro. */
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
   color: var(--color-hdm-ink);
   font-family: var(--font-sans);
   font-size: 14px;
@@ -5113,12 +5119,12 @@ body {
 .finder-field select:focus {
   border-color: var(--color-hdm-orange);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 138, 31, 0.16);
+  box-shadow: 0 0 0 3px rgba(216, 138, 0, 0.14);
 }
 
 .finder-field select option {
-  background: #0e1922;
-  color: #eef3f8;
+  background: #ffffff;
+  color: #0b1622;
 }
 
 .finder-go {
@@ -5566,7 +5572,9 @@ body {
   font-weight: 800;
   letter-spacing: -0.015em;
   line-height: 1.2;
-  color: var(--color-hdm-ink);
+  /* Claro y fijo: el encabezado es oscuro, así que heredar la tinta
+     del cuerpo lo volvía invisible. */
+  color: #eef3f8;
 }
 
 /* El eslogan desaparece al hacer scroll: quedan logo e idioma y
@@ -6056,7 +6064,7 @@ body {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--hdm-line);
-  background: #0b1520;
+  background: #eef1f5;
 }
 
 /* La portada se marca: es la que decide si alguien abre el anuncio. */
