@@ -4994,12 +4994,20 @@ body {
   inset: 0;
   z-index: -1;
   pointer-events: none;
+  /*
+   * Dos líneas por ciclo en vez de una: la clara arriba y una oscura
+   * justo debajo. Ese par es lo que da profundidad — una sola línea
+   * clara se ve dibujada encima; clara + oscura se lee como un surco
+   * con su luz y su sombra.
+   */
   background-image: repeating-linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.03) 0px,
-    rgba(255, 255, 255, 0.03) 1px,
-    transparent 1px,
-    transparent 3px
+    rgba(255, 255, 255, 0.055) 0px,
+    rgba(255, 255, 255, 0.055) 1px,
+    rgba(0, 0, 0, 0.42) 1px,
+    rgba(0, 0, 0, 0.42) 2px,
+    transparent 2px,
+    transparent 4px
   );
 }
 
@@ -5008,8 +5016,9 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(14px);
-  background-color: rgba(8, 15, 22, 0.94);
+  /* Sólido, sin transparencia ni desenfoque: el contenido claro que
+     pasaba por debajo lo lavaba, y las líneas se perdían. */
+  background-color: #080f16;
   border-bottom: 1px solid rgba(245, 197, 66, 0.16);
 }
 
@@ -6460,3 +6469,31 @@ body {
   color: #ff8f9c;
 }
 
+
+
+/* ============================================================
+   RELIEVE DEL LOGO
+
+   Pillow emboss de 1px: una luz arriba a la izquierda y una sombra
+   abajo a la derecha, ambas a 1px.
+
+   Se usa drop-shadow y no box-shadow: drop-shadow sigue la silueta
+   real del PNG —la troca y las letras— mientras que box-shadow
+   dibujaría el relieve alrededor del rectángulo de la imagen, que se
+   vería como una tarjeta y no como metal grabado.
+   ============================================================ */
+
+.hdm-logo,
+.foot-logo {
+  filter:
+    drop-shadow(-1px -1px 0 rgba(255, 255, 255, 0.34))
+    drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.72));
+}
+
+/* Al hacer scroll el logo encoge; el relieve baja con él para que no
+   se vea grueso en tamaño pequeño. */
+.hdm-header.is-scrolled .hdm-logo {
+  filter:
+    drop-shadow(-1px -1px 0 rgba(255, 255, 255, 0.26))
+    drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6));
+}
