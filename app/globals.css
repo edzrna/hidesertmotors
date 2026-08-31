@@ -5139,7 +5139,7 @@ body {
   );
 }
 
-/* --- Brillo azul claro, fijo al viewport --- */
+/* --- Banda de luz azul, fija al viewport --- */
 .hdm-header::after,
 .hdm-footer::after {
   content: "";
@@ -5149,24 +5149,47 @@ body {
   pointer-events: none;
 
   /*
-   * Mate: sin núcleo blanco y con caída muy larga, que es como se
-   * comporta la luz sobre una superficie sin pulir.
+   * Lineal, no radial: una banda horizontal que cruza de extremo a
+   * extremo. Un gradiente radial da un punto de luz —parece una
+   * lámpara apuntando; uno lineal da un frente de luz, que es lo que
+   * se ve cuando algo pasa bajo un tubo o frente a una ventana
+   * alargada.
    *
-   * Dos capas y no una: una sola se ve como un círculo. Y azul frío,
-   * que además hace que el ámbar del logo se lea más caliente por
-   * contraste.
+   * Dos bandas superpuestas: una ancha y muy tenue que es el halo, y
+   * una angosta encima que es el núcleo. Con una sola el borde se
+   * nota; con dos la caída se lee continua.
+   *
+   * Nada de núcleo blanco: eso lo volvería pulido. El tope es 7% y
+   * el color se queda en azul.
    */
   background:
-    radial-gradient(
-      70vw 55vh at 50% 8%,
-      rgba(150, 195, 245, 0.075),
-      transparent 62%
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(150, 195, 245, 0.018) 22%,
+      rgba(150, 195, 245, 0.055) 38%,
+      rgba(160, 200, 248, 0.07) 46%,
+      rgba(150, 195, 245, 0.055) 54%,
+      rgba(150, 195, 245, 0.018) 70%,
+      transparent 100%
     ),
-    radial-gradient(
-      40vw 32vh at 50% 8%,
-      rgba(180, 215, 255, 0.05),
-      transparent 58%
-    );
+    /* El halo ancho suaviza los extremos de la banda. */
+      linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(150, 195, 245, 0.022) 46%,
+        transparent 100%
+      );
+
+  /* Se desvanece en los costados: una banda que llega a filo con el
+     borde de la pantalla se ve cortada. */
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
 }
 
 .hdm-header > *,
@@ -5175,8 +5198,30 @@ body {
   z-index: 1;
 }
 
-/* El encabezado conserva su desenfoque, pero ya no su fondo plano:
-   ese lo pone la superficie. */
+/*
+ * El encabezado va pegado arriba, así que una banda centrada en el
+ * viewport nunca lo alcanzaría: se quedaría abajo, fuera de él.
+ *
+ * Aquí la banda se sube al 8% de la altura de pantalla, que es donde
+ * el encabezado vive. No barre —no puede, está fijo— pero sí queda
+ * iluminado, y con el logo justo dentro del núcleo.
+ */
+.hdm-header::after {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(150, 195, 245, 0.05) 0%,
+      rgba(160, 200, 248, 0.07) 5%,
+      rgba(150, 195, 245, 0.04) 11%,
+      transparent 20%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(150, 195, 245, 0.022) 0%,
+      transparent 24%
+    );
+}
+
 .hdm-header {
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--hdm-line);
