@@ -5117,7 +5117,32 @@ body {
   isolation: isolate;
   overflow: hidden;
   background-color: #080f16;
+
+  /*
+   * Esto es lo que mantiene la luz DENTRO del bloque.
+   *
+   * Un hijo con position: fixed NO lo recorta el overflow: hidden del
+   * padre — se posiciona contra el viewport y se derrama por toda la
+   * pantalla. Sólo queda contenido si el padre crea un bloque
+   * contenedor.
+   *
+   * `contain: paint` lo dice explícitamente: no pintes fuera de este
+   * elemento. El transform es el respaldo para navegadores que no lo
+   * soportan; ambos crean el bloque contenedor.
+   *
+   * El encabezado ya lo lograba de rebote por su backdrop-filter. El
+   * pie no tenía nada, y por eso su banda se veía sobre el cuerpo.
+   */
+  contain: paint;
+  transform: translateZ(0);
 }
+
+/*
+ * OJO si algún día agregas un menú desplegable al encabezado:
+ * `contain: paint` recorta todo lo que se salga del bloque, así que
+ * el menú quedaría cortado. En ese caso, mueve la contención a un
+ * <div> interno que envuelva sólo las capas de luz.
+ */
 
 /* --- Líneas horizontales --- */
 .hdm-header::before,
