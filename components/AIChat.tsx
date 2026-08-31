@@ -18,12 +18,12 @@ function getInitialAssistantMessage(language: "es" | "en"): ChatMessage {
     ? {
         role: "assistant",
         content:
-          "Hi, I'm the HI DESERT MOTORS assistant. I can help you with availability, prices, titles, mileage, and vehicle details.",
+          "Hi, I'm Axel. I'm the one who rates the cars here — I read what each seller declares and turn it into a number you can compare.\n\nAsk me about any listing, what its rating means, or what a salvage title actually costs you. I don't sell anything, so I have no reason to sugarcoat it.",
       }
     : {
         role: "assistant",
         content:
-          "Hola, soy el asistente de HI DESERT MOTORS. Puedo ayudarte con disponibilidad, precios, títulos, millaje y detalles de los vehículos.",
+          "Hola, soy Axel. Yo soy quien califica los autos aquí — leo lo que declara cada vendedor y lo convierto en un número que puedes comparar.\n\nPregúntame por cualquier anuncio, qué significa su calificación, o qué te cuesta de verdad un título Salvage. No vendo nada, así que no tengo por qué endulzarte la respuesta.",
       };
 }
 
@@ -43,8 +43,8 @@ export default function AIChat() {
 
   const placeholder = useMemo(() => {
     return language === "en"
-      ? "Ask about a vehicle..."
-      : "Pregunta por un vehículo...";
+      ? "Ask Axel about any car..."
+      : "Pregúntale a Axel por un auto...";
   }, [language]);
 
   function scrollToBottom() {
