@@ -6535,3 +6535,78 @@ body {
   line-height: 1.55;
   color: var(--color-hdm-muted);
 }
+
+/* ============================================================
+   LETRAS HUNDIDAS
+
+   Letterpress: una sombra oscura arriba y una luz tenue abajo. Es el
+   inverso del relieve del logo — ahí la luz va arriba y la sombra
+   abajo, y por eso sobresale; aquí se invierte el orden y la letra
+   se lee grabada hacia adentro.
+
+   Sólo se aplica sobre las superficies oscuras. Sobre el cuerpo claro
+   el mismo efecto ensucia el texto en vez de tallarlo: hace falta
+   contraste entre la letra y su fondo para que la sombra se lea como
+   profundidad y no como borrón.
+
+   Y sólo en etiquetas cortas y espaciadas. En un párrafo entero
+   reduce la legibilidad, que es exactamente lo contrario de lo que
+   debe hacer un detalle de acabado.
+   ============================================================ */
+
+.hdm-lang,
+.foot-col h3,
+.hdm-header .hdm-kicker,
+.hdm-footer .hdm-kicker,
+.axel-intro-kicker,
+.axel-intro-figure figcaption,
+.foot-city,
+.pub-hero-pill,
+.hdm-steps-copy .hdm-kicker,
+.review-status {
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+/* El activo se hunde un poco más: al estar encendido en ámbar, la
+   misma sombra se le nota menos. */
+.hdm-lang.is-active {
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.7),
+    0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+/* Los títulos grandes de las bandas oscuras llevan una versión más
+   suave: en cuerpos grandes, la misma intensidad se ve sucia. */
+.axel-intro-title,
+.pub-hero-title,
+.hdm-steps-copy .hdm-h2 {
+  text-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.4),
+    0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* La dirección del pie y los enlaces de columna: hundido apenas
+   perceptible, lo justo para que se sientan parte de la misma
+   superficie. */
+.foot-col a,
+.foot-tagline,
+.hdm-footer-links a {
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-contrast: more) {
+  /* Con contraste alto el efecto estorba: se quita entero. */
+  .hdm-lang,
+  .foot-col h3,
+  .foot-col a,
+  .axel-intro-kicker,
+  .axel-intro-title,
+  .pub-hero-title,
+  .pub-hero-pill,
+  .foot-city,
+  .foot-tagline {
+    text-shadow: none;
+  }
+}
