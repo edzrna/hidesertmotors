@@ -161,20 +161,34 @@ export default function AIChat() {
           position: "fixed",
           right: "18px",
           bottom: "18px",
-          width: "58px",
-          height: "58px",
+          width: "62px",
+          height: "62px",
           borderRadius: "999px",
-          border: "none",
+          border: "2px solid rgba(245, 197, 66, 0.75)",
+          padding: 0,
+          overflow: "hidden",
           background: "linear-gradient(135deg, #f5c542, #d88a00)",
-          color: "#071018",
-          fontWeight: 900,
-          fontSize: "22px",
           cursor: "pointer",
-          boxShadow: "0 14px 30px rgba(0,0,0,0.22)",
+          boxShadow: "0 14px 30px rgba(11, 22, 34, 0.24)",
           zIndex: 9999,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        💬
+        {/*
+          Axel en vez de la burbuja de diálogo.
+          Un 💬 se dibuja distinto en cada sistema y no dice quién
+          responde. Aquí quien contesta es Axel, así que su cara es a
+          la vez el icono y la respuesta a "¿con quién hablo?".
+        */}
+        <img
+          src="/axel/good_deal.webp"
+          alt=""
+          width={62}
+          height={62}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
       </button>
 
       {isOpen && (

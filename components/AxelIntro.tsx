@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { Dictionary } from "@/i18n/dictionaries";
+import AxelFace from "@/components/AxelFace";
 import { localePath, type Locale } from "@/lib/hdm";
 
 /**
@@ -40,10 +41,19 @@ export default function AxelIntro({
 
           <p className="axel-intro-lead">{dict.axel.lead}</p>
 
+          {/* La cara de Axel como viñeta, en vez de las huellas de
+              CSS: es el mismo icono que marca "Muy buena compra" en
+              las tarjetas, así que refuerza el reconocimiento en vez
+              de introducir una forma más. */}
           <ul className="axel-intro-points">
-            <li>{dict.axel.point1}</li>
-            <li>{dict.axel.point2}</li>
-            <li>{dict.axel.point3}</li>
+            {[dict.axel.point1, dict.axel.point2, dict.axel.point3].map(
+              (point) => (
+                <li key={point}>
+                  <AxelFace level="great_buy" size="sm" />
+                  <span>{point}</span>
+                </li>
+              )
+            )}
           </ul>
 
           <div className="axel-intro-actions">
