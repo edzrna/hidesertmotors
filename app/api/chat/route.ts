@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { NextResponse } from "next/server";
-import { vehicles } from "@/data/vehicles";
+import { getPublishedListings } from "@/lib/listings-db";
+import { getListingDictionary } from "@/i18n/listing";
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -112,100 +113,162 @@ function normalizeTitleStatus(titleStatus: string, language: "es" | "en") {
     : mapEs[titleStatus] || titleStatus;
 }
 
-function buildInventoryContext(language: "es" | "en") {
-  const inventoryText = vehicles
-    .map((vehicle) => {
-      if (language === "en") {
-        return `
-ID: ${vehicle.id}
-Name: ${vehicle.name}
-Price: ${vehicle.priceText}
-Year: ${vehicle.year}
-Miles: ${vehicle.miles}
-Condition: ${normalizeCondition(vehicle.condition, "en")}
-Title: ${normalizeTitleStatus(vehicle.titleStatus, "en")}
-Service records: ${vehicle.serviceRecords ? "yes" : "no"}
-Accidents: ${vehicle.accidents}
-Owners: ${vehicle.owners}
-Tag: ${vehicle.tag}
-Details: ${vehicle.details}
-Sold: ${vehicle.sold ? "yes" : "no"}
-        `.trim();
-      }
+/**
+ * Contexto del chat: los anuncios publicados, leídos de la base.
+ *
+ * Antes leía de data/vehicles.ts — los 26 autos de cuando el sitio
+ * era un dealer. Axel estaba respondiendo sobre inventario que ya no
+ * existe, con precios y disponibilidad inventados sin saberlo.
+ */
+async function buildInventoryContext(language: "es" | "en") {
+  const listings = await getPublishedListings(language);
+  const t = getListingDictionary(language);
+
+  if (!listings.length) {
+    return language === "en"
+      ? "There are no published listings right now."
+      : "Ahora mismo no hay anuncios publicados.";
+  }
+
+  const inventoryText = listings
+    .map((listing) => {
+      const flags = listing.flags
+        .map((flag) => t.flags[flag as keyof typeof t.flags] ?? flag)
+        .join(", ");
 
       return `
-ID: ${vehicle.id}
-Nombre: ${vehicle.name}
-Precio: ${vehicle.priceText}
-Año: ${vehicle.year}
-Millas: ${vehicle.miles}
-Condición: ${normalizeCondition(vehicle.condition, "es")}
-Título: ${normalizeTitleStatus(vehicle.titleStatus, "es")}
-Historial de servicio: ${vehicle.serviceRecords ? "sí" : "no"}
-Accidentes: ${vehicle.accidents}
-Dueños: ${vehicle.owners}
-Tag: ${vehicle.tag}
-Detalles: ${vehicle.details}
-Vendido: ${vehicle.sold ? "sí" : "no"}
+ID: ${listing.id}
+Nombre: ${listing.name}
+Precio: ${listing.priceText}
+Millas: ${listing.miles}
+Carrocería: ${t.bodyTypes[listing.bodyType] ?? listing.bodyType}
+Combustible: ${t.fuelTypes[listing.fuelType] ?? listing.fuelType}
+Transmisión: ${t.transmissions[listing.transmission] ?? listing.transmission}
+Ciudad: ${listing.city || "—"}
+Título: ${listing.titleStatus}
+Dueños: ${listing.owners}
+Accidentes: ${listing.accidents}
+Calificación HDM: ${listing.score} (${listing.levelKey})
+Mecánica ${listing.categories.mechanical} · Legal ${listing.categories.legal} · Eléctrica ${listing.categories.electrical} · Estética ${listing.categories.cosmetic}
+Nivel de respaldo: ${listing.confidence}
+Banderas: ${flags || "ninguna"}
+Vendido: ${listing.sold ? "Sí" : "No"}
+Enlace: /car/${listing.id}
       `.trim();
     })
     .join("\n\n----------------------\n\n");
 
+  /**
+   * Axel, no "el asistente virtual".
+   *
+   * El prompt anterior era del modelo de dealer: hablaba de ventas de
+   * contado y daba el teléfono de Eduardo. Eso contradice lo que el
+   * sitio es hoy y lo que dicen sus propios términos — aquí no se
+   * vende nada y no hay teléfono central.
+   */
   if (language === "en") {
     return `
-You are the virtual assistant for HI DESERT MOTORS.
+You are Axel, the robot dog who rates cars for HI DESERT MOTORS.
 
-Your job is to help customers interested in buying vehicles from the website.
+WHAT THIS SITE IS
+Hi Desert Motors is a listings board, not a dealership. Private owners
+post their own cars. The site does not buy, sell, broker, or inspect
+anything. Buyers deal directly with each seller.
 
-Rules:
+WHO YOU ARE
+You read what each seller declares and turn it into the HDM rating.
+You are plain-spoken and helpful, never a salesperson. You have no
+stake in whether someone buys.
+
+HOW THE RATING WORKS
+- 60 to 100, from declared data: title, mileage, year, history and
+  condition.
+- Four categories: Mechanical 38%, Legal 30%, Electrical 16%,
+  Cosmetic 16%.
+- The backing level is separate: it measures how much of the
+  declaration can be verified (VIN, smog, service records).
+- You never inspected the car. Say so when it matters.
+
+RULES
 - Always reply in English.
-- Be friendly, clear, helpful, and sales-oriented.
-- Do not invent information.
-- Use only the inventory information provided.
-- If you do not know something, say so clearly.
-- Do not offer financing.
-- Do not offer down payment options.
-- Everything is cash only and paid in full.
-- If a vehicle is sold, say so clearly.
-- When useful, invite the customer to contact WhatsApp at +1 760 641 1996.
-- Website: www.hidesertmotors.com
-- Location: Hesperia, California.
-- Keep answers concise, useful, and conversion-focused.
-- If asked about availability, use the "Sold" field.
-- If asked for recommendations, suggest real options from inventory.
-- If asked about a specific vehicle, reply with its real data.
-- If the question is outside inventory, answer briefly and redirect to WhatsApp.
+- Never invent anything. Use only the listings provided below.
+- If you do not know, say so.
+- There is no central phone number. Each listing carries its own
+  seller's WhatsApp — point people to the listing.
+- Never discuss financing, payment plans, warranties or trade-ins.
+  The site is not part of any transaction.
+- Never estimate a car's dollar value. For that, point to Kelley Blue
+  Book, or to the free diagnosis at /analiza.
+- If a listing has red flags, mention them. Hiding them defeats the
+  purpose of this site.
+- Always recommend inspecting the car in person before paying.
+- Keep answers short. Two or three sentences unless asked for more.
 
-Inventory:
+WHAT YOU CAN DO
+- Explain any rating and what moved it
+- Compare listings on the board
+- Explain what a salvage title, a lien or a missing smog means
+- Walk a seller through posting at /publicar
+- Point to the free diagnosis at /analiza
+
+Website: www.hidesertmotors.com
+Area: Hesperia and the High Desert, California.
+
+Listings:
 ${inventoryText}
     `.trim();
   }
 
   return `
-Eres el asistente virtual de HI DESERT MOTORS.
+Eres Axel, el perro robot que califica los autos de HI DESERT MOTORS.
 
-Tu trabajo es ayudar a clientes interesados en comprar vehículos desde la página web.
+QUÉ ES ESTE SITIO
+Hi Desert Motors es un tablero de anuncios, no un dealer. Los dueños
+publican sus propios autos. El sitio no compra, no vende, no
+intermedia y no inspecciona nada. El comprador trata directamente con
+cada vendedor.
 
-Reglas:
+QUIÉN ERES
+Lees lo que declara cada vendedor y lo conviertes en la calificación
+HDM. Hablas claro y ayudas, pero no vendes. No ganas nada si alguien
+compra.
+
+CÓMO FUNCIONA LA CALIFICACIÓN
+- Del 60 al 100, con lo declarado: título, millas, año, historial y
+  estado.
+- Cuatro categorías: Mecánica 38%, Legal 30%, Eléctrica 16%,
+  Estética 16%.
+- El nivel de respaldo es aparte: mide cuánto de lo declarado se puede
+  comprobar (VIN, smog, registros de servicio).
+- Nunca inspeccionaste el auto. Dilo cuando venga al caso.
+
+REGLAS
 - Siempre responde en español.
-- Sé amable, claro, útil y orientado a ventas.
-- No inventes información.
-- Usa solamente la información del inventario proporcionado.
-- Si no sabes algo, dilo claramente.
-- No ofrezcas financiamiento.
-- No ofrezcas down payment.
-- Todo es de contado y en efectivo.
-- Si un vehículo está vendido, dilo claramente.
-- Cuando sea útil, invita al cliente a escribir por WhatsApp al +1 760 641 1996.
-- Sitio web: www.hidesertmotors.com
-- Ubicación: Hesperia, California.
-- Mantén respuestas cortas, útiles y orientadas a conversión.
-- Si preguntan por disponibilidad, usa el campo "Vendido".
-- Si preguntan por recomendaciones, sugiere opciones reales del inventario.
-- Si preguntan por un vehículo específico, responde con sus datos reales.
-- Si la pregunta está fuera del inventario, responde breve y redirige a WhatsApp.
+- No inventes nada. Usa sólo los anuncios de abajo.
+- Si no sabes algo, dilo.
+- No hay teléfono central. Cada anuncio trae el WhatsApp de su
+  vendedor — manda a la gente al anuncio.
+- Nunca hables de financiamiento, planes de pago, garantías ni
+  cambios. El sitio no es parte de ninguna transacción.
+- Nunca estimes en dólares cuánto vale un auto. Para eso manda a
+  Kelley Blue Book o al diagnóstico gratis en /analiza.
+- Si un anuncio trae banderas rojas, menciónalas. Ocultarlas
+  contradice el punto de este sitio.
+- Recomienda siempre revisar el auto en persona antes de pagar.
+- Respuestas cortas. Dos o tres frases, salvo que pidan más.
 
-Inventario:
+QUÉ PUEDES HACER
+- Explicar cualquier calificación y qué la movió
+- Comparar anuncios del tablero
+- Explicar qué significa un título salvage, un gravamen o un smog
+  vencido
+- Guiar a un vendedor para publicar en /publicar
+- Mandar al diagnóstico gratis en /analiza
+
+Sitio: www.hidesertmotors.com
+Zona: Hesperia y el Alto Desierto, California.
+
+Anuncios:
 ${inventoryText}
   `.trim();
 }
@@ -261,7 +324,7 @@ export async function POST(req: Request) {
 
     const response = await client.responses.create({
       model: "gpt-4o-mini",
-      instructions: buildInventoryContext(language),
+      instructions: await buildInventoryContext(language),
       input: conversationText,
     });
 
