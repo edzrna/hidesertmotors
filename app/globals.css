@@ -6,15 +6,22 @@
    ============================================================ */
 
 @theme {
+  /* El ámbar y el naranja no se tocan: son la marca. Todo lo
+     demás se invirtió para el tema oscuro. */
   --color-hdm-amber: #f5c542;
   --color-hdm-orange: #d88a00;
+
+  /* Cuerpo claro. El encabezado, el pie y las bandas de Axel se
+     quedan oscuros: enmarcan el contenido y le dan contraste al
+     ámbar, mientras las fichas de auto y los formularios se leen
+     sobre claro, que es donde se pasa el tiempo. */
+  --color-hdm-canvas: #f4f7fb;
+  --color-hdm-surface: #ffffff;
+  --color-hdm-cream: #fffdf8;
+  --color-hdm-sand: #fff7e6;
+
   --color-hdm-dark: #071018;
   --color-hdm-ink: #0b1622;
-
-  --color-hdm-surface: #ffffff;
-  --color-hdm-canvas: #f4f7fb;
-  --color-hdm-cream: #fffaf0;
-  --color-hdm-sand: #fff7e6;
 
   --color-hdm-muted: #5b6b7f;
   --color-hdm-brown: #7a4d00;
@@ -27,8 +34,8 @@
 
 :root {
   --hdm-line: rgba(216, 138, 0, 0.12);
-  --hdm-line-strong: rgba(216, 138, 0, 0.18);
-  --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.06);
+  --hdm-line-strong: rgba(216, 138, 0, 0.2);
+  --hdm-shadow-soft: 0 18px 40px rgba(216, 138, 0, 0.07);
   --hdm-shadow-lift: 0 28px 60px rgba(216, 138, 0, 0.18);
   --hdm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --hdm-r: 26px;
@@ -120,8 +127,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background: linear-gradient(180deg, rgba(7, 16, 24, 0.96), rgba(7, 16, 24, 0.92));
-  backdrop-filter: blur(14px);
+  /* El fondo lo pone la superficie con líneas, más abajo. */
   border-bottom: 1px solid rgba(245, 197, 66, 0.14);
   transition: box-shadow 0.3s ease, padding 0.3s ease;
   padding-block: 14px;
@@ -173,30 +179,7 @@ body {
   flex-wrap: wrap;
 }
 
-.hdm-lang {
-  display: inline-flex;
-  align-items: center;
-  padding: 9px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--hdm-line-strong);
-  background: var(--color-hdm-cream);
-  color: #5a3900;
-  text-decoration: none;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 13px;
-  transition: background 0.25s ease;
-}
-
-.hdm-lang:hover {
-  background: #ffffff;
-}
-
-.hdm-lang--active {
-  background: linear-gradient(135deg, var(--color-hdm-amber), var(--color-hdm-orange));
-  color: var(--color-hdm-dark);
-  border-color: transparent;
-}
+/* Las píldoras de idioma se retiraron: ahora es texto. Ver más abajo. */
 
 .hdm-wa {
   display: inline-flex;
@@ -717,7 +700,7 @@ body {
 }
 
 .hdm-share-btn:hover {
-  background: #ffffff;
+  background: var(--color-hdm-surface);
   transform: translateY(-2px);
 }
 
@@ -842,7 +825,7 @@ body {
   margin-top: 16px;
   padding: 12px;
   border-radius: 18px;
-  background: #fffdf8;
+  background: var(--color-hdm-cream);
   border: 1px solid var(--hdm-line);
 }
 
@@ -965,7 +948,6 @@ body {
 
 .hdm-footer {
   border-top: 1px solid rgba(245, 197, 66, 0.1);
-  background: linear-gradient(180deg, rgba(7, 16, 24, 0.98), #040a10);
   color: #f5f7fb;
   margin-top: 30px;
   padding-block: clamp(26px, 5vw, 40px);
@@ -1166,4 +1148,5390 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ============================================================
+   ESPACIADO DE SECCIONES
+   ============================================================ */
+
+.hdm-section {
+  padding-block: 18px 24px;
+}
+
+.hdm-section + .hdm-section {
+  padding-block: 8px 60px;
+}
+
+.hdm-logo--footer {
+  width: clamp(96px, 20vw, 120px);
+}
+
+.hdm-btn--block {
+  width: 100%;
+  margin-top: 22px;
+}
+
+/* ============================================================
+   GALERÍA: variantes de escenario
+   ============================================================ */
+
+.hdm-stage--detail img {
+  aspect-ratio: 3 / 2;
+}
+
+@media (min-width: 1100px) {
+  .hdm-stage--detail img {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* Flechas dentro del lightbox: fondo claro translúcido */
+.hdm-arrow--light {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  width: 48px;
+  height: 48px;
+  z-index: 2;
+}
+
+.hdm-arrow--light:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hdm-share-note {
+  margin-top: 10px;
+  color: var(--color-hdm-brown);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   FICHA DEL VEHÍCULO
+   ============================================================ */
+
+.hdm-detail {
+  padding-block: clamp(18px, 4vw, 28px) clamp(40px, 8vw, 60px);
+}
+
+.hdm-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-hdm-brown);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  transition: gap 0.25s var(--hdm-ease);
+}
+
+.hdm-back:hover {
+  gap: 10px;
+}
+
+.hdm-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(340px, 0.92fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+@media (max-width: 1100px) {
+  .hdm-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hdm-detail-media {
+  padding: clamp(12px, 2vw, 22px);
+}
+
+.hdm-detail-media .hdm-stage {
+  margin-top: 0;
+}
+
+@media (min-width: 1101px) {
+  .hdm-detail-info {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.hdm-detail-info .hdm-h2 {
+  margin-top: 4px;
+}
+
+.hdm-detail-text {
+  color: var(--color-hdm-muted);
+  line-height: 1.8;
+  font-size: 15px;
+  margin-top: 18px;
+}
+
+.hdm-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+.hdm-info-box {
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-cream);
+  min-width: 0;
+}
+
+.hdm-info-box dt {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-hdm-brown-soft);
+  margin-bottom: 6px;
+}
+
+.hdm-info-box dd {
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.hdm-detail-phone {
+  margin-top: 14px;
+  color: var(--color-hdm-brown);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+/* ============================================================
+   CONTROLES DEL INVENTARIO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+.hdm-controls {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.hdm-control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  flex: 1 1 190px;
+}
+
+.hdm-control-label {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-hdm-brown-soft);
+}
+
+.hdm-select {
+  appearance: none;
+  width: 100%;
+  padding: 12px 38px 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background-color: var(--color-hdm-cream);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  /* Flecha dibujada en el fondo: los <select> nativos no se pueden
+     estilizar de forma consistente entre navegadores. */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%237a4d00' d='M1.4 0 6 4.6 10.6 0 12 1.4 6 7.4 0 1.4Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 11px;
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+
+.hdm-select:hover {
+  border-color: var(--color-hdm-orange);
+  background-color: #ffffff;
+}
+
+.hdm-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  font-size: 14px;
+  font-weight: 700;
+  color: #5a3900;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background 0.25s ease;
+}
+
+.hdm-toggle:hover {
+  background: var(--color-hdm-surface);
+}
+
+.hdm-toggle input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+  margin: 0;
+}
+
+.hdm-controls-tail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  padding-bottom: 12px;
+}
+
+.hdm-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-hdm-muted);
+  white-space: nowrap;
+}
+
+.hdm-reset {
+  border: none;
+  background: none;
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--color-hdm-orange);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+.hdm-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+  border-radius: 20px;
+  background: var(--color-hdm-surface);
+  border: 1px dashed var(--hdm-line-strong);
+}
+
+/* En pantallas chicas el contador se va a su propia línea,
+   para que los selects conserven ancho usable. */
+@media (max-width: 640px) {
+  .hdm-controls {
+    gap: 12px;
+  }
+
+  .hdm-control {
+    flex: 1 1 100%;
+  }
+
+  .hdm-toggle {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .hdm-controls-tail {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 0;
+    justify-content: space-between;
+  }
+}
+
+/* La última sección antes del pie necesita aire propio.
+   (La regla vieja `.hdm-section + .hdm-section` dependía de que
+   existiera la sección de opiniones; ya no existe.) */
+.hdm-section--last {
+  padding-block: 18px 60px;
+}
+/* ============================================================
+   PUBLICAR ANUNCIO
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+.pub-head {
+  margin: var(--sp-3, 18px) 0 26px;
+}
+
+.pub-lede {
+  color: var(--color-hdm-muted);
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 62ch;
+  margin: 12px 0 0;
+}
+
+/* Arriba y visible: es lo que deja claro que el sitio no vende. */
+.pub-disclaimer {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-orange);
+  background: var(--color-hdm-cream);
+  color: var(--color-hdm-brown);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 70ch;
+}
+
+/* ---------- Disposición ---------- */
+
+.pub-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .pub-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pub-fields {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pub-live {
+  order: 2;
+}
+
+@media (max-width: 1000px) {
+  /* En móvil la calificación va arriba: es la razón de llenar el
+     formulario, no un resumen del final. */
+  .pub-live {
+    order: 0;
+    position: sticky;
+    top: 8px;
+    z-index: 20;
+  }
+}
+
+/* ---------- Panel de calificación en vivo ---------- */
+
+.pub-live {
+  padding: 20px;
+  border-radius: var(--hdm-r, 26px);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+@media (min-width: 1001px) {
+  .pub-live {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.pub-live-ring {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pub-live-level {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+  line-height: 1.2;
+}
+
+.pub-live-caption {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-hdm-muted);
+  margin: 4px 0 0;
+}
+
+.pub-live-conf {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.pub-live-conf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  margin-bottom: 8px;
+}
+
+.pub-live-conf-head strong {
+  font-family: var(--font-display);
+  color: var(--color-hdm-brown);
+  white-space: nowrap;
+}
+
+.pub-bar {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(216, 138, 0, 0.12);
+  overflow: hidden;
+}
+
+.pub-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  transition: width 0.4s var(--hdm-ease);
+}
+
+.pub-live-flags {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 77, 94, 0.09);
+  border: 1px solid rgba(255, 59, 77, 0.18);
+}
+
+.pub-live-flags-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-sold);
+  margin-bottom: 8px;
+}
+
+.pub-live-flags ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.pub-live-flags li {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #ff8f9c;
+}
+
+/* ---------- Secciones ---------- */
+
+.pub-step {
+  border: 1px solid var(--hdm-line);
+  border-radius: var(--hdm-r, 26px);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  padding: clamp(18px, 3vw, 24px);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pub-step legend {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+  padding: 0 10px;
+  margin-left: -10px;
+}
+
+.pub-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+/* ---------- Campos ---------- */
+
+.pub-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pub-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.pub-field input[type="text"],
+.pub-field input[type="number"],
+.pub-field input[type="tel"],
+.pub-field input[type="email"],
+.pub-field input:not([type]),
+.pub-field select,
+.pub-field textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 16px; /* 16px evita que iOS haga zoom al enfocar */
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pub-field input:focus,
+.pub-field select:focus,
+.pub-field textarea:focus {
+  background: var(--color-hdm-surface);
+  border-color: var(--color-hdm-orange);
+}
+
+.pub-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.pub-field input[type="file"] {
+  padding: 11px;
+  font-size: 14px;
+}
+
+.pub-help {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
+}
+
+.pub-field-error {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-hdm-sold);
+}
+
+.pub-field.has-error input,
+.pub-field.has-error select,
+.pub-field.has-error textarea {
+  border-color: var(--color-hdm-sold);
+}
+
+.pub-count {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--color-hdm-sand);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-hdm-brown);
+}
+
+/* ---------- Casillas ---------- */
+
+.pub-checks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+}
+
+.pub-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-cream);
+  font-size: 14px;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.pub-check:hover {
+  background: var(--color-hdm-surface);
+  border-color: var(--hdm-line-strong);
+}
+
+.pub-check input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+}
+
+/* Las casillas de defecto se tiñen al marcarse: marcar aquí es
+   declarar un problema, y debe verse distinto a marcar "sí funciona". */
+.pub-checks--negative .pub-check:has(input:checked) {
+  background: rgba(255, 77, 94, 0.09);
+  border-color: rgba(255, 59, 77, 0.28);
+}
+
+.pub-checks--negative .pub-check input {
+  accent-color: var(--color-hdm-sold);
+}
+
+/* ---------- Declaración y envío ---------- */
+
+.pub-declaration {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 18px;
+  border: 1px solid var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-brown);
+  cursor: pointer;
+}
+
+.pub-declaration.has-error {
+  border-color: var(--color-hdm-sold);
+  background: rgba(255, 77, 94, 0.09);
+}
+
+.pub-declaration input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--color-hdm-orange);
+  cursor: pointer;
+}
+
+.pub-error {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: rgba(255, 77, 94, 0.09);
+  border: 1px solid rgba(255, 59, 77, 0.22);
+  color: #ff8f9c;
+  font-size: 14px;
+}
+
+.pub-error strong {
+  font-family: var(--font-display);
+}
+
+.pub-submit {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+.pub-submit:disabled {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.pub-done {
+  padding: clamp(28px, 6vw, 48px);
+  border-radius: var(--hdm-r-lg, 30px);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  text-align: center;
+}
+
+.pub-done h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: 900;
+  margin: 0 0 12px;
+}
+
+.pub-done p {
+  color: var(--color-hdm-muted);
+  line-height: 1.7;
+  max-width: 46ch;
+  margin: 0 auto;
+}
+/* ============================================================
+   AÑADIDOS DEL FORMULARIO v2
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+/* ---------- Emojis rápidos ---------- */
+
+.pub-emoji {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.pub-emoji button {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-cream);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s var(--hdm-ease);
+}
+
+.pub-emoji button:hover {
+  background: var(--color-hdm-surface);
+  transform: translateY(-2px);
+}
+
+.pub-chars {
+  align-self: flex-end;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.pub-chars.is-low {
+  color: var(--color-hdm-sold);
+  font-weight: 700;
+}
+
+/* ---------- Fotos ---------- */
+
+/* El input de archivo nativo se ve distinto en cada navegador y no
+   admite estilos. Se oculta y se estiliza la etiqueta. */
+.pub-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 20px;
+  border-radius: 14px;
+  border: 1px dashed var(--hdm-line-strong);
+  background: var(--color-hdm-cream);
+  color: #5a3900;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.pub-file:hover {
+  background: var(--color-hdm-surface);
+  border-color: var(--color-hdm-orange);
+}
+
+.pub-file input {
+  display: none;
+}
+
+.pub-count.is-low {
+  background: rgba(255, 77, 94, 0.09);
+  color: #ff8f9c;
+}
+
+.pub-photos {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pub-photos li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  font-size: 13px;
+}
+
+.pub-photos li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-hdm-brown);
+}
+
+.pub-photos li button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-hdm-sold);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ---------- Lista de errores ---------- */
+
+.pub-error ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.pub-error li {
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+/* ============================================================
+   TABLERO DE ANUNCIOS
+   Pega este bloque AL FINAL de app/globals.css
+   ============================================================ */
+
+/* Aviso de qué es el sitio, dentro del hero oscuro. */
+.hdm-board-note {
+  margin: 0 0 22px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(245, 197, 66, 0.08);
+  border: 1px solid rgba(245, 197, 66, 0.16);
+  color: #e7d7b4;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+
+/* Panel de "todavía no hay anuncios" */
+.hdm-empty-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 260px;
+}
+
+/* ---------- Banderas ---------- */
+
+.hdm-card-flags {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.hdm-card-flags li {
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(255, 77, 94, 0.09);
+  border: 1px solid rgba(255, 59, 77, 0.2);
+  color: #ff8f9c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hdm-flags {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 77, 94, 0.09);
+  border: 1px solid rgba(255, 59, 77, 0.18);
+}
+
+.hdm-flags-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-sold);
+  margin-bottom: 8px;
+}
+
+.hdm-flags ul {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.hdm-flags li {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #ff8f9c;
+}
+
+/* ---------- Origen del dato ---------- */
+
+/* Va pegado al número, no al pie de la página: quien ve la
+   calificación tiene que ver de dónde sale. */
+.hdm-declared {
+  margin: 10px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
+  font-style: italic;
+}
+
+.hdm-conf {
+  margin-top: 16px;
+}
+
+.hdm-conf-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  margin-bottom: 7px;
+}
+
+.hdm-conf-head strong {
+  font-family: var(--font-display);
+  color: var(--color-hdm-brown);
+  white-space: nowrap;
+}
+
+/* ---------- Texto del vendedor ---------- */
+
+/* white-space: pre-wrap conserva los saltos de línea que escribió
+   el vendedor sin necesidad de aceptar HTML. */
+.hdm-seller-note {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-seller-note p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.75;
+  color: var(--color-hdm-ink);
+  font-size: 15px;
+}
+
+.hdm-known {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-known p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--color-hdm-muted);
+}
+
+.hdm-seller-line {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}
+
+/* ============================================================
+   MARCAR VENDIDO
+   ============================================================ */
+
+.edit-sold-box {
+  margin-top: 8px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-align: center;
+}
+
+.edit-sold-btn {
+  width: 100%;
+}
+
+.edit-sold-box p {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+}
+
+/* ============================================================
+   PÁGINAS LEGALES
+   ============================================================ */
+
+.legal-page {
+  padding-block: clamp(18px, 4vw, 28px) clamp(40px, 8vw, 64px);
+}
+
+.legal-hero {
+  margin: 18px 0 32px;
+}
+
+.legal-subtitle {
+  margin: 12px 0 0;
+  max-width: 60ch;
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.legal-pill {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: var(--color-hdm-sand);
+  border: 1px solid var(--hdm-line);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-hdm-brown-soft);
+}
+
+.legal-body {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 44px);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .legal-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* Índice fijo en escritorio: en un documento largo, saber dónde estás
+   importa tanto como el texto. */
+.legal-toc {
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+}
+
+@media (min-width: 901px) {
+  .legal-toc {
+    position: sticky;
+    top: 24px;
+  }
+}
+
+.legal-toc ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.legal-toc li {
+  margin-bottom: 9px;
+}
+
+.legal-toc li:last-child {
+  margin-bottom: 0;
+}
+
+.legal-toc a {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--color-hdm-muted);
+  text-decoration: none;
+}
+
+.legal-toc a:hover {
+  color: var(--color-hdm-orange);
+}
+
+@media (max-width: 900px) {
+  .legal-toc ol {
+    columns: 2;
+    column-gap: 18px;
+  }
+  .legal-toc li {
+    break-inside: avoid;
+  }
+}
+
+.legal-doc {
+  padding: clamp(20px, 4vw, 32px);
+  border-radius: var(--hdm-r-lg);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.legal-section {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--hdm-line);
+  scroll-margin-top: 24px;
+}
+
+.legal-section:first-child {
+  padding-top: 0;
+}
+
+.legal-section:last-of-type {
+  border-bottom: none;
+}
+
+.legal-section h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.legal-section h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.legal-section h2 a:hover {
+  color: var(--color-hdm-orange);
+}
+
+.legal-section p {
+  margin: 0 0 12px;
+  max-width: 70ch;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--color-hdm-muted);
+}
+
+.legal-section p:last-child {
+  margin-bottom: 0;
+}
+
+.legal-foot {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hdm-line);
+  font-size: 14px;
+}
+
+.legal-foot a {
+  color: var(--color-hdm-orange);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.hdm-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.hdm-footer-links a {
+  font-size: 14px;
+  color: #c9d2df;
+  text-decoration: none;
+}
+
+.hdm-footer-links a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* ============================================================
+   REPORTAR ANUNCIO
+   ============================================================ */
+
+/* Discreto a propósito: quien lo necesita lo busca, el resto no
+   debería sentirse invitado a usarlo. */
+.report-open {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  background: none;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.report-open:hover {
+  color: var(--color-hdm-sold);
+}
+
+.report-box {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line-strong);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.report-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.report-head strong {
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+
+.report-head button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.report-lead {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+}
+
+.report-send {
+  width: 100%;
+}
+
+.report-box--done {
+  text-align: center;
+  background: rgba(46, 200, 110, 0.1);
+  border-color: rgba(34, 139, 68, 0.22);
+}
+
+.report-box--done strong {
+  font-family: var(--font-display);
+  font-size: 16px;
+  color: #4fd888;
+}
+
+.report-box--done p {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #8ae2b0;
+}
+
+/* ============================================================
+   SECCIÓN "POR QUÉ AQUÍ"
+   ============================================================ */
+
+.hdm-why {
+  padding-block: clamp(44px, 8vw, 80px) clamp(24px, 5vw, 40px);
+}
+
+.hdm-why-lead {
+  margin: 14px 0 0;
+  max-width: 60ch;
+  font-size: clamp(16px, 2.2vw, 18px);
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.hdm-why-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.hdm-why-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(20px, 3vw, 26px);
+  border-radius: var(--hdm-r);
+  border: 1px solid var(--hdm-line);
+  background: var(--color-hdm-surface);
+  box-shadow: var(--hdm-shadow-soft);
+  transition: transform 0.35s var(--hdm-ease), box-shadow 0.35s var(--hdm-ease);
+}
+
+.hdm-why-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--hdm-shadow-lift);
+}
+
+/* Zona de demostración: aquí va el producto real, no un icono.
+   Altura fija para que las tres tarjetas alineen sus títulos. */
+.hdm-why-demo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 146px;
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 18px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.hdm-why-demo--bars {
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.hdm-why-flags {
+  margin: 0;
+  justify-content: center;
+}
+
+.hdm-why-bar-label {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+  margin-bottom: 7px;
+}
+
+.hdm-why-card h3 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.4vw, 20px);
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.hdm-why-card p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-hdm-muted);
+}
+
+/* El aviso de honestidad NO va en letra chica al pie. Va aquí,
+   completo y legible: reconocer el límite es parte del argumento. */
+.hdm-why-honest {
+  margin: 24px 0 0;
+  padding: 20px 22px;
+  border-radius: 20px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-orange);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--color-hdm-brown);
+  max-width: 82ch;
+}
+
+/* ---------- Pasos para vender ---------- */
+
+.hdm-steps {
+  padding-block: clamp(24px, 5vw, 44px);
+}
+
+.hdm-steps-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 52px);
+  align-items: start;
+  padding: clamp(26px, 4vw, 44px);
+  border-radius: var(--hdm-r-lg);
+  background: var(--color-hdm-dark);
+  color: #ffffff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Mismo resplandor del hero: liga las dos secciones oscuras. */
+.hdm-steps-inner::before {
+  content: "";
+  position: absolute;
+  inset: -50% -20% auto -20%;
+  height: 100%;
+  z-index: -1;
+  background: radial-gradient(
+    55% 55% at 25% 30%,
+    rgba(245, 197, 66, 0.22),
+    transparent 70%
+  );
+}
+
+@media (max-width: 860px) {
+  .hdm-steps-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hdm-steps-copy .hdm-kicker {
+  color: var(--color-hdm-amber);
+}
+
+.hdm-steps-copy .hdm-h2 {
+  color: #ffffff;
+}
+
+.hdm-steps-copy .hdm-why-lead {
+  color: #b9c6d6;
+}
+
+.hdm-steps-cta {
+  margin-top: 24px;
+}
+
+.hdm-steps-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.hdm-steps-list li {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.hdm-step-n {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: var(--color-hdm-dark);
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+}
+
+.hdm-steps-list h3 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.hdm-steps-list p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #b9c6d6;
+}
+
+/* ============================================================
+   AJUSTES DE PORTADA
+   ============================================================ */
+
+/* El logo competía con el eslogan por el mismo espacio.
+   Bajarlo un escalón deja respirar la frase, que es lo que
+   comunica. */
+.hdm-logo {
+  width: clamp(78px, 12vw, 116px);
+}
+
+.hdm-header.is-scrolled .hdm-logo {
+  width: clamp(62px, 9vw, 84px);
+}
+
+/* El eslogan es el mensaje principal del encabezado: merece más
+   presencia que el nombre repetido. */
+.hdm-tagline {
+  font-size: clamp(15px, 2.1vw, 26px);
+  letter-spacing: -0.01em;
+}
+
+/* Los cuatro iconos del medidor quedaban muy apretados contra sus
+   etiquetas en pantallas medianas. */
+.hdm-scale {
+  gap: 14px;
+}
+
+.hdm-scale-label {
+  line-height: 1.35;
+}
+
+/* En el panel de compartir, cuatro botones en fila se comprimían
+   demasiado; con este mínimo saltan a dos filas antes de apretarse. */
+.hdm-share-grid {
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+}
+
+/* Aire entre el bloque destacado y la sección que sigue. */
+.hdm-top {
+  padding-bottom: clamp(20px, 4vw, 34px);
+}
+
+/* ============================================================
+   MEDIDORES POR CATEGORÍA
+   ============================================================ */
+
+.gauges {
+  margin-top: 20px;
+}
+
+.gauges-head h2 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 800;
+}
+
+.gauges-head p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+  max-width: 56ch;
+}
+
+.gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.gauges--compact .gauges-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.gauge {
+  margin: 0;
+  padding: 14px 10px 12px;
+  border-radius: 18px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-align: center;
+}
+
+.gauges--compact .gauge {
+  padding: 10px 6px 8px;
+}
+
+.gauge-svg {
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+  display: block;
+  margin: 0 auto 4px;
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(216, 138, 0, 0.12);
+  stroke-width: 8;
+  stroke-linecap: round;
+}
+
+/* El arco se dibuja al entrar en pantalla. El desfase parte del
+   total y baja hasta el valor: πr = 131.95 con r = 42. */
+.gauge-fill {
+  fill: none;
+  stroke-width: 8;
+  /* El color lo pone el gradiente del SVG. */
+  stroke-linecap: round;
+  stroke-dashoffset: 131.95;
+  transition: stroke-dashoffset 1.1s var(--hdm-ease);
+}
+
+.gauge-svg.is-visible .gauge-fill {
+  stroke-dashoffset: calc(131.95 - 131.95 * (var(--value) / 100));
+}
+
+.gauge-needle {
+  stroke: var(--color-hdm-ink);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transform-origin: 50px 52px;
+  transform: rotate(-90deg);
+  transition: transform 1.1s var(--hdm-ease);
+}
+
+.gauge-svg.is-visible .gauge-needle {
+  transform: rotate(0deg);
+}
+
+.gauge-pin {
+  fill: var(--color-hdm-ink);
+}
+
+.gauge-icon {
+  font-size: 15px;
+}
+
+/* Gama de marca: naranja profundo abajo, ámbar claro arriba. El
+   valor se sigue leyendo en el tono sin recurrir al verde, que
+   desentonaba con todo lo demás del sitio. */
+.gauge--brand {
+  --gauge-from: #e2670a;
+  --gauge-to: #ffd166;
+}
+
+/* El rojo se conserva sólo debajo de 50. Un auto con la transmisión
+   patinando debe alarmar, no combinar. */
+.gauge--bad {
+  --gauge-from: #c02535;
+  --gauge-to: #ff6b7a;
+}
+
+.gauge--brand .gauge-value {
+  color: var(--color-hdm-amber);
+}
+
+.gauge--bad .gauge-value {
+  color: #ff8f9c;
+}
+
+.gauge figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gauge-value {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-hdm-brown);
+}
+
+.gauges--compact .gauge-value {
+  font-size: 18px;
+}
+
+.gauge-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--color-hdm-ink);
+}
+
+.gauges--compact .gauge-label {
+  font-size: 11px;
+}
+
+.gauge-caption {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-hdm-muted);
+  margin-top: 2px;
+}
+
+/* ---------- Grupos del formulario ---------- */
+
+.pub-group legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.pub-group-icon {
+  font-size: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gauge-fill,
+  .gauge-needle {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   PANEL DE CALIFICACIÓN EN MÓVIL
+   ============================================================ */
+
+/* En escritorio el resumen no hace falta: cabe todo. */
+.pub-live-toggle {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .pub-live {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .pub-live-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .pub-live-mini {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .pub-live-mini strong {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--color-hdm-brown);
+  }
+
+  .pub-live-mini span {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-hdm-ink);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Cuatro puntos: el color dice cómo va cada categoría sin ocupar
+     espacio. Es el resumen del resumen. */
+  .pub-live-dots {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .pub-live-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    transition: background 0.3s ease;
+  }
+
+  .pub-live-dot[style*="--v: 100"],
+  .pub-live-dot {
+    background: color-mix(
+      in srgb,
+      #3fcf7f calc(var(--v, 0) * 1%),
+      var(--color-hdm-sold)
+    );
+  }
+
+  .pub-live-chevron {
+    font-size: 13px;
+    color: var(--color-hdm-muted);
+    transition: transform 0.25s var(--hdm-ease);
+    flex-shrink: 0;
+  }
+
+  .pub-live.is-open .pub-live-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Colapsado por omisión: el formulario recupera la pantalla. */
+  .pub-live-body {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--hdm-line);
+  }
+
+  .pub-live.is-open .pub-live-body {
+    display: block;
+    padding-top: 16px;
+  }
+
+  .pub-live-ring {
+    gap: 14px;
+  }
+
+  .pub-live-ring .hdm-ring {
+    --size: 92px;
+  }
+}
+
+/* ============================================================
+   VIGENCIA DEL ANUNCIO
+   ============================================================ */
+
+.hdm-card-age {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+/* Los últimos días se marcan: es información útil para el comprador
+   que está dudando, y un recordatorio para el vendedor. */
+.hdm-card-age .is-soon {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 77, 94, 0.09);
+  border: 1px solid rgba(255, 59, 77, 0.2);
+  color: #ff8f9c;
+  font-weight: 700;
+}
+
+.hdm-expires {
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}
+
+.pub-duration {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--color-hdm-sand);
+  border: 1px solid var(--hdm-line);
+  color: var(--color-hdm-brown);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 70ch;
+}
+
+/* ============================================================
+   AXEL
+   ============================================================ */
+
+.axel-face {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 999px;
+}
+
+.axel-face--sm { width: 44px; height: 44px; }
+.axel-face--md { width: 72px; height: 72px; }
+.axel-face--lg { width: 112px; height: 112px; }
+
+/* La cara va junto al nivel, no encima: el número manda, Axel
+   confirma. */
+.hdm-score-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---------- Presentación ---------- */
+
+.axel-intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--color-hdm-dark);
+  color: #ffffff;
+  padding-block: clamp(36px, 7vw, 72px);
+  margin-bottom: clamp(20px, 4vw, 34px);
+}
+
+/* La línea de autos va al fondo, desenfocada y oscurecida: es el
+   contexto, no el sujeto. Axel es el sujeto. */
+.axel-intro-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  opacity: 0.32;
+}
+
+.axel-intro-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 62%;
+  filter: blur(2px) saturate(0.7);
+}
+
+.axel-intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(58% 62% at 22% 42%, rgba(245, 197, 66, 0.16), transparent 70%),
+    linear-gradient(
+      100deg,
+      rgba(7, 16, 24, 0.95) 0%,
+      rgba(7, 16, 24, 0.78) 46%,
+      rgba(7, 16, 24, 0.42) 100%
+    );
+}
+
+.axel-intro-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(20px, 4vw, 48px);
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .axel-intro-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.axel-intro-kicker {
+  display: inline-block;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.12);
+  border: 1px solid rgba(245, 197, 66, 0.26);
+  color: var(--color-hdm-amber);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.axel-intro-title {
+  margin: 0 0 16px;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5.4vw, 46px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.axel-intro-lead {
+  margin: 0 0 20px;
+  max-width: 56ch;
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.65;
+  color: #c3cede;
+}
+
+.axel-intro-points {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 58ch;
+}
+
+/* La cara de Axel hace de viñeta: mismo icono que en las tarjetas. */
+.axel-intro-points li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9c6d6;
+}
+
+.axel-intro-points .axel-face {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.axel-intro-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.axel-intro-figure {
+  margin: 0;
+  text-align: center;
+}
+
+.axel-intro-figure img {
+  width: 100%;
+  max-width: 340px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  /* La sombra ámbar lo despega del fondo sin recortarlo. */
+  filter: drop-shadow(0 24px 44px rgba(216, 138, 0, 0.28));
+}
+
+.axel-intro-figure figcaption {
+  margin-top: 12px;
+  font-family: var(--font-data, var(--font-display));
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-hdm-amber);
+}
+
+@media (max-width: 860px) {
+  .axel-intro-figure img {
+    max-width: 240px;
+  }
+}
+
+/* ============================================================
+   ICONOS PROPIOS
+   ============================================================ */
+
+.gauge-icon {
+  color: var(--color-hdm-brown-soft);
+}
+
+.gauge-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================================
+   HISTORIAL DEL VENDEDOR
+   ============================================================ */
+
+.seller {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.seller--established {
+  background: rgba(46, 200, 110, 0.08);
+  border-color: rgba(46, 158, 91, 0.24);
+}
+
+.seller--flagged {
+  background: rgba(255, 77, 94, 0.09);
+  border-color: rgba(255, 59, 77, 0.24);
+}
+
+.seller-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seller-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--color-hdm-brown-soft);
+}
+
+.seller--established .seller-icon {
+  color: #3fcf7f;
+}
+
+.seller--flagged .seller-icon {
+  color: var(--color-hdm-sold);
+}
+
+.seller-name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--color-hdm-ink);
+}
+
+.seller-badge {
+  display: block;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+  margin-top: 1px;
+}
+
+.seller-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: 10px;
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.seller-stats dt {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+  margin-bottom: 3px;
+}
+
+.seller-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}
+
+.seller-note {
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
+}
+
+/* ============================================================
+   BANDAS OSCURAS SOBRE CUERPO CLARO
+
+   El cuerpo es claro, pero cuatro bloques se quedan oscuros a
+   propósito: encabezado, pie, la presentación de Axel y los
+   encabezados de formulario. Enmarcan el contenido y le dan al ámbar
+   el contraste que sobre blanco pierde.
+
+   Estas reglas existen porque esos bloques NO pueden heredar los
+   colores de texto del cuerpo: sobre oscuro, la tinta oscura
+   desaparece.
+   ============================================================ */
+
+body {
+  background: var(--color-hdm-canvas);
+  color: var(--color-hdm-ink);
+}
+
+.hdm-steps-inner,
+.axel-intro,
+.pub-hero {
+  background: linear-gradient(155deg, #12202c 0%, #0b151e 55%, #070f16 100%);
+  color: #ffffff;
+}
+
+.hdm-steps-inner .hdm-h2,
+.axel-intro .hdm-h2,
+.pub-hero .hdm-h2 {
+  color: #ffffff;
+}
+
+/* Las tarjetas vuelven a la sombra: sobre claro, el relieve lo da la
+   sombra, no un borde iluminado. */
+.hdm-card,
+.hdm-why-card,
+.legal-doc,
+.legal-toc,
+.gauge,
+.seller,
+.pub-step,
+.pub-live,
+.review-block,
+.review-photos,
+.review-score {
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.hdm-card:hover,
+.hdm-why-card:hover {
+  border-color: rgba(216, 138, 0, 0.3);
+  box-shadow: var(--hdm-shadow-lift);
+}
+
+/* Campos sobre blanco: borde marcado en vez de fondo hundido. */
+.pub-field input,
+.pub-field select,
+.pub-field textarea,
+.hdm-select,
+.pub-link-input,
+.finder-field select {
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-ink);
+}
+
+.pub-field input:focus,
+.pub-field select:focus,
+.pub-field textarea:focus,
+.hdm-select:focus,
+.finder-field select:focus {
+  border-color: var(--color-hdm-orange);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(216, 138, 0, 0.14);
+}
+
+.pub-field input::placeholder,
+.pub-field textarea::placeholder {
+  color: #9aa7b6;
+}
+
+.pub-field select option,
+.hdm-select option,
+.finder-field select option {
+  background: #ffffff;
+  color: #0b1622;
+}
+
+.pub-check input,
+.hdm-toggle input {
+  accent-color: var(--color-hdm-orange);
+}
+
+.pub-check {
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.pub-check:has(input:checked) {
+  background: var(--color-hdm-sand);
+  border-color: rgba(216, 138, 0, 0.34);
+}
+
+.hdm-btn--ghost {
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-brown);
+}
+
+.hdm-btn--ghost:hover {
+  background: var(--color-hdm-sand);
+  border-color: var(--color-hdm-orange);
+}
+
+/* Dentro de las bandas oscuras, el botón fantasma se invierte. */
+.axel-intro .hdm-btn--ghost,
+.hdm-steps-inner .hdm-btn--ghost,
+.pub-hero .hdm-btn--ghost {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.axel-intro .hdm-btn--ghost:hover,
+.hdm-steps-inner .hdm-btn--ghost:hover,
+.pub-hero .hdm-btn--ghost:hover {
+  background: rgba(245, 197, 66, 0.12);
+  border-color: var(--color-hdm-amber);
+}
+
+/* Medidores y anillos sobre claro. */
+.gauge-track,
+.hdm-ring-track {
+  stroke: rgba(216, 138, 0, 0.13);
+}
+
+.gauge-needle {
+  stroke: var(--color-hdm-ink);
+}
+
+.gauge-pin {
+  fill: var(--color-hdm-ink);
+  stroke: none;
+}
+
+/* Banderas rojas sobre claro. */
+.hdm-card-flags li,
+.hdm-flags li,
+.pub-live-flags li {
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.22);
+  color: #8c2230;
+}
+
+.pub-error {
+  background: #fff5f5;
+  border-color: rgba(255, 59, 77, 0.24);
+  color: #8c2230;
+}
+
+.edit-saved,
+.pub-sent {
+  background: #f0f9f2;
+  border-color: rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+}
+
+.edit-locked {
+  background: #f2f0ec;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+.edit-locked .edit-locked-grid > div {
+  background: rgba(255, 255, 255, 0.72);
+  border-color: rgba(11, 22, 34, 0.08);
+}
+
+.photo-grid li {
+  background: #eef1f5;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+::selection {
+  background: rgba(216, 138, 0, 0.24);
+  color: #0b1622;
+}
+
+* {
+  scrollbar-color: rgba(216, 138, 0, 0.32) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(216, 138, 0, 0.28);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:root {
+  color-scheme: light;
+}
+
+/* ============================================================
+   BUSCADOR EN BARRA
+   ============================================================ */
+
+/* Se monta sobre la presentación de Axel: parte encima del bloque
+   oscuro, como en la referencia. Da sensación de capa, no de lista. */
+.finder {
+  position: relative;
+  margin-top: calc(clamp(20px, 4vw, 34px) * -1 - 26px);
+  margin-bottom: clamp(24px, 4vw, 38px);
+  padding: clamp(16px, 2.6vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  /* Sobre el cuerpo claro, una sombra negra al 55% se lee como un
+     manchón. Aquí basta con levantar la tarjeta del fondo. */
+  box-shadow: 0 12px 32px rgba(11, 22, 34, 0.09);
+  z-index: 2;
+}
+
+.finder-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.finder-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.finder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr));
+  gap: 10px;
+}
+
+.finder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.finder-field > span {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+}
+
+.finder-field select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 13px;
+  /* Blanco, no el azul oscuro que traía del tema anterior: la barra
+     del buscador flota sobre el cuerpo claro. */
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.finder-field select:focus {
+  border-color: var(--color-hdm-orange);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(216, 138, 0, 0.14);
+}
+
+.finder-field select option {
+  background: #ffffff;
+  color: #0b1622;
+}
+
+.finder-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s var(--hdm-ease), box-shadow 0.2s var(--hdm-ease);
+}
+
+.finder-go:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(255, 138, 31, 0.3);
+}
+
+.finder-go-icon {
+  width: 17px;
+  height: 17px;
+}
+
+@media (min-width: 861px) {
+  /* En escritorio el botón vuelve a la fila, como en la referencia. */
+  .finder-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+  }
+
+  .finder-go {
+    width: auto;
+    margin-top: 0;
+    padding-inline: 26px;
+    align-self: end;
+    height: 42px;
+  }
+}
+
+/* ============================================================
+   .theme-light — ya no hace nada
+
+   Existía para mantener claros los formularios cuando el resto del
+   sitio era oscuro. Ahora el cuerpo entero es claro, así que la
+   clase sobra.
+
+   Se deja declarada y vacía a propósito: los componentes siguen
+   poniéndola en el JSX, y borrarla del CSS obligaría a tocar cuatro
+   archivos para no ganar nada. Si algún día vuelves al cuerpo
+   oscuro, aquí es donde se reactiva.
+   ============================================================ */
+
+.theme-light {
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* ============================================================
+   DIAGNÓSTICO DE AXEL
+   ============================================================ */
+
+.diag {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diag-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.diag-head h2 {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+@media (max-width: 560px) {
+  .diag-head {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .diag-head > div {
+    flex-basis: 100%;
+    order: 3;
+  }
+}
+
+.diag-block {
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-block h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.diag-block h3 svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-hdm-brown-soft);
+  flex-shrink: 0;
+}
+
+.diag-block h4 {
+  margin: 16px 0 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Lo que dice Axel se destaca: es la parte que la gente lee. */
+.diag-narrative {
+  border-left: 3px solid var(--color-hdm-orange);
+}
+
+.diag-narrative p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+.diag-lead {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Precio ---------- */
+
+.diag-range {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-sand);
+  border: 1px solid var(--hdm-line-strong);
+  margin-bottom: 14px;
+}
+
+.diag-range strong {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-hdm-brown);
+}
+
+.diag-range span {
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-factors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-factors li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.diag-factor-value {
+  flex-shrink: 0;
+  min-width: 92px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.diag-factors .is-down .diag-factor-value {
+  color: var(--color-hdm-sold);
+}
+
+.diag-factors .is-up .diag-factor-value {
+  color: #3fcf7f;
+}
+
+.diag-clean {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* El número real no sale de aquí, y se dice con claridad. */
+.diag-kbb {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.diag-kbb strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.diag-kbb p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Comparables ---------- */
+
+.diag-comps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-comps a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s var(--hdm-ease);
+}
+
+.diag-comps a:hover {
+  border-color: var(--color-hdm-orange);
+}
+
+.diag-comp-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.diag-comp-meta {
+  grid-column: 1;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-comp-price {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}
+
+.diag-empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Fotos ---------- */
+
+.diag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.diag-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diag-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-hdm-brown-soft);
+}
+
+.diag-list--tips li::before {
+  background: var(--color-hdm-orange);
+}
+
+/* El límite de la vista por IA se dice en tamaño legible, no en
+   letra chica: es lo que evita que alguien confíe de más. */
+.diag-note {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-brown-soft);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-note--final {
+  border-left-color: var(--color-hdm-line);
+}
+
+/* ---------- Publicar ---------- */
+
+.diag-publish {
+  border-color: var(--hdm-line-strong);
+  background: var(--color-hdm-sand);
+}
+
+.diag-publish p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-reset {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--hdm-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-hdm-muted);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.diag-reset:hover {
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-brown);
+}
+
+.pub-photo-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+/* Los dos botones de la sección de vendedores, en fila. */
+.hdm-steps-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+
+.hdm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+  transition: padding 0.3s var(--hdm-ease);
+}
+
+.hdm-header.is-scrolled .hdm-header-inner {
+  padding-block: 8px;
+}
+
+.hdm-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* El logo con presencia real. Antes competía de tú a tú con el
+   eslogan; ahora manda, que es su trabajo. */
+.hdm-logo {
+  /* El tope baja de 230 a 176: en escritorio, 230px dejaba el
+     encabezado desproporcionado respecto del contenido. En móvil no
+     cambia nada — ahí manda el 21vw. */
+  width: clamp(132px, 21vw, 176px);
+  height: auto;
+  flex-shrink: 0;
+  transition: width 0.3s var(--hdm-ease);
+}
+
+/* Al hacer scroll baja, pero sigue siendo grande: encogerlo a un
+   sello ilegible es lo que hace que un sitio se sienta genérico. */
+.hdm-header.is-scrolled .hdm-logo {
+  width: clamp(104px, 15vw, 132px);
+}
+
+.hdm-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.9vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  /* Claro y fijo: el encabezado es oscuro, así que heredar la tinta
+     del cuerpo lo volvía invisible. */
+  color: #eef3f8;
+}
+
+/* El eslogan desaparece al hacer scroll: quedan logo e idioma y
+   botón, como pediste. */
+.hdm-header.is-scrolled .hdm-tagline {
+  display: none;
+}
+
+.hdm-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* ---------- Idioma como texto ---------- */
+
+.hdm-lang-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Discreto a propósito: cambiar de idioma es algo que se hace una
+   vez, no en cada visita. Compitiendo con el logo y el botón,
+   estorbaba. */
+.hdm-lang {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.42);
+  text-decoration: none;
+  padding: 1px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hdm-lang:hover {
+  color: var(--color-hdm-ink);
+}
+
+/* El activo se marca con una línea, no con una píldora: pesa menos
+   y no compite con el botón. */
+.hdm-lang.is-active {
+  color: rgba(245, 197, 66, 0.85);
+  border-bottom-color: rgba(245, 197, 66, 0.5);
+}
+
+.hdm-lang-sep {
+  color: rgba(255, 255, 255, 0.16);
+  font-size: 10px;
+}
+
+/* ---------- Botón de publicar ---------- */
+
+.hdm-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 22px;
+  white-space: nowrap;
+}
+
+.hdm-publish-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+/* Al hacer scroll queda sólo el icono: redondo, compacto, y el logo
+   recupera todo el protagonismo. */
+.hdm-header.is-scrolled .hdm-publish {
+  padding: 11px;
+  border-radius: 999px;
+  gap: 0;
+}
+
+.hdm-header.is-scrolled .hdm-publish-text {
+  display: none;
+}
+
+/* En pantallas chicas el texto del botón estorba desde el inicio. */
+@media (max-width: 560px) {
+  .hdm-publish {
+    padding: 11px;
+    border-radius: 999px;
+    gap: 0;
+  }
+  .hdm-publish-text {
+    display: none;
+  }
+  .hdm-tagline {
+    display: none;
+  }
+}
+
+/* ============================================================
+   PIE DE PÁGINA
+   ============================================================ */
+
+.hdm-footer {
+  margin-top: clamp(40px, 8vw, 72px);
+  padding-block: clamp(36px, 6vw, 56px) 24px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 44px);
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--hdm-line);
+}
+
+@media (max-width: 860px) {
+  .foot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+  .foot-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+.foot-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 14px;
+}
+
+.foot-tagline {
+  margin: 0 0 4px;
+  max-width: 32ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9c6d6;
+}
+
+.foot-city {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.foot-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.foot-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hdm-line);
+  color: #c9d2df;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.foot-social a:hover {
+  background: rgba(255, 168, 47, 0.12);
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-amber);
+}
+
+.foot-social svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------- Columnas de enlaces ---------- */
+
+.foot-col {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.foot-col h3 {
+  margin: 0 0 3px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-amber);
+}
+
+.foot-col a {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #b9c6d6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.foot-col a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* ---------- Deslinde y línea final ---------- */
+
+.foot-notice {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--color-hdm-brown-soft);
+  max-width: 82ch;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #98a2b0;
+}
+
+.foot-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hdm-line);
+  font-size: 12px;
+  color: #7d8896;
+}
+
+.foot-credit {
+  color: var(--color-hdm-brown-soft);
+}
+
+/* ============================================================
+   ENCABEZADO OSCURO EN PUBLICAR Y ANALIZAR
+
+   Mismo lenguaje que "Encuentra el auto correcto": el bloque oscuro
+   presenta, el formulario claro debajo es donde se trabaja. La
+   isla clara empieza después del encabezado.
+   ============================================================ */
+
+.pub-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 6px 0 26px;
+  padding: clamp(26px, 5vw, 44px);
+  border-radius: var(--hdm-r-lg);
+  background: linear-gradient(155deg, #12202c 0%, #0b151e 55%, #070f16 100%);
+  border: 1px solid rgba(255, 168, 47, 0.14);
+  color: #ffffff;
+}
+
+/* El mismo resplandor ámbar del hero y de la sección de Axel: es lo
+   que hace que los tres bloques oscuros se lean como familia. */
+.pub-hero::before {
+  content: "";
+  position: absolute;
+  inset: -55% -25% auto -25%;
+  height: 110%;
+  z-index: -1;
+  background: radial-gradient(
+    52% 58% at 22% 34%,
+    rgba(245, 197, 66, 0.2),
+    transparent 70%
+  );
+}
+
+.pub-hero-pill {
+  display: inline-block;
+  padding: 7px 15px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.12);
+  border: 1px solid rgba(245, 197, 66, 0.28);
+  color: var(--color-hdm-amber);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pub-hero-title {
+  margin: 0 0 14px;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(27px, 5.2vw, 44px);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.pub-hero-lead {
+  margin: 0;
+  max-width: 56ch;
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.65;
+  color: #c3cede;
+}
+
+.pub-hero-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.pub-hero-notes p {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--color-hdm-orange);
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.68;
+  color: #a8b6c6;
+}
+
+/* ============================================================
+   PESTAÑAS DE SECCIÓN
+
+   Cada bloque del formulario lleva su pestaña naranja arriba a la
+   izquierda. Antes las secciones se distinguían sólo por el espacio
+   entre ellas, y en un formulario largo eso no basta para saber en
+   cuál vas.
+   ============================================================ */
+
+.pub-step {
+  position: relative;
+  margin-top: 30px;
+  padding-top: clamp(26px, 4vw, 32px);
+  border-radius: var(--hdm-r);
+}
+
+.pub-step > legend {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  float: none;
+  width: auto;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(255, 138, 31, 0.28);
+  white-space: nowrap;
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* El icono de categoría hereda el oscuro de la pestaña. */
+.pub-group-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .pub-step > legend {
+    left: 14px;
+    padding: 7px 13px;
+    font-size: 11px;
+  }
+}
+
+/* Aviso de que el enlace también salió por correo. Va antes del
+   enlace: quita la presión de copiarlo bien a la primera, que es
+   justo cuando la gente se equivoca. */
+.pub-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4fd888;
+  text-align: left;
+}
+
+.pub-sent-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.pub-sent-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.pub-sent strong {
+  word-break: break-all;
+}
+
+.theme-light .pub-sent {
+  background: #f0f9f2;
+  border-color: rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+}
+
+/* ============================================================
+   TARJETAS MÁS COMPACTAS
+
+   Con la descripción fuera, la tarjeta se cierra: menos aire entre
+   bloques para que quepan más anuncios por pantalla sin apretarse.
+   ============================================================ */
+
+.hdm-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+.hdm-specs > div {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+}
+
+.hdm-specs dt {
+  color: var(--color-hdm-muted);
+}
+
+.hdm-specs dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-hdm-ink);
+}
+
+/* La calificación y las banderas mandan: son lo que decide si abres
+   el anuncio. */
+.hdm-card-flags {
+  margin-top: 12px;
+}
+
+.hdm-card-age {
+  margin-top: 10px;
+}
+
+/* ============================================================
+   REJILLA DE FOTOS EN EDICIÓN
+
+   Miniaturas en vez de lista de nombres: con once fotos, una lista
+   de "mazda3-2017-7.jpg" es ilegible y no dice cuál es cuál.
+   ============================================================ */
+
+.photo-grid {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.photo-grid li {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+  background: #eef1f5;
+}
+
+/* La portada se marca: es la que decide si alguien abre el anuncio. */
+.photo-grid li.is-cover {
+  border-color: var(--color-hdm-orange);
+  box-shadow: 0 0 0 2px rgba(255, 138, 31, 0.25);
+}
+
+.photo-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-cover-tag {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Los controles viven sobre la foto, en una franja legible. */
+.photo-actions {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.photo-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.photo-actions button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.photo-actions button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.photo-actions .photo-remove:hover {
+  background: var(--color-hdm-sold);
+}
+
+/* En el tema claro, la franja sigue oscura: las fotos son de autos
+   y casi siempre traen zonas claras donde un control blanco
+   desaparece. */
+.theme-light .photo-grid li {
+  background: #eef1f5;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+/* ============================================================
+   BLOQUE DE DATOS CONGELADOS — corrección
+
+   La rejilla no se estaba aplicando dentro de la isla clara y los
+   pares quedaban apilados a lo largo. El selector necesita ganar
+   sobre las reglas generales de dl/dt/dd.
+   ============================================================ */
+
+.edit-locked .edit-locked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.edit-locked .edit-locked-grid > div {
+  display: block;
+  padding: 11px 13px;
+  border-radius: 12px;
+}
+
+.edit-locked .edit-locked-grid dt {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  margin-bottom: 3px;
+}
+
+.edit-locked .edit-locked-grid dd {
+  display: block;
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* El candado y su texto, alineados de verdad. */
+.edit-locked-head {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+/* Era un emoji y bastaba con font-size. Ahora es un SVG: sin ancho
+   explícito toma el tamaño que quiera, y por eso salía enorme. */
+.edit-lock-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--color-hdm-brown-soft);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   TARJETA CLICABLE
+
+   La foto y el título llevan a la ficha. Se usan enlaces reales y no
+   un onClick en la tarjeta entera: así el botón de compartir sigue
+   funcionando, se puede abrir en pestaña nueva, y el teclado y los
+   lectores de pantalla lo entienden.
+   ============================================================ */
+
+.hdm-card-media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hdm-card-media-link img {
+  transition: transform 0.5s var(--hdm-ease);
+}
+
+.hdm-card:hover .hdm-card-media-link img {
+  transform: scale(1.04);
+}
+
+.hdm-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hdm-card-title a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* Los iconos de las pestañas heredan el oscuro de la píldora. */
+.pub-group-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PÁGINA DE REVISIÓN
+   ============================================================ */
+
+.review {
+  padding-block: 20px clamp(40px, 8vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.review-head h1 {
+  margin: 8px 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.review-meta {
+  margin: 0;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+}
+
+.review-status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.review-status.is-pending {
+  background: rgba(255, 168, 47, 0.14);
+  border: 1px solid rgba(255, 168, 47, 0.4);
+  color: var(--color-hdm-amber);
+}
+
+.review-status.is-published {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.34);
+  color: #4fd888;
+}
+
+.review-status.is-rejected {
+  background: rgba(255, 77, 94, 0.12);
+  border: 1px solid rgba(255, 77, 94, 0.34);
+  color: #ff8f9c;
+}
+
+.review-block,
+.review-photos,
+.review-score {
+  padding: clamp(16px, 3vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-block h2,
+.review-photos h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Miniaturas numeradas: se abre cada una a tamaño real. Revisar
+   fotos en una galería pequeña no sirve para lo que importa. */
+.review-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.review-thumbs a {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+}
+
+.review-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-thumbs span {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.review-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.review-score {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.review-score > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-score strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.review-score span {
+  color: var(--color-hdm-muted);
+  font-size: 14px;
+}
+
+.review-data {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.review-data > div {
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-data dt {
+  font-size: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+  margin-bottom: 3px;
+}
+
+.review-data dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.review-text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-hdm-ink);
+}
+
+.review-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 16px 0;
+  background: linear-gradient(transparent, var(--color-hdm-canvas) 28%);
+}
+
+.review-reject {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  border-radius: 999px;
+  background: none;
+  color: #ff8f9c;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-reject:hover {
+  background: rgba(255, 77, 94, 0.1);
+}
+
+.review-done {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.review-done.is-ok {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.3);
+  color: #4fd888;
+}
+
+.review-done.is-no {
+  background: rgba(255, 77, 94, 0.1);
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  color: #ff8f9c;
+}
+
+/* ============================================================
+   SUPERFICIE DEL ENCABEZADO Y EL PIE
+
+   Encabezado y pie se quedan oscuros mientras el cuerpo es claro:
+   enmarcan el contenido y dan contraste al logo ámbar.
+
+   Sólo llevan las líneas horizontales. El brillo fijo se retiró:
+   contenerlo exigía `contain: paint` y `transform`, y las dos cosas
+   rompen `position: sticky` — el encabezado dejaba de pegarse arriba.
+   No vale un efecto decorativo a cambio de una función.
+   ============================================================ */
+
+.hdm-header,
+.hdm-footer {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #080f16;
+  color: #eef3f8;
+}
+
+/* Líneas horizontales de 1px cada 3px. */
+.hdm-header::before,
+.hdm-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /*
+   * Dos líneas por ciclo en vez de una: la clara arriba y una oscura
+   * justo debajo. Ese par es lo que da profundidad — una sola línea
+   * clara se ve dibujada encima; clara + oscura se lee como un surco
+   * con su luz y su sombra.
+   */
+  background-image: repeating-linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.055) 0px,
+    rgba(255, 255, 255, 0.055) 1px,
+    rgba(0, 0, 0, 0.42) 1px,
+    rgba(0, 0, 0, 0.42) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+/* Sin transform ni contain: el sticky tiene que seguir funcionando. */
+.hdm-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  /* Sólido, sin transparencia ni desenfoque: el contenido claro que
+     pasaba por debajo lo lavaba, y las líneas se perdían. */
+  background-color: #080f16;
+  border-bottom: 1px solid rgba(245, 197, 66, 0.16);
+}
+
+/* Sobre fondo oscuro, el texto del encabezado no puede heredar la
+   tinta del cuerpo, que ahora es oscura. */
+.hdm-tagline {
+  color: #eef3f8;
+}
+
+.hdm-lang {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.hdm-lang:hover {
+  color: #eef3f8;
+}
+
+.hdm-lang.is-active {
+  color: rgba(245, 197, 66, 0.9);
+  border-bottom-color: rgba(245, 197, 66, 0.55);
+}
+
+.hdm-lang-sep {
+  color: rgba(255, 255, 255, 0.16);
+}
+
+/* ============================================================
+   BUSCADOR EN BARRA
+   ============================================================ */
+
+/* Se monta sobre la presentación de Axel: parte encima del bloque
+   oscuro, como en la referencia. Da sensación de capa, no de lista. */
+.finder {
+  position: relative;
+  margin-top: calc(clamp(20px, 4vw, 34px) * -1 - 26px);
+  margin-bottom: clamp(24px, 4vw, 38px);
+  padding: clamp(16px, 2.6vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  /* Sobre el cuerpo claro, una sombra negra al 55% se lee como un
+     manchón. Aquí basta con levantar la tarjeta del fondo. */
+  box-shadow: 0 12px 32px rgba(11, 22, 34, 0.09);
+  z-index: 2;
+}
+
+.finder-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.finder-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.finder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 168px), 1fr));
+  gap: 10px;
+}
+
+.finder-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.finder-field > span {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+}
+
+.finder-field select {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 13px;
+  /* Blanco, no el azul oscuro que traía del tema anterior: la barra
+     del buscador flota sobre el cuerpo claro. */
+  background: #ffffff;
+  border: 1px solid var(--hdm-line-strong);
+  color: var(--color-hdm-ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.finder-field select:focus {
+  border-color: var(--color-hdm-orange);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(216, 138, 0, 0.14);
+}
+
+.finder-field select option {
+  background: #ffffff;
+  color: #0b1622;
+}
+
+.finder-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 13px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s var(--hdm-ease), box-shadow 0.2s var(--hdm-ease);
+}
+
+.finder-go:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(255, 138, 31, 0.3);
+}
+
+.finder-go-icon {
+  width: 17px;
+  height: 17px;
+}
+
+@media (min-width: 861px) {
+  /* En escritorio el botón vuelve a la fila, como en la referencia. */
+  .finder-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+  }
+
+  .finder-go {
+    width: auto;
+    margin-top: 0;
+    padding-inline: 26px;
+    align-self: end;
+    height: 42px;
+  }
+}
+
+/* ============================================================
+   DIAGNÓSTICO DE AXEL
+   ============================================================ */
+
+.diag {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.diag-head {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: clamp(18px, 3vw, 26px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line-strong);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-head > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.diag-head h2 {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+@media (max-width: 560px) {
+  .diag-head {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .diag-head > div {
+    flex-basis: 100%;
+    order: 3;
+  }
+}
+
+.diag-block {
+  padding: clamp(18px, 3vw, 24px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+}
+
+.diag-block h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.diag-block h3 svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-hdm-brown-soft);
+  flex-shrink: 0;
+}
+
+.diag-block h4 {
+  margin: 16px 0 8px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Lo que dice Axel se destaca: es la parte que la gente lee. */
+.diag-narrative {
+  border-left: 3px solid var(--color-hdm-orange);
+}
+
+.diag-narrative p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+.diag-lead {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Precio ---------- */
+
+.diag-range {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-hdm-sand);
+  border: 1px solid var(--hdm-line-strong);
+  margin-bottom: 14px;
+}
+
+.diag-range strong {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--color-hdm-brown);
+}
+
+.diag-range span {
+  font-size: 13px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-factors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-factors li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 13px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.diag-factor-value {
+  flex-shrink: 0;
+  min-width: 92px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.diag-factors .is-down .diag-factor-value {
+  color: var(--color-hdm-sold);
+}
+
+.diag-factors .is-up .diag-factor-value {
+  color: #3fcf7f;
+}
+
+.diag-clean {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* El número real no sale de aquí, y se dice con claridad. */
+.diag-kbb {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.diag-kbb strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.diag-kbb p {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Comparables ---------- */
+
+.diag-comps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diag-comps a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s var(--hdm-ease);
+}
+
+.diag-comps a:hover {
+  border-color: var(--color-hdm-orange);
+}
+
+.diag-comp-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.diag-comp-meta {
+  grid-column: 1;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.diag-comp-price {
+  grid-row: 1 / 3;
+  grid-column: 2;
+  align-self: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}
+
+.diag-empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-hdm-muted);
+}
+
+/* ---------- Fotos ---------- */
+
+.diag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.diag-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diag-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-hdm-brown-soft);
+}
+
+.diag-list--tips li::before {
+  background: var(--color-hdm-orange);
+}
+
+/* El límite de la vista por IA se dice en tamaño legible, no en
+   letra chica: es lo que evita que alguien confíe de más. */
+.diag-note {
+  margin: 16px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  border-left: 3px solid var(--color-hdm-brown-soft);
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-note--final {
+  border-left-color: var(--color-hdm-line);
+}
+
+/* ---------- Publicar ---------- */
+
+.diag-publish {
+  border-color: var(--hdm-line-strong);
+  background: var(--color-hdm-sand);
+}
+
+.diag-publish p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-hdm-muted);
+}
+
+.diag-reset {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--hdm-line);
+  border-radius: 999px;
+  background: none;
+  color: var(--color-hdm-muted);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.diag-reset:hover {
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-brown);
+}
+
+.pub-photo-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+/* Los dos botones de la sección de vendedores, en fila. */
+.hdm-steps-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* ============================================================
+   ENCABEZADO
+   ============================================================ */
+
+.hdm-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px;
+  transition: padding 0.3s var(--hdm-ease);
+}
+
+.hdm-header.is-scrolled .hdm-header-inner {
+  padding-block: 8px;
+}
+
+.hdm-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* El logo con presencia real. Antes competía de tú a tú con el
+   eslogan; ahora manda, que es su trabajo. */
+.hdm-logo {
+  /* El tope baja de 230 a 176: en escritorio, 230px dejaba el
+     encabezado desproporcionado respecto del contenido. En móvil no
+     cambia nada — ahí manda el 21vw. */
+  width: clamp(132px, 21vw, 176px);
+  height: auto;
+  flex-shrink: 0;
+  transition: width 0.3s var(--hdm-ease);
+}
+
+/* Al hacer scroll baja, pero sigue siendo grande: encogerlo a un
+   sello ilegible es lo que hace que un sitio se sienta genérico. */
+.hdm-header.is-scrolled .hdm-logo {
+  width: clamp(104px, 15vw, 132px);
+}
+
+.hdm-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.9vw, 22px);
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  /* Claro y fijo: el encabezado es oscuro, así que heredar la tinta
+     del cuerpo lo volvía invisible. */
+  color: #eef3f8;
+}
+
+/* El eslogan desaparece al hacer scroll: quedan logo e idioma y
+   botón, como pediste. */
+.hdm-header.is-scrolled .hdm-tagline {
+  display: none;
+}
+
+.hdm-nav {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+/* ---------- Idioma como texto ---------- */
+
+.hdm-lang-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Discreto a propósito: cambiar de idioma es algo que se hace una
+   vez, no en cada visita. Compitiendo con el logo y el botón,
+   estorbaba. */
+.hdm-lang {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.42);
+  text-decoration: none;
+  padding: 1px 0;
+  border-bottom: 1.5px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.hdm-lang:hover {
+  color: var(--color-hdm-ink);
+}
+
+/* El activo se marca con una línea, no con una píldora: pesa menos
+   y no compite con el botón. */
+.hdm-lang.is-active {
+  color: rgba(245, 197, 66, 0.85);
+  border-bottom-color: rgba(245, 197, 66, 0.5);
+}
+
+.hdm-lang-sep {
+  color: rgba(255, 255, 255, 0.16);
+  font-size: 10px;
+}
+
+/* ---------- Botón de publicar ---------- */
+
+.hdm-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 22px;
+  white-space: nowrap;
+}
+
+.hdm-publish-icon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+/* Al hacer scroll queda sólo el icono: redondo, compacto, y el logo
+   recupera todo el protagonismo. */
+.hdm-header.is-scrolled .hdm-publish {
+  padding: 11px;
+  border-radius: 999px;
+  gap: 0;
+}
+
+.hdm-header.is-scrolled .hdm-publish-text {
+  display: none;
+}
+
+/* En pantallas chicas el texto del botón estorba desde el inicio. */
+@media (max-width: 560px) {
+  .hdm-publish {
+    padding: 11px;
+    border-radius: 999px;
+    gap: 0;
+  }
+  .hdm-publish-text {
+    display: none;
+  }
+  .hdm-tagline {
+    display: none;
+  }
+}
+
+/* ============================================================
+   PIE DE PÁGINA
+   ============================================================ */
+
+.hdm-footer {
+  margin-top: clamp(40px, 8vw, 72px);
+  padding-block: clamp(36px, 6vw, 56px) 24px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 44px);
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--hdm-line);
+}
+
+@media (max-width: 860px) {
+  .foot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 20px;
+  }
+  .foot-brand {
+    grid-column: 1 / -1;
+  }
+}
+
+.foot-logo {
+  width: 150px;
+  height: auto;
+  margin-bottom: 14px;
+}
+
+.foot-tagline {
+  margin: 0 0 4px;
+  max-width: 32ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #b9c6d6;
+}
+
+.foot-city {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.foot-social {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.foot-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--hdm-line);
+  color: #c9d2df;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.foot-social a:hover {
+  background: rgba(255, 168, 47, 0.12);
+  border-color: var(--color-hdm-orange);
+  color: var(--color-hdm-amber);
+}
+
+.foot-social svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* ---------- Columnas de enlaces ---------- */
+
+.foot-col {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+}
+
+.foot-col h3 {
+  margin: 0 0 3px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-hdm-amber);
+}
+
+.foot-col a {
+  font-size: 14px;
+  line-height: 1.4;
+  color: #b9c6d6;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.foot-col a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* ---------- Deslinde y línea final ---------- */
+
+.foot-notice {
+  margin: 24px 0 0;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 2px solid var(--color-hdm-brown-soft);
+  max-width: 82ch;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #98a2b0;
+}
+
+.foot-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hdm-line);
+  font-size: 12px;
+  color: #7d8896;
+}
+
+.foot-credit {
+  color: var(--color-hdm-brown-soft);
+}
+
+/* ============================================================
+   ENCABEZADO OSCURO EN PUBLICAR Y ANALIZAR
+
+   Mismo lenguaje que "Encuentra el auto correcto": el bloque oscuro
+   presenta, el formulario claro debajo es donde se trabaja. La
+   isla clara empieza después del encabezado.
+   ============================================================ */
+
+.pub-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin: 6px 0 26px;
+  padding: clamp(26px, 5vw, 44px);
+  border-radius: var(--hdm-r-lg);
+  background: linear-gradient(155deg, #12202c 0%, #0b151e 55%, #070f16 100%);
+  border: 1px solid rgba(255, 168, 47, 0.14);
+  color: #ffffff;
+}
+
+/* El mismo resplandor ámbar del hero y de la sección de Axel: es lo
+   que hace que los tres bloques oscuros se lean como familia. */
+.pub-hero::before {
+  content: "";
+  position: absolute;
+  inset: -55% -25% auto -25%;
+  height: 110%;
+  z-index: -1;
+  background: radial-gradient(
+    52% 58% at 22% 34%,
+    rgba(245, 197, 66, 0.2),
+    transparent 70%
+  );
+}
+
+.pub-hero-pill {
+  display: inline-block;
+  padding: 7px 15px;
+  margin-bottom: 18px;
+  border-radius: 999px;
+  background: rgba(245, 197, 66, 0.12);
+  border: 1px solid rgba(245, 197, 66, 0.28);
+  color: var(--color-hdm-amber);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.pub-hero-title {
+  margin: 0 0 14px;
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: clamp(27px, 5.2vw, 44px);
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+}
+
+.pub-hero-lead {
+  margin: 0;
+  max-width: 56ch;
+  font-size: clamp(15px, 2vw, 17px);
+  line-height: 1.65;
+  color: #c3cede;
+}
+
+.pub-hero-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.pub-hero-notes p {
+  margin: 0;
+  padding-left: 14px;
+  border-left: 2px solid var(--color-hdm-orange);
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.68;
+  color: #a8b6c6;
+}
+
+/* ============================================================
+   PESTAÑAS DE SECCIÓN
+
+   Cada bloque del formulario lleva su pestaña naranja arriba a la
+   izquierda. Antes las secciones se distinguían sólo por el espacio
+   entre ellas, y en un formulario largo eso no basta para saber en
+   cuál vas.
+   ============================================================ */
+
+.pub-step {
+  position: relative;
+  margin-top: 30px;
+  padding-top: clamp(26px, 4vw, 32px);
+  border-radius: var(--hdm-r);
+}
+
+.pub-step > legend {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  float: none;
+  width: auto;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 16px rgba(255, 138, 31, 0.28);
+  white-space: nowrap;
+  max-width: calc(100% - 40px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* El icono de categoría hereda el oscuro de la pestaña. */
+.pub-group-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .pub-step > legend {
+    left: 14px;
+    padding: 7px 13px;
+    font-size: 11px;
+  }
+}
+
+/* Aviso de que el enlace también salió por correo. Va antes del
+   enlace: quita la presión de copiarlo bien a la primera, que es
+   justo cuando la gente se equivoca. */
+.pub-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: rgba(46, 200, 110, 0.1);
+  border: 1px solid rgba(63, 207, 127, 0.24);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4fd888;
+  text-align: left;
+}
+
+.pub-sent-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.pub-sent-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.pub-sent strong {
+  word-break: break-all;
+}
+
+.theme-light .pub-sent {
+  background: #f0f9f2;
+  border-color: rgba(34, 139, 68, 0.22);
+  color: #1d6b38;
+}
+
+/* ============================================================
+   TARJETAS MÁS COMPACTAS
+
+   Con la descripción fuera, la tarjeta se cierra: menos aire entre
+   bloques para que quepan más anuncios por pantalla sin apretarse.
+   ============================================================ */
+
+.hdm-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+.hdm-specs > div {
+  display: flex;
+  gap: 4px;
+  align-items: baseline;
+}
+
+.hdm-specs dt {
+  color: var(--color-hdm-muted);
+}
+
+.hdm-specs dd {
+  margin: 0;
+  font-weight: 700;
+  color: var(--color-hdm-ink);
+}
+
+/* La calificación y las banderas mandan: son lo que decide si abres
+   el anuncio. */
+.hdm-card-flags {
+  margin-top: 12px;
+}
+
+.hdm-card-age {
+  margin-top: 10px;
+}
+
+/* ============================================================
+   REJILLA DE FOTOS EN EDICIÓN
+
+   Miniaturas en vez de lista de nombres: con once fotos, una lista
+   de "mazda3-2017-7.jpg" es ilegible y no dice cuál es cuál.
+   ============================================================ */
+
+.photo-grid {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+
+.photo-grid li {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+  background: #eef1f5;
+}
+
+/* La portada se marca: es la que decide si alguien abre el anuncio. */
+.photo-grid li.is-cover {
+  border-color: var(--color-hdm-orange);
+  box-shadow: 0 0 0 2px rgba(255, 138, 31, 0.25);
+}
+
+.photo-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-cover-tag {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: linear-gradient(
+    135deg,
+    var(--color-hdm-amber),
+    var(--color-hdm-orange)
+  );
+  color: #12100a;
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Los controles viven sobre la foto, en una franja legible. */
+.photo-actions {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+}
+
+.photo-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.photo-actions button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.photo-actions button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.photo-actions .photo-remove:hover {
+  background: var(--color-hdm-sold);
+}
+
+/* En el tema claro, la franja sigue oscura: las fotos son de autos
+   y casi siempre traen zonas claras donde un control blanco
+   desaparece. */
+.theme-light .photo-grid li {
+  background: #eef1f5;
+  border-color: rgba(11, 22, 34, 0.1);
+}
+
+/* ============================================================
+   BLOQUE DE DATOS CONGELADOS — corrección
+
+   La rejilla no se estaba aplicando dentro de la isla clara y los
+   pares quedaban apilados a lo largo. El selector necesita ganar
+   sobre las reglas generales de dl/dt/dd.
+   ============================================================ */
+
+.edit-locked .edit-locked-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 18px 0 0;
+}
+
+.edit-locked .edit-locked-grid > div {
+  display: block;
+  padding: 11px 13px;
+  border-radius: 12px;
+}
+
+.edit-locked .edit-locked-grid dt {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.72;
+  margin-bottom: 3px;
+}
+
+.edit-locked .edit-locked-grid dd {
+  display: block;
+  margin: 0;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+/* El candado y su texto, alineados de verdad. */
+.edit-locked-head {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+/* Era un emoji y bastaba con font-size. Ahora es un SVG: sin ancho
+   explícito toma el tamaño que quiera, y por eso salía enorme. */
+.edit-lock-icon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--color-hdm-brown-soft);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   TARJETA CLICABLE
+
+   La foto y el título llevan a la ficha. Se usan enlaces reales y no
+   un onClick en la tarjeta entera: así el botón de compartir sigue
+   funcionando, se puede abrir en pestaña nueva, y el teclado y los
+   lectores de pantalla lo entienden.
+   ============================================================ */
+
+.hdm-card-media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hdm-card-media-link img {
+  transition: transform 0.5s var(--hdm-ease);
+}
+
+.hdm-card:hover .hdm-card-media-link img {
+  transform: scale(1.04);
+}
+
+.hdm-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hdm-card-title a:hover {
+  color: var(--color-hdm-amber);
+}
+
+/* Los iconos de las pestañas heredan el oscuro de la píldora. */
+.pub-group-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   PÁGINA DE REVISIÓN
+   ============================================================ */
+
+.review {
+  padding-block: 20px clamp(40px, 8vw, 72px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.review-head h1 {
+  margin: 8px 0 4px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.review-meta {
+  margin: 0;
+  color: var(--color-hdm-muted);
+  font-size: 15px;
+}
+
+.review-status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.review-status.is-pending {
+  background: rgba(255, 168, 47, 0.14);
+  border: 1px solid rgba(255, 168, 47, 0.4);
+  color: var(--color-hdm-amber);
+}
+
+.review-status.is-published {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.34);
+  color: #4fd888;
+}
+
+.review-status.is-rejected {
+  background: rgba(255, 77, 94, 0.12);
+  border: 1px solid rgba(255, 77, 94, 0.34);
+  color: #ff8f9c;
+}
+
+.review-block,
+.review-photos,
+.review-score {
+  padding: clamp(16px, 3vw, 22px);
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-block h2,
+.review-photos h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+/* Miniaturas numeradas: se abre cada una a tamaño real. Revisar
+   fotos en una galería pequeña no sirve para lo que importa. */
+.review-thumbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.review-thumbs a {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--hdm-line);
+}
+
+.review-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.review-thumbs span {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.review-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.review-score {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.review-score > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.review-score strong {
+  font-family: var(--font-display);
+  font-size: 19px;
+}
+
+.review-score span {
+  color: var(--color-hdm-muted);
+  font-size: 14px;
+}
+
+.review-data {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.review-data > div {
+  padding: 10px 12px;
+  border-radius: 11px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+}
+
+.review-data dt {
+  font-size: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-muted);
+  margin-bottom: 3px;
+}
+
+.review-data dd {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.review-text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-hdm-ink);
+}
+
+.review-actions {
+  position: sticky;
+  bottom: 0;
+  padding: 16px 0;
+  background: linear-gradient(transparent, var(--color-hdm-canvas) 28%);
+}
+
+.review-reject {
+  width: 100%;
+  margin-top: 10px;
+  padding: 13px;
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  border-radius: 999px;
+  background: none;
+  color: #ff8f9c;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-reject:hover {
+  background: rgba(255, 77, 94, 0.1);
+}
+
+.review-done {
+  margin: 0;
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.review-done.is-ok {
+  background: rgba(46, 200, 110, 0.12);
+  border: 1px solid rgba(63, 207, 127, 0.3);
+  color: #4fd888;
+}
+
+.review-done.is-no {
+  background: rgba(255, 77, 94, 0.1);
+  border: 1px solid rgba(255, 77, 94, 0.3);
+  color: #ff8f9c;
+}
+
+
+
+/* ============================================================
+   RELIEVE DEL LOGO
+
+   Pillow emboss de 1px: una luz arriba a la izquierda y una sombra
+   abajo a la derecha, ambas a 1px.
+
+   Se usa drop-shadow y no box-shadow: drop-shadow sigue la silueta
+   real del PNG —la troca y las letras— mientras que box-shadow
+   dibujaría el relieve alrededor del rectángulo de la imagen, que se
+   vería como una tarjeta y no como metal grabado.
+   ============================================================ */
+
+.hdm-logo,
+.foot-logo {
+  filter:
+    drop-shadow(-1px -1px 0 rgba(255, 255, 255, 0.34))
+    drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.72));
+}
+
+/* Al hacer scroll el logo encoge; el relieve baja con él para que no
+   se vea grueso en tamaño pequeño. */
+.hdm-header.is-scrolled .hdm-logo {
+  filter:
+    drop-shadow(-1px -1px 0 rgba(255, 255, 255, 0.26))
+    drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6));
+}
+
+/* Cuando sólo hay botón de quitar, va solo a la derecha. */
+.photo-actions--single {
+  justify-content: flex-end;
+}
+
+/* La casilla de clásico ocupa el ancho completo y lleva su
+   explicación debajo: es una declaración con consecuencias, no un
+   ajuste más. */
+.pub-check--wide {
+  align-items: flex-start;
+  padding: 14px 16px;
+}
+
+.pub-check--wide span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pub-check--wide strong {
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.pub-check--wide small {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-hdm-muted);
 }
