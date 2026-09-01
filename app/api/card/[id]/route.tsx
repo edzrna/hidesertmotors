@@ -3,6 +3,7 @@ import { getListingById } from "@/lib/listings-db";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getListingDictionary } from "@/i18n/listing";
 import { isLocale, formatMiles } from "@/lib/hdm";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * Tarjeta de calificación, en imagen.
@@ -49,6 +50,19 @@ export async function GET(request: Request, { params }: { params: Params }) {
   const texto = (valor: unknown, respaldo = "—") =>
     typeof valor === "string" && valor.trim() ? valor : respaldo;
 
+  /*
+    Las imágenes se piden en PNG, no en WebP.
+
+    Satori —el motor de next/og— no decodifica WebP: devuelve un error
+    de imagen no soportada. Por eso existen copias PNG de Axel en
+    public/axel, sólo para esta tarjeta.
+
+    Van con URL absoluta porque Satori las descarga por red; una ruta
+    relativa no tiene contra qué resolverse.
+  */
+  const cara = `${SITE_URL}/axel/${listing.levelKey}.png`;
+  const axel = `${SITE_URL}/axel/axel-card.png`;
+
   const AMBER = "#f5c542";
   const ORANGE = "#d88a00";
   const NAVY = "#071018";
@@ -83,7 +97,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
         />
 
         {/* ---------- Anillo y nivel ---------- */}
-        <div style={{ display: "flex", alignItems: "center", gap: 44 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
           {/*
             Anillo con SVG, no con conic-gradient.
 
@@ -95,15 +109,15 @@ export async function GET(request: Request, { params }: { params: Params }) {
           <div
             style={{
               display: "flex",
-              width: 260,
-              height: 260,
+              width: 220,
+              height: 220,
               flexShrink: 0,
               position: "relative",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <svg width="260" height="260" viewBox="0 0 260 260">
+            <svg width="220" height="220" viewBox="0 0 260 260">
               <circle
                 cx="130"
                 cy="130"
@@ -129,7 +143,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
               style={{
                 position: "absolute",
                 display: "flex",
-                fontSize: 96,
+                fontSize: 82,
                 fontWeight: 700,
                 color: "#ffffff",
               }}
@@ -137,6 +151,11 @@ export async function GET(request: Request, { params }: { params: Params }) {
               {listing.score}
             </div>
           </div>
+
+          {/* La cara de Axel cambia con el nivel: es lo que se lee
+              de reojo cuando alguien pasa el dedo por Marketplace,
+              antes que el número. */}
+          <img src={cara} width={132} height={132} alt="" />
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div
@@ -151,12 +170,12 @@ export async function GET(request: Request, { params }: { params: Params }) {
             </div>
             <div
               style={{
-                fontSize: 72,
+                fontSize: 58,
                 fontWeight: 700,
                 color: "#ffffff",
                 lineHeight: 1.05,
                 marginTop: 8,
-                maxWidth: 560,
+                maxWidth: 400,
               }}
             >
               {texto(dict.levels[listing.levelKey])}
@@ -176,11 +195,11 @@ export async function GET(request: Request, { params }: { params: Params }) {
         >
           <div
             style={{
-              fontSize: 54,
+              fontSize: 48,
               fontWeight: 700,
               color: "#ffffff",
               lineHeight: 1.15,
-              maxWidth: 940,
+              maxWidth: 620,
             }}
           >
             {texto(listing.name)}
@@ -241,6 +260,27 @@ export async function GET(request: Request, { params }: { params: Params }) {
         )}
 
         <div style={{ display: "flex", flex: 1 }} />
+
+        {/*
+          Axel abajo a la derecha, con opacidad reducida.
+
+          A tamaño completo tapaba el título del auto y su recuadro
+          gris se veía pegado encima en vez de integrado. Al 55% y más
+          chico funciona como marca de agua: se reconoce el personaje
+          sin competir con los datos, que son la razón de la tarjeta.
+        */}
+        <img
+          src={axel}
+          width={478}
+          height={430}
+          alt=""
+          style={{
+            position: "absolute",
+            right: -30,
+            bottom: 120,
+            opacity: 0.9,
+          }}
+        />
 
         {/* ---------- Pie ---------- */}
         <div
