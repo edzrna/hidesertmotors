@@ -11,20 +11,5 @@
 
 export const SITE_URL = "https://www.hidesertmotors.com";
 
-/**
- * Correo de contacto público.
- *
- * Apunta a Gmail y no a contacto@hidesertmotors.com porque ese buzón
- * dejó de recibir: al pasar a Custom MX para poder ENVIAR con el
- * dominio, se perdió el reenvío gratuito de Namecheap.
- *
- * Publicar una dirección que rebota es peor que publicar un Gmail: el
- * buzón roto no avisa. Nadie te escribe y no sabes si es porque no
- * quieren o porque no llega.
- *
- * Para volver a contacto@hidesertmotors.com hace falta un buzón real
- * —Zoho Mail tiene plan gratis para un dominio— y entonces se cambia
- * esta línea de vuelta.
- */
-export const CONTACT_EMAIL = "edzrna@gmail.com";
+export const CONTACT_EMAIL = "contacto@hidesertmotors.com";
 export const FACEBOOK_URL = "https://facebook.com/hidesertmotors";
