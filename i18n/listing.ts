@@ -46,7 +46,9 @@ const es = {
       "Cuéntale al comprador por qué lo vendes, qué le has hecho y cómo lo has cuidado. Puedes usar emojis y varios párrafos.",
     descriptionPlaceholder:
       "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
-    bodyType: "Carrocería",
+    bodyType: "¿Qué vas a publicar?",
+    bodyTypeHelp:
+      "Elige primero: de esto depende qué te preguntamos después. Una moto no lleva las mismas preguntas que una lancha.",
     color: "Color exterior",
     interiorColor: "Color interior",
     engineHours: "Horas de motor",
@@ -336,7 +338,9 @@ const en: Dict = {
       "Tell the buyer why you're selling, what you've done to it, and how you've looked after it. Emojis and multiple paragraphs are fine.",
     descriptionPlaceholder:
       "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
-    bodyType: "Body type",
+    bodyType: "What are you posting?",
+    bodyTypeHelp:
+      "Pick this first: it decides what we ask you next. A motorcycle does not get the same questions as a boat.",
     color: "Exterior color",
     interiorColor: "Interior color",
     engineHours: "Engine hours",
