@@ -271,14 +271,29 @@ export async function GET(request: Request, { params }: { params: Params }) {
         */}
         <img
           src={axel}
-          width={478}
-          height={430}
+          width={420}
+          height={420}
           alt=""
           style={{
             position: "absolute",
-            right: -30,
-            bottom: 120,
-            opacity: 0.9,
+            right: 30,
+
+            /*
+              Anclado por ARRIBA, no por abajo.
+              Alineado con el título del auto, y con la altura
+              suficiente para no cruzar la línea del pie: el borde
+              inferior de la caja queda en 780 y la línea está en ~870.
+            */
+            top: 360,
+
+            /*
+              contain, no la deformación por omisión.
+              Sin esto, la imagen se estira para llenar el ancho y el
+              alto que se le indiquen, y cualquier PNG con otra
+              proporción sale aplastado. Con contain, la caja es un
+              límite y la figura conserva su forma sea cual sea.
+            */
+            objectFit: "contain",
           }}
         />
 
