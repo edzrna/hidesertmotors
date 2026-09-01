@@ -186,6 +186,10 @@ const es = {
       "Ningún anuncio se publica solo. Revisamos cada uno antes de que aparezca, y el comprador te contacta directo a tu WhatsApp.",
   },
 
+  sellerOther: {
+    title: "Más anuncios de",
+  },
+
   card: {
     download: "Descargar tarjeta de calificación",
     help: "Súbela como última foto de tu anuncio en Facebook Marketplace. Le dice al comprador que tus datos están declarados.",
@@ -509,6 +513,10 @@ const en: Dictionary = {
     step3Title: "We review it and it goes live",
     step3Body:
       "No listing publishes itself. We review each one before it appears, and buyers contact you directly on your WhatsApp.",
+  },
+
+  sellerOther: {
+    title: "More listings from",
   },
 
   card: {

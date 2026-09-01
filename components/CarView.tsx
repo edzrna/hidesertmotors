@@ -6,6 +6,7 @@ import Gallery from "@/components/Gallery";
 import ShareButtons from "@/components/ShareButtons";
 import CategoryGrid from "@/components/CategoryGrid";
 import SellerBadgeView from "@/components/SellerBadge";
+import SellerOther from "@/components/SellerOther";
 import AxelFace from "@/components/AxelFace";
 import type { SellerBadge, SellerHistory } from "@/lib/seller-history";
 import { fill, type Dictionary } from "@/i18n/dictionaries";
@@ -24,6 +25,7 @@ export default function CarView({
   legal,
   listing,
   seller,
+  otherFromSeller,
 }: {
   locale: Locale;
   dict: Dictionary;
@@ -31,6 +33,7 @@ export default function CarView({
   legal: LegalDictionary;
   listing: PublicListing;
   seller: { history: SellerHistory; badge: SellerBadge } | null;
+  otherFromSeller: PublicListing[];
 }) {
   const path = localePath(locale, `/car/${listing.id}`);
   const shareUrl =
@@ -147,10 +150,25 @@ export default function CarView({
               label={dict.specs.fuelType}
               value={t.fuelTypes[listing.fuelType]}
             />
+            {listing.engineHours !== null && (
+              <InfoBox
+                label={t.fields.engineHours}
+                value={String(listing.engineHours)}
+              />
+            )}
             <InfoBox
               label={t.fields.color}
               value={t.colors[listing.color as keyof typeof t.colors] ?? listing.color}
             />
+            {listing.interiorColor && listing.interiorColor !== "other" && (
+              <InfoBox
+                label={t.fields.interiorColor}
+                value={
+                  t.colors[listing.interiorColor as keyof typeof t.colors] ??
+                  listing.interiorColor
+                }
+              />
+            )}
             <InfoBox
               label={dict.specs.transmission}
               value={t.transmissions[listing.transmission]}
@@ -222,6 +240,13 @@ export default function CarView({
           </a>
 
           <ReportButton listingId={listing.id} t={legal} />
+
+          <SellerOther
+            locale={locale}
+            dict={dict}
+            listings={otherFromSeller}
+            sellerName={listing.sellerName}
+          />
         </div>
       </div>
     </main>

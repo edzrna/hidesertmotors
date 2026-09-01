@@ -19,6 +19,13 @@
  * 85 con VIN, smog y registros de servicio.
  */
 
+import {
+  getUsageUnit,
+  getVehicleClass,
+  needsSmog,
+} from "@/lib/vehicle-class";
+
+
 /* ============================================================
    CAMPOS DEL FORMULARIO
    ============================================================ */
@@ -53,6 +60,7 @@ export type BodyType =
   | "motorcycle"
   | "atv"
   | "boat"
+  | "jetski"
   | "trailer"
   | "other";
 
@@ -127,6 +135,16 @@ export interface Listing {
    */
   description: string;
 
+  /**
+   * Horas de motor, para lo que no se mide en millas.
+   * Una lancha con 200 horas es lo que un auto con 60 mil millas: el
+   * dato que todo comprador pregunta primero.
+   */
+  engineHours: number | null;
+
+  /** Color del interior. No entra en la calificación. */
+  interiorColor: string;
+
   /** Ciudad donde está el auto. Tampoco entra en la calificación. */
   city: string;
 
@@ -192,6 +210,23 @@ export function isClassicEligible(
   return currentYear - year >= CLASSIC_MIN_AGE;
 }
 
+/**
+ * Horas de motor.
+ *
+ * Las referencias del mercado marino: bajo 100 es poco uso, 300 es
+ * uso normal para su edad, y arriba de 750 se acerca a la revisión
+ * mayor del motor, que cuesta buena parte de lo que vale la lancha.
+ */
+function hoursPenalty(hours: number) {
+  if (hours <= 0) return 0;
+  if (hours <= 100) return 0;
+  if (hours <= 200) return 5;
+  if (hours <= 350) return 11;
+  if (hours <= 550) return 18;
+  if (hours <= 750) return 25;
+  return 32;
+}
+
 function agePenalty(
   year: number,
   isClassic: boolean,
@@ -255,8 +290,21 @@ function mechanicalScore(listing: Listing) {
    * reduce a un tercio en vez de eliminarse: las millas sí desgastan,
    * sólo que su lectura cambia.
    */
-  const miles = milesPenalty(listing.miles);
-  score -= listing.isClassic ? Math.round(miles / 3) : miles;
+  /**
+   * En lo que se mide por horas, las millas no dicen nada: una jetski
+   * con 300 horas está muy usada aunque su odómetro marque cero.
+   */
+  const clase = getVehicleClass(listing.bodyType);
+  const unidad = getUsageUnit(clase);
+
+  const desgaste =
+    unidad === "hours"
+      ? hoursPenalty(listing.engineHours ?? 0)
+      : unidad === "miles"
+      ? milesPenalty(listing.miles)
+      : 0;
+
+  score -= listing.isClassic ? Math.round(desgaste / 3) : desgaste;
 
   score -= agePenalty(listing.year, listing.isClassic);
 
@@ -296,12 +344,18 @@ function legalScore(listing: Listing) {
   if (listing.owners >= 4) score -= 11;
 
   /**
-   * Sin smog vigente no se puede transferir en California — pero los
-   * eléctricos están exentos, así que castigarlos por no tenerlo
-   * sería castigarlos por un trámite que la ley no les pide.
+   * El smog sólo se exige a lo que la ley se lo exige.
+   *
+   * Los eléctricos están exentos, y también las motocicletas, las
+   * embarcaciones, las cuatrimotos y los remolques. Castigar a una
+   * moto por no tener smog sería castigarla por un trámite que
+   * California no le pide.
    */
-  const needsSmog = listing.fuelType !== "electric";
-  if (needsSmog && !listing.documentation.smogCurrent) score -= 12;
+  const exigeSmog =
+    listing.fuelType !== "electric" &&
+    needsSmog(getVehicleClass(listing.bodyType));
+
+  if (exigeSmog && !listing.documentation.smogCurrent) score -= 12;
   if (!listing.documentation.registrationCurrent) score -= 6;
 
   return clamp(score, 20, 100);
@@ -442,8 +496,12 @@ function getFlags(listing: Listing): string[] {
   // valora con otras reglas.
   if (listing.isClassic) flags.push("classic");
 
-  // Un eléctrico está exento de smog: la bandera sería falsa.
-  if (listing.fuelType !== "electric" && !listing.documentation.smogCurrent) {
+  // La bandera sólo aparece donde el smog es obligatorio.
+  const exigeSmogFlag =
+    listing.fuelType !== "electric" &&
+    needsSmog(getVehicleClass(listing.bodyType));
+
+  if (exigeSmogFlag && !listing.documentation.smogCurrent) {
     flags.push("no_smog");
   }
 

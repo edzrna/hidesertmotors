@@ -77,6 +77,8 @@ export async function POST(request: Request) {
     description: String(body.description ?? "").trim().slice(0, 1200),
     city: String(body.city ?? "").trim().slice(0, 60),
     color: String(body.color ?? "other").slice(0, 20),
+    interiorColor: String(body.interiorColor ?? "other").slice(0, 20),
+    engineHours: body.engineHours ? Number(body.engineHours) : null,
     isClassic: Boolean(body.isClassic),
     bodyType: body.bodyType ?? "sedan",
     fuelType: body.fuelType ?? "gasoline",
@@ -134,7 +136,8 @@ export async function POST(request: Request) {
   const [row] = await sql`
     INSERT INTO listings (
       year, make, model, miles, price,
-      body_type, fuel_type, transmission, color, is_classic,
+      body_type, fuel_type, transmission, color, interior_color,
+      engine_hours, is_classic,
       title_status, owners, reported_accidents,
       defects, documentation, known_issues, description, city,
       photos, seller_name, seller_phone, seller_email,
@@ -144,7 +147,8 @@ export async function POST(request: Request) {
       ${listing.year}, ${listing.make}, ${listing.model}, ${listing.miles},
       ${body.price ? Number(body.price) : null},
       ${listing.bodyType}, ${listing.fuelType}, ${listing.transmission},
-      ${listing.color}, ${listing.isClassic},
+      ${listing.color}, ${listing.interiorColor},
+      ${listing.engineHours}, ${listing.isClassic},
       ${listing.titleStatus}, ${listing.owners}, ${listing.reportedAccidents},
       ${JSON.stringify(listing.defects)},
       ${JSON.stringify(listing.documentation)},

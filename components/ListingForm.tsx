@@ -54,6 +54,14 @@ import {
   type Transmission,
   isClassicEligible,
 } from "@/lib/listing-score";
+import {
+  DEFECTS_BY_CLASS,
+  getUsageUnit,
+  getVehicleClass,
+  hasInterior,
+  hasTires,
+  needsSmog,
+} from "@/lib/vehicle-class";
 
 /**
  * Las casillas agrupadas por la misma categoría que muestran los
@@ -131,6 +139,8 @@ export default function ListingForm({
     model: "",
     bodyType: "sedan",
     color: "white",
+    interiorColor: "black",
+    engineHours: "",
     isClassic: false,
     fuelType: "gasoline",
     transmission: "automatic",
@@ -237,6 +247,17 @@ export default function ListingForm({
   const resolvedCity =
     form.city === OTHER_CITY ? form.otherCity.trim() : form.city;
 
+  /**
+   * La familia decide qué se pregunta.
+   *
+   * Preguntarle a una moto si el aire acondicionado enfría no sólo
+   * sobra: hace que quien la publica dude de que el sitio sepa de
+   * motos, y eso pesa más que el campo de más.
+   */
+  const clase = getVehicleClass(form.bodyType as BodyType);
+  const unidadUso = getUsageUnit(clase);
+  const casillasVisibles = DEFECTS_BY_CLASS[clase];
+
   const draft: Listing = useMemo(
     () => ({
       id: "draft",
@@ -260,6 +281,8 @@ export default function ListingForm({
       description: form.description,
       city: resolvedCity,
       color: form.color,
+      engineHours: form.engineHours ? Number(form.engineHours) : null,
+      interiorColor: form.interiorColor,
       isClassic: Boolean(form.isClassic),
       bodyType: form.bodyType as BodyType,
       fuelType: form.fuelType as FuelType,
@@ -668,6 +691,21 @@ export default function ListingForm({
               </select>
             </Field>
 
+            {hasInterior(clase) && (
+              <Field label={t.fields.interiorColor}>
+                <select
+                  value={form.interiorColor}
+                  onChange={(e) => set("interiorColor", e.target.value)}
+                >
+                  {COLORS.map((option) => (
+                    <option key={option} value={option}>
+                      {t.colors[option]}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            )}
+
             <Field label={t.fields.fuelType}>
               <select
                 value={form.fuelType}
@@ -740,31 +778,43 @@ export default function ListingForm({
           )}
 
           <div className="pub-row">
-            <Field
-              label={t.fields.miles}
-              help={t.fields.milesHelp}
-              error={errors.miles && t.form.required}
-            >
-              <input
-                type="number"
-                inputMode="numeric"
-                min={0}
-                max={MAX_MILES}
-                step={1}
-                value={form.miles}
-                placeholder="87,430"
-                list="mile-hints"
-                onChange={(e) => set("miles", e.target.value)}
-              />
-              {/* Sugerencias, no opciones: el campo acepta cualquier
-                  número. Antes el desplegable saltaba de 60,000 a
-                  70,000 y obligaba a redondear. */}
-              <datalist id="mile-hints">
-                {MILE_HINTS.map((hint) => (
-                  <option key={hint} value={hint} />
-                ))}
-              </datalist>
-            </Field>
+            {/* Millas u horas: lo que corresponda a la familia. Un
+                comprador de lancha pregunta las horas antes que nada,
+                y ponerle "millas" delata que el sitio no sabe de eso. */}
+            {unidadUso === "miles" && (
+              <Field
+                label={t.fields.miles}
+                help={t.fields.milesHelp}
+                error={errors.miles && t.form.required}
+              >
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={MAX_MILES}
+                  value={form.miles}
+                  placeholder="87,430"
+                  onChange={(e) => set("miles", e.target.value)}
+                />
+              </Field>
+            )}
+
+            {unidadUso === "hours" && (
+              <Field
+                label={t.fields.engineHours}
+                help={t.fields.engineHoursHelp}
+              >
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={0}
+                  max={9999}
+                  value={form.engineHours}
+                  placeholder="240"
+                  onChange={(e) => set("engineHours", e.target.value)}
+                />
+              </Field>
+            )}
 
             <Field label={t.fields.price}>
               <input
@@ -836,7 +886,9 @@ export default function ListingForm({
 
             {group.positive.length > 0 && (
               <div className="pub-checks">
-                {group.positive.map((key) => (
+                {group.positive
+              .filter((key) => casillasVisibles.includes(key))
+              .map((key) => (
                   <label className="pub-check" key={key}>
                     <input
                       type="checkbox"
@@ -850,7 +902,9 @@ export default function ListingForm({
             )}
 
             <div className="pub-checks pub-checks--negative">
-              {group.negative.map((key) => (
+              {group.negative
+                .filter((key) => casillasVisibles.includes(key))
+                .map((key) => (
                 <label className="pub-check" key={key}>
                   <input
                     type="checkbox"
@@ -862,7 +916,7 @@ export default function ListingForm({
               ))}
             </div>
 
-            {group.key === "mechanical" && (
+            {group.key === "mechanical" && hasTires(clase) && (
               <>
                 <Field label={t.fields.tires}>
                   <select

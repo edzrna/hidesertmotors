@@ -47,7 +47,11 @@ const es = {
     descriptionPlaceholder:
       "Ejemplo:\n\n🚗 Lo compré hace tres años y siempre me respondió.\n🔧 Servicio cada 5,000 millas, tengo los recibos.\n❄️ Aire acondicionado recién cargado.\n\nLo vendo porque me llegó una troca más grande para el trabajo.",
     bodyType: "Carrocería",
-    color: "Color",
+    color: "Color exterior",
+    interiorColor: "Color interior",
+    engineHours: "Horas de motor",
+    engineHoursHelp:
+      "Lo que marca el horómetro. Es el dato que todo comprador pregunta primero en una lancha o una moto de agua.",
     isClassic: "Es un clásico o de colección",
     isClassicHelp:
       "Márcalo sólo si lo vendes como pieza de colección, no como transporte diario. Cambia cómo se calcula la calificación: en un clásico la antigüedad deja de contar en contra.",
@@ -147,7 +151,8 @@ const es = {
     commercial: "Vehículo comercial",
     motorcycle: "Motocicleta",
     atv: "Cuatrimoto / UTV",
-    boat: "Lancha",
+    boat: "Lancha / bote",
+    jetski: "Moto de agua",
     trailer: "Remolque",
     other: "Otro",
   },
@@ -332,7 +337,11 @@ const en: Dict = {
     descriptionPlaceholder:
       "Example:\n\n🚗 Bought it three years ago and it never let me down.\n🔧 Serviced every 5,000 miles, I have the receipts.\n❄️ A/C just recharged.\n\nSelling because I got a bigger truck for work.",
     bodyType: "Body type",
-    color: "Color",
+    color: "Exterior color",
+    interiorColor: "Interior color",
+    engineHours: "Engine hours",
+    engineHoursHelp:
+      "What the hour meter shows. It is the first thing any buyer asks about a boat or jet ski.",
     isClassic: "It is a classic or collector vehicle",
     isClassicHelp:
       "Check this only if you are selling it as a collector piece, not as daily transport. It changes how the rating is calculated: on a classic, age stops counting against it.",
@@ -433,6 +442,7 @@ const en: Dict = {
     motorcycle: "Motorcycle",
     atv: "ATV / UTV",
     boat: "Boat",
+    jetski: "Jet ski",
     trailer: "Trailer",
     other: "Other",
   },

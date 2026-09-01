@@ -170,6 +170,7 @@ export const BODY_TYPES: BodyType[] = [
   "motorcycle",
   "atv",
   "boat",
+  "jetski",
   "trailer",
   "other",
 ];

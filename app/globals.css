@@ -6746,3 +6746,105 @@ body {
   font-weight: 900;
   color: var(--color-hdm-brown);
 }
+
+/* ============================================================
+   OTROS ANUNCIOS DEL MISMO VENDEDOR
+   ============================================================ */
+
+.seller-other {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hdm-line);
+}
+
+.seller-other h2 {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-hdm-brown-soft);
+}
+
+.seller-other h2 strong {
+  color: var(--color-hdm-ink);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.seller-other ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.seller-other a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px;
+  border-radius: 14px;
+  background: var(--color-hdm-cream);
+  border: 1px solid var(--hdm-line);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s var(--hdm-ease);
+}
+
+.seller-other a:hover {
+  border-color: var(--color-hdm-orange);
+}
+
+.seller-other img {
+  width: 62px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  background: #eef1f5;
+}
+
+.seller-other a > div:first-of-type {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.seller-other strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seller-other span {
+  font-size: 12px;
+  color: var(--color-hdm-muted);
+}
+
+.seller-other-sold {
+  color: var(--color-hdm-sold) !important;
+  font-weight: 700;
+}
+
+.seller-other-score {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.seller-other-score b {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}

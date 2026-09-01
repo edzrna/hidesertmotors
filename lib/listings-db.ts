@@ -103,6 +103,8 @@ export interface PublicListing {
   bodyType: BodyType;
   color: string;
   isClassic: boolean;
+  interiorColor: string;
+  engineHours: number | null;
   fuelType: FuelType;
   transmission: Transmission;
 
@@ -172,6 +174,8 @@ function mapRow(row: any, locale: Locale): PublicListing {
     city: row.city ?? "",
     bodyType: (row.body_type ?? "sedan") as BodyType,
     color: row.color ?? "other",
+    interiorColor: row.interior_color ?? "other",
+    engineHours: row.engine_hours ?? null,
     isClassic: Boolean(row.is_classic),
     fuelType: (row.fuel_type ?? "gasoline") as FuelType,
     transmission: (row.transmission ?? "automatic") as Transmission,
@@ -223,7 +227,8 @@ export async function getPublishedListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color, is_classic,
+        body_type, fuel_type, transmission, color, interior_color,
+        engine_hours, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at
@@ -258,7 +263,8 @@ export async function getListingById(id: string, locale: Locale) {
           id, year, make, model, miles, price,
           title_status, owners, reported_accidents,
           description, known_issues, city, photos,
-          body_type, fuel_type, transmission, color, is_classic,
+          body_type, fuel_type, transmission, color, interior_color,
+        engine_hours, is_classic,
           score, level_key, confidence, confidence_level, flags, categories,
           seller_name, seller_phone,
           status, published_at, expires_at
@@ -294,7 +300,8 @@ export async function getListingForEdit(id: string, token: string) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color, is_classic,
+        body_type, fuel_type, transmission, color, interior_color,
+        engine_hours, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status
@@ -366,7 +373,8 @@ export async function getListingForReview(id: string, locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color, is_classic,
+        body_type, fuel_type, transmission, color, interior_color,
+        engine_hours, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone, seller_email,
         status, published_at, expires_at, created_at
@@ -400,7 +408,8 @@ export async function getPendingListings(locale: Locale) {
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
         description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color, is_classic,
+        body_type, fuel_type, transmission, color, interior_color,
+        engine_hours, is_classic,
         score, level_key, confidence, confidence_level, flags, categories,
         seller_name, seller_phone,
         status, published_at, expires_at, created_at
@@ -473,6 +482,59 @@ export async function getSellerHistory(
     console.error("getSellerHistory failed", error);
     return null;
   }
+}
+
+/**
+ * Otros anuncios del mismo vendedor.
+ *
+ * Sirve a los dos lados: al comprador que ya confió lo suficiente
+ * para abrir un anuncio, y al vendedor con varias unidades, que aquí
+ * gana lo que en Marketplace no tiene — que sus autos se vean como un
+ * conjunto y no como publicaciones sueltas.
+ *
+ * Se agrupa por teléfono, que es lo único estable sin cuentas.
+ */
+export async function getOtherFromSeller(
+  phone: string,
+  excludeId: string,
+  locale: Locale
+) {
+  if (!phone) return [];
+
+  const numeric = Number(excludeId);
+  if (!Number.isInteger(numeric)) return [];
+
+  return withRetry(
+    "getOtherFromSeller",
+    async () => {
+      const sql = getSql();
+      if (!sql) return [];
+
+      const rows = await sql`
+        SELECT
+          id, year, make, model, miles, price,
+          title_status, owners, reported_accidents,
+          description, known_issues, city, photos,
+          body_type, fuel_type, transmission, color, interior_color,
+          engine_hours, is_classic,
+          score, level_key, confidence, confidence_level, flags, categories,
+          seller_name, seller_phone,
+          status, published_at, expires_at
+        FROM listings
+        WHERE seller_phone = ${phone}
+          AND id <> ${numeric}
+          AND status IN ('published', 'sold')
+          AND (expires_at IS NULL OR expires_at > NOW())
+        ORDER BY
+          CASE WHEN status = 'sold' THEN 1 ELSE 0 END,
+          score DESC
+        LIMIT 4
+      `;
+
+      return rows.map((row) => mapRow(row, locale));
+    },
+    []
+  );
 }
 
 /** Enlace de WhatsApp al vendedor del anuncio, no al sitio. */
