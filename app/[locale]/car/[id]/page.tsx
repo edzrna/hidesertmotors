@@ -4,7 +4,11 @@ import { isLocale } from "@/lib/hdm";
 import { getDictionary } from "@/i18n/dictionaries";
 import { getListingDictionary } from "@/i18n/listing";
 import { getLegalDictionary } from "@/i18n/legal";
-import { getListingById, getSellerHistory } from "@/lib/listings-db";
+import {
+  getListingById,
+  getOtherFromSeller,
+  getSellerHistory,
+} from "@/lib/listings-db";
 import CarView from "@/components/CarView";
 
 /**
@@ -63,7 +67,10 @@ export default async function CarPage({ params }: { params: Params }) {
   const listing = await getListingById(id, locale);
   if (!listing) notFound();
 
-  const seller = await getSellerHistory(listing.sellerPhone);
+  const [seller, otherFromSeller] = await Promise.all([
+    getSellerHistory(listing.sellerPhone),
+    getOtherFromSeller(listing.sellerPhone, listing.id, locale),
+  ]);
 
   return (
     <CarView
@@ -72,6 +79,7 @@ export default async function CarPage({ params }: { params: Params }) {
       t={getListingDictionary(locale)}
       legal={getLegalDictionary(locale)}
       seller={seller}
+      otherFromSeller={otherFromSeller}
       listing={listing}
     />
   );
