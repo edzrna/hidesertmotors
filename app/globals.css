@@ -6848,3 +6848,11 @@ body {
   font-weight: 900;
   color: var(--color-hdm-brown);
 }
+
+/* El primer desplegable del formulario decide todo lo demás: se ve
+   más grande que el resto para que no pase desapercibido. */
+.pub-select-lead {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  padding: 14px 14px !important;
+}
