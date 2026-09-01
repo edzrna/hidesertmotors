@@ -52,8 +52,10 @@ const es = {
 
   titles: {
     clean: "Limpio",
+    clean_lien: "Limpio con gravamen",
     rebuilt: "Reconstruido",
     salvage: "Salvage",
+    no_title: "Sin título",
   } satisfies Record<TitleStatusKey, string>,
 
   vehicle: {
@@ -375,8 +377,10 @@ const en: Dictionary = {
 
   titles: {
     clean: "Clean",
+    clean_lien: "Clean with lien",
     rebuilt: "Rebuilt",
     salvage: "Salvage",
+    no_title: "No title",
   },
 
   vehicle: {

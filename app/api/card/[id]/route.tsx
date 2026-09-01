@@ -33,18 +33,29 @@ export async function GET(request: Request, { params }: { params: Params }) {
     return new Response("not found", { status: 404 });
   }
 
+  try {
+
   const dict = getDictionary(locale);
   const t = getListingDictionary(locale);
+
+  /**
+   * Satori revienta con un texto undefined —"Cannot read properties of
+   * undefined (reading 'trim')"— y el error no dice qué faltaba.
+   *
+   * Toda cadena que venga de un diccionario pasa por aquí. Una
+   * traducción faltante se convierte en un hueco visible, no en una
+   * imagen rota.
+   */
+  const texto = (valor: unknown, respaldo = "—") =>
+    typeof valor === "string" && valor.trim() ? valor : respaldo;
 
   const AMBER = "#f5c542";
   const ORANGE = "#d88a00";
   const NAVY = "#071018";
 
-  /** El arco del anillo, dibujado con dos semicírculos girados. */
   const pct = Math.max(0, Math.min(100, listing.score));
-  const angle = (pct / 100) * 360;
 
-  return new ImageResponse(
+    return new ImageResponse(
     (
       <div
         style={{
@@ -73,29 +84,53 @@ export async function GET(request: Request, { params }: { params: Params }) {
 
         {/* ---------- Anillo y nivel ---------- */}
         <div style={{ display: "flex", alignItems: "center", gap: 44 }}>
+          {/*
+            Anillo con SVG, no con conic-gradient.
+
+            next/og renderiza con Satori, que soporta un subconjunto
+            de CSS: los gradientes cónicos no están. Un arco SVG con
+            strokeDasharray sí, y además da control exacto de dónde
+            empieza y termina.
+          */}
           <div
             style={{
+              display: "flex",
               width: 260,
               height: 260,
-              borderRadius: 130,
-              display: "flex",
+              flexShrink: 0,
+              position: "relative",
               alignItems: "center",
               justifyContent: "center",
-              background: `conic-gradient(${AMBER} 0deg, ${ORANGE} ${angle}deg, rgba(255,255,255,0.09) ${angle}deg)`,
-              flexShrink: 0,
             }}
           >
+            <svg width="260" height="260" viewBox="0 0 260 260">
+              <circle
+                cx="130"
+                cy="130"
+                r="115"
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="22"
+              />
+              <circle
+                cx="130"
+                cy="130"
+                r="115"
+                fill="none"
+                stroke={AMBER}
+                strokeWidth="22"
+                strokeLinecap="round"
+                strokeDasharray={`${(pct / 100) * 722.6} 722.6`}
+                transform="rotate(-90 130 130)"
+              />
+            </svg>
+
             <div
               style={{
-                width: 208,
-                height: 208,
-                borderRadius: 104,
-                background: NAVY,
+                position: "absolute",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
                 fontSize: 96,
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "#ffffff",
               }}
             >
@@ -117,14 +152,14 @@ export async function GET(request: Request, { params }: { params: Params }) {
             <div
               style={{
                 fontSize: 72,
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "#ffffff",
                 lineHeight: 1.05,
                 marginTop: 8,
                 maxWidth: 560,
               }}
             >
-              {dict.levels[listing.levelKey]}
+              {texto(dict.levels[listing.levelKey])}
             </div>
           </div>
         </div>
@@ -142,13 +177,13 @@ export async function GET(request: Request, { params }: { params: Params }) {
           <div
             style={{
               fontSize: 54,
-              fontWeight: 800,
+              fontWeight: 700,
               color: "#ffffff",
               lineHeight: 1.15,
               maxWidth: 940,
             }}
           >
-            {listing.name}
+            {texto(listing.name)}
           </div>
 
           <div
@@ -160,13 +195,13 @@ export async function GET(request: Request, { params }: { params: Params }) {
               color: "#b9c6d6",
             }}
           >
-            <span>{formatMiles(listing.miles, locale)}</span>
+            <span>{texto(formatMiles(listing.miles, locale))}</span>
             <span>·</span>
-            <span>{dict.titles[listing.titleStatus]}</span>
+            <span>{texto(dict.titles[listing.titleStatus])}</span>
             {listing.city && (
               <>
                 <span>·</span>
-                <span>{listing.city}</span>
+                <span>{texto(listing.city)}</span>
               </>
             )}
           </div>
@@ -199,7 +234,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
                   fontWeight: 600,
                 }}
               >
-                {t.flags[flag as keyof typeof t.flags] ?? flag}
+                {texto(t.flags[flag as keyof typeof t.flags], flag)}
               </div>
             ))}
           </div>
@@ -224,7 +259,7 @@ export async function GET(request: Request, { params }: { params: Params }) {
           <div
             style={{
               fontSize: 46,
-              fontWeight: 900,
+              fontWeight: 700,
               color: AMBER,
               marginTop: 14,
             }}
@@ -234,6 +269,29 @@ export async function GET(request: Request, { params }: { params: Params }) {
         </div>
       </div>
     ),
-    { width: 1080, height: 1080 }
-  );
+    {
+      width: 1080,
+      height: 1080,
+      /*
+        Sin fuentes propias, Satori usa la que trae por defecto.
+        Cargar Montserrat desde Google aquí exigiría una descarga en
+        cada petición y una dependencia de red que puede fallar — y
+        cuando falla, la tarjeta devuelve 500 en vez de una imagen.
+      */
+      }
+    );
+  } catch (error) {
+    /*
+      Un 500 mudo en un generador de imágenes es especialmente
+      molesto: el navegador sólo enseña un icono roto y no hay forma
+      de saber por qué. Aquí el motivo se devuelve como texto.
+    */
+    const detail = error instanceof Error ? error.message : String(error);
+    console.error("card failed:", detail);
+
+    return new Response(`No se pudo generar la tarjeta: ${detail}`, {
+      status: 500,
+      headers: { "Content-Type": "text/plain; charset=utf-8" },
+    });
+  }
 }

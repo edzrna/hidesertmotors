@@ -62,7 +62,20 @@ export type ConditionKey =
   | "regular"
   | "malo";
 
-export type TitleStatusKey = "clean" | "rebuilt" | "salvage";
+/**
+ * Tenía tres valores cuando el motor ya manejaba cinco.
+ *
+ * El desfase no daba error de compilación porque los anuncios llegan
+ * de la base como texto: TypeScript nunca vio el `clean_lien` real.
+ * Se notó cuando el generador de tarjetas recibió `undefined` al
+ * buscar su traducción y reventó.
+ */
+export type TitleStatusKey =
+  | "clean"
+  | "clean_lien"
+  | "rebuilt"
+  | "salvage"
+  | "no_title";
 
 export interface Vehicle {
   id: string;
