@@ -52,6 +52,24 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const quiereEnviar = url.searchParams.get("send") === "1";
 
+  /**
+   * ?to=correo@ejemplo.com prueba el envío A UN TERCERO.
+   *
+   * Es la prueba que importa: con onboarding@resend.dev, Resend sólo
+   * entrega al dueño de la cuenta y rechaza cualquier otro
+   * destinatario. Mandarte un correo a ti mismo sale bien y no
+   * demuestra nada sobre si a tus vendedores les llega.
+   */
+  const destinoPrueba = url.searchParams.get("to");
+
+  const usandoRemitenteDePrueba = (from ?? "").includes("resend.dev");
+
+  if (usandoRemitenteDePrueba) {
+    problemas.push(
+      "NOTIFY_FROM usa onboarding@resend.dev. Con ese remitente, Resend SÓLO entrega al correo dueño de la cuenta: a los vendedores NO les llega nada. Verifica hidesertmotors.com en Resend y cambia NOTIFY_FROM."
+    );
+  }
+
   if (!quiereEnviar) {
     return NextResponse.json({
       paso: "Sólo revisión de configuración",
@@ -64,7 +82,11 @@ export async function GET(request: Request) {
     });
   }
 
-  if (problemas.length) {
+  // Los avisos sobre el remitente de prueba no impiden enviar: son
+  // justamente lo que se quiere comprobar.
+  const bloqueantes = problemas.filter((p) => p.startsWith("Falta"));
+
+  if (bloqueantes.length) {
     return NextResponse.json(
       { error: "configuracion_incompleta", config, problemas },
       { status: 400 }
@@ -82,8 +104,10 @@ export async function GET(request: Request) {
       },
       body: JSON.stringify({
         from,
-        to: destinatarios,
-        subject: "Prueba de correo — Hi Desert Motors",
+        to: destinoPrueba ? [destinoPrueba] : destinatarios,
+        subject: destinoPrueba
+          ? "Prueba a un tercero — Hi Desert Motors"
+          : "Prueba de correo — Hi Desert Motors",
         html: `
           <div style="font-family:system-ui,sans-serif;max-width:480px">
             <h2 style="margin:0 0 12px">El correo funciona</h2>
@@ -121,7 +145,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       ok: true,
-      enviadoA: destinatarios,
+      avisos: problemas.length ? problemas : undefined,
+      enviadoA: destinoPrueba ? [destinoPrueba] : destinatarios,
       desde: from,
       idDeResend: cuerpo.id,
       nota: "Si no llega en un minuto, revisa la carpeta de spam y el panel de Resend en Logs.",

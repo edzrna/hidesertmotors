@@ -241,6 +241,27 @@ async function sendEditLink(listing: NewListingInfo, locale: "es" | "en") {
           }
         </p>
 
+        <div style="background:#f4f7fb;border:1px solid #dde3ea;border-radius:14px;padding:18px;margin:22px 0">
+          <p style="margin:0 0 8px;font-weight:700;font-size:15px">
+            ${
+              es
+                ? "¿Vas a publicarlo también en Facebook?"
+                : "Also posting it on Facebook?"
+            }
+          </p>
+          <p style="margin:0 0 14px;font-size:14px;color:#5b6b7f;line-height:1.55">
+            ${
+              es
+                ? "Descarga tu tarjeta de calificación y súbela como última foto. Le dice al comprador que tus datos están declarados y firmados — eso te separa de los anuncios que sólo dicen &quot;excelentes condiciones&quot;."
+                : "Download your rating card and add it as the last photo. It tells buyers your details are declared and signed — that sets you apart from listings that just say &quot;excellent condition&quot;."
+            }
+          </p>
+          <a href="${SITE_URL}/api/card/${listing.id}?lang=${locale}"
+             style="display:inline-block;background:#0b1622;color:#fff;padding:11px 22px;border-radius:999px;text-decoration:none;font-weight:700;font-size:14px">
+            ${es ? "Descargar tarjeta" : "Download card"}
+          </a>
+        </div>
+
         ${
           listing.flags.length
             ? `<p style="margin:10px 0 0;font-size:13px;color:#c0392b">

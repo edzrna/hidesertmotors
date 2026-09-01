@@ -350,6 +350,41 @@ export async function getListingForReview(id: string, locale: Locale) {
   }
 }
 
+/** Todos los pendientes, para la bandeja de revisión. */
+export async function getPendingListings(locale: Locale) {
+  try {
+    const sql = getSql();
+    if (!sql) return [];
+
+    const rows = await sql`
+      SELECT
+        id, year, make, model, miles, price,
+        title_status, owners, reported_accidents,
+        description, known_issues, city, photos,
+        body_type, fuel_type, transmission, color, is_classic,
+        score, level_key, confidence, confidence_level, flags, categories,
+        seller_name, seller_phone,
+        status, published_at, expires_at, created_at
+      FROM listings
+      WHERE status = 'pending'
+      ORDER BY created_at ASC
+    `;
+
+    return rows.map((row) => ({
+      ...mapRow(row, locale),
+      createdAt: row.created_at ? String(row.created_at) : null,
+      photoCount: toArray(row.photos).length,
+    }));
+  } catch (error) {
+    console.error("getPendingListings failed", error);
+    return [];
+  }
+}
+
+export type PendingListing = Awaited<
+  ReturnType<typeof getPendingListings>
+>[number];
+
 export type ReviewListing = NonNullable<
   Awaited<ReturnType<typeof getListingForReview>>
 >;

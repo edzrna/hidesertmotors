@@ -6610,3 +6610,139 @@ body {
     text-shadow: none;
   }
 }
+
+/* ============================================================
+   TARJETA PARA MARKETPLACE Y BANDEJA DE PENDIENTES
+   ============================================================ */
+
+.card-download {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  margin-top: 14px;
+  padding: 15px 18px;
+  border-radius: 16px;
+  text-align: left;
+}
+
+.card-download-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.card-download span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.card-download strong {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.card-download small {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-hdm-muted);
+  font-weight: 400;
+  white-space: normal;
+}
+
+/* ---------- Bandeja ---------- */
+
+.admin-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-list a {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border-radius: var(--hdm-r);
+  background: var(--color-hdm-surface);
+  border: 1px solid var(--hdm-line);
+  box-shadow: var(--hdm-shadow-soft);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s var(--hdm-ease);
+}
+
+.admin-list a:hover {
+  border-color: var(--color-hdm-orange);
+}
+
+.admin-thumb {
+  width: 78px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 11px;
+  flex-shrink: 0;
+  background: #eef1f5;
+}
+
+.admin-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-info strong {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-info span {
+  font-size: 12.5px;
+  color: var(--color-hdm-muted);
+}
+
+.admin-seller {
+  font-size: 11.5px !important;
+  opacity: 0.8;
+}
+
+.admin-flags {
+  display: inline-block;
+  width: fit-content;
+  margin-top: 3px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #fff5f5;
+  border: 1px solid rgba(255, 59, 77, 0.24);
+  color: #8c2230 !important;
+  font-size: 11px !important;
+  font-weight: 700;
+}
+
+.admin-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.admin-score b {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 900;
+  color: var(--color-hdm-brown);
+}

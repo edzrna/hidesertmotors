@@ -12,6 +12,7 @@ import { fill, type Dictionary } from "@/i18n/dictionaries";
 import type { ListingDictionary } from "@/i18n/listing";
 import type { LegalDictionary } from "@/i18n/legal";
 import ReportButton from "@/components/ReportButton";
+import { IconCamera } from "@/components/HdmIcons";
 import { formatMiles, localePath, type Locale } from "@/lib/hdm";
 import { sellerWhatsAppUrl, type PublicListing } from "@/lib/listings-db";
 import { SITE_URL } from "@/lib/site";
@@ -203,6 +204,22 @@ export default function CarView({
           )}
 
           <ShareButtons url={shareUrl} text={listing.name} dict={dict} extended />
+
+          {/* La tarjeta para Marketplace.
+              Va en la ficha y no sólo en el correo porque el vendedor
+              vuelve aquí cada vez que actualiza su anuncio, y ahí es
+              cuando la necesita. */}
+          <a
+            href={`/api/card/${listing.id}?lang=${locale}`}
+            download={`hdm-${listing.id}.png`}
+            className="hdm-btn hdm-btn--ghost card-download"
+          >
+            <IconCamera className="card-download-icon" />
+            <span>
+              <strong>{dict.card.download}</strong>
+              <small>{dict.card.help}</small>
+            </span>
+          </a>
 
           <ReportButton listingId={listing.id} t={legal} />
         </div>
