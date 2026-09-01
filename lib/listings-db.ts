@@ -36,6 +36,45 @@ import {
  * ocurre al importar el archivo — antes de cualquier try/catch — y
  * tumba la página entera con un 500. Aquí queda dentro del try.
  */
+/**
+ * Reintenta una consulta si falla por red.
+ *
+ * Neon en plan gratis suspende la base tras unos minutos sin uso. La
+ * primera consulta que llega después la despierta, pero a veces esa
+ * primera falla con "fetch failed" mientras arranca. El segundo
+ * intento, medio segundo después, casi siempre entra.
+ *
+ * Sólo reintenta fallos de conexión. Un error de SQL —una columna que
+ * no existe— va a fallar igual las tres veces, y reintentarlo sólo
+ * retrasa el mensaje.
+ */
+async function withRetry<T>(
+  label: string,
+  run: () => Promise<T>,
+  fallback: T
+): Promise<T> {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      return await run();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const esDeRed =
+        message.includes("fetch failed") ||
+        message.includes("ECONNRESET") ||
+        message.includes("connecting to database");
+
+      if (!esDeRed || attempt === 2) {
+        console.error(`${label} failed`, message);
+        return fallback;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 400 * (attempt + 1)));
+    }
+  }
+
+  return fallback;
+}
+
 function getSql() {
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -173,11 +212,13 @@ function mapRow(row: any, locale: Locale): PublicListing {
 }
 
 export async function getPublishedListings(locale: Locale) {
-  try {
-    const sql = getSql();
-    if (!sql) return [];
+  return withRetry(
+    "getPublishedListings",
+    async () => {
+      const sql = getSql();
+      if (!sql) return [];
 
-    const rows = await sql`
+      const rows = await sql`
       SELECT
         id, year, make, model, miles, price,
         title_status, owners, reported_accidents,
@@ -195,13 +236,10 @@ export async function getPublishedListings(locale: Locale) {
         published_at DESC NULLS LAST
     `;
 
-    return rows.map((row) => mapRow(row, locale));
-  } catch (error) {
-    // Una base caída no debe tumbar la página entera: el sitio se
-    // muestra vacío y el error queda en los registros de Vercel.
-    console.error("getPublishedListings failed", error);
-    return [];
-  }
+      return rows.map((row) => mapRow(row, locale));
+    },
+    []
+  );
 }
 
 export async function getListingById(id: string, locale: Locale) {
@@ -209,31 +247,32 @@ export async function getListingById(id: string, locale: Locale) {
   const numeric = Number(id);
   if (!Number.isInteger(numeric) || numeric <= 0) return null;
 
-  try {
-    const sql = getSql();
-    if (!sql) return null;
+  return withRetry(
+    "getListingById",
+    async () => {
+      const sql = getSql();
+      if (!sql) return null;
 
-    const rows = await sql`
-      SELECT
-        id, year, make, model, miles, price,
-        title_status, owners, reported_accidents,
-        description, known_issues, city, photos,
-        body_type, fuel_type, transmission, color, is_classic,
-        score, level_key, confidence, confidence_level, flags, categories,
-        seller_name, seller_phone,
-        status, published_at, expires_at
-      FROM listings
-      WHERE id = ${numeric}
-        AND status IN ('published', 'sold')
-        AND (expires_at IS NULL OR expires_at > NOW())
-      LIMIT 1
-    `;
+      const rows = await sql`
+        SELECT
+          id, year, make, model, miles, price,
+          title_status, owners, reported_accidents,
+          description, known_issues, city, photos,
+          body_type, fuel_type, transmission, color, is_classic,
+          score, level_key, confidence, confidence_level, flags, categories,
+          seller_name, seller_phone,
+          status, published_at, expires_at
+        FROM listings
+        WHERE id = ${numeric}
+          AND status IN ('published', 'sold')
+          AND (expires_at IS NULL OR expires_at > NOW())
+        LIMIT 1
+      `;
 
-    return rows.length ? mapRow(rows[0], locale) : null;
-  } catch (error) {
-    console.error("getListingById failed", error);
-    return null;
-  }
+      return rows.length ? mapRow(rows[0], locale) : null;
+    },
+    null
+  );
 }
 
 /**
