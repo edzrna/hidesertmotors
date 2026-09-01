@@ -612,6 +612,29 @@ export default function ListingForm({
             {t.steps.vehicle}
           </legend>
 
+          {/*
+            Lo primero que se pregunta, y solo en su renglón.
+
+            Estaba al final y comprimido en una fila de tres, así que
+            en el celular pasaba desapercibido. Pero además el orden
+            estaba al revés: uno decide que vende una lancha ANTES de
+            saber su marca, y de esta respuesta depende qué preguntas
+            aparecen después.
+          */}
+          <Field label={t.fields.bodyType} help={t.fields.bodyTypeHelp}>
+            <select
+              className="pub-select-lead"
+              value={form.bodyType}
+              onChange={(e) => set("bodyType", e.target.value)}
+            >
+              {BODY_TYPES.map((option) => (
+                <option key={option} value={option}>
+                  {t.bodyTypes[option]}
+                </option>
+              ))}
+            </select>
+          </Field>
+
           <div className="pub-row">
             <Field label={t.fields.year} error={errors.year && t.form.required}>
               <select
@@ -665,19 +688,6 @@ export default function ListingForm({
           </Field>
 
           <div className="pub-row">
-            <Field label={t.fields.bodyType}>
-              <select
-                value={form.bodyType}
-                onChange={(e) => set("bodyType", e.target.value)}
-              >
-                {BODY_TYPES.map((option) => (
-                  <option key={option} value={option}>
-                    {t.bodyTypes[option]}
-                  </option>
-                ))}
-              </select>
-            </Field>
-
             <Field label={t.fields.color}>
               <select
                 value={form.color}

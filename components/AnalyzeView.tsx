@@ -264,6 +264,23 @@ export default function AnalyzeView({
         <legend>{t.steps.vehicle}</legend>
 
         <div className="pub-row">
+        {/* Primero: de esto depende qué se pregunta después. */}
+        <label className="pub-field">
+          <span className="pub-label">{t.fields.bodyType}</span>
+          <select
+            className="pub-select-lead"
+            value={form.bodyType}
+            onChange={(e) => set("bodyType", e.target.value)}
+          >
+            {BODY_TYPES.map((option) => (
+              <option key={option} value={option}>
+                {t.bodyTypes[option]}
+              </option>
+            ))}
+          </select>
+          <span className="pub-help">{t.fields.bodyTypeHelp}</span>
+        </label>
+
           <label className="pub-field">
             <span className="pub-label">{t.fields.year}</span>
             <select value={form.year} onChange={(e) => set("year", e.target.value)}>
@@ -306,20 +323,6 @@ export default function AnalyzeView({
         </label>
 
         <div className="pub-row">
-          <label className="pub-field">
-            <span className="pub-label">{t.fields.bodyType}</span>
-            <select
-              value={form.bodyType}
-              onChange={(e) => set("bodyType", e.target.value)}
-            >
-              {BODY_TYPES.map((option) => (
-                <option key={option} value={option}>
-                  {t.bodyTypes[option]}
-                </option>
-              ))}
-            </select>
-          </label>
-
           <label className="pub-field">
             <span className="pub-label">{t.fields.color}</span>
             <select
