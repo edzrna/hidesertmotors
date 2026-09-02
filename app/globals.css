@@ -6941,6 +6941,32 @@ body {
   }
 }
 
+
+.foot-col {
+  gap: 12px;
+}
+
+/* El título de cada columna pega con el borde superior del panel si
+   no se separa. */
+.foot-col h3 {
+  margin-bottom: 5px;
+}
+
+/* Los enlaces del pie ya no necesitan su sombra hundida: ese efecto
+   requería las líneas detrás para leerse como grabado, y sobre el
+   panel liso sólo ensucia el texto. */
+.foot-col a,
+.foot-tagline {
+  text-shadow: none;
+}
+
+@media (max-width: 560px) {
+  .foot-brand,
+  .foot-col {
+    padding: 16px 18px;
+  }
+}
+
 /* ============================================================
    PANELES SOBRE LAS LÍNEAS
 
@@ -7032,4 +7058,5 @@ body {
     padding: 16px 18px;
   }
 }
+
 
