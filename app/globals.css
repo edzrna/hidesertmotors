@@ -2807,13 +2807,14 @@ body {
   fill: #1b2b3a;
 }
 
-.gauge-icon {
-  color: var(--color-hdm-brown-soft);
-}
-
-.gauge-icon svg {
-  width: 24px;
-  height: 24px;
+/* El icono junto al nombre, en el mismo azul del arco de fondo: los
+   dos son la parte "instrumento" del medidor, y compartir color los
+   liga sin agregar un tono más. */
+.gauge-label-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #1b2b3a;
 }
 
 .gauge figcaption {
@@ -2835,6 +2836,10 @@ body {
 }
 
 .gauge-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-family: var(--font-display);
   font-size: 12px;
   font-weight: 800;
@@ -3202,13 +3207,14 @@ body {
    ICONOS PROPIOS
    ============================================================ */
 
-.gauge-icon {
-  color: var(--color-hdm-brown-soft);
-}
-
-.gauge-icon svg {
-  width: 24px;
-  height: 24px;
+/* El icono junto al nombre, en el mismo azul del arco de fondo: los
+   dos son la parte "instrumento" del medidor, y compartir color los
+   liga sin agregar un tono más. */
+.gauge-label-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: #1b2b3a;
 }
 
 /* ============================================================
@@ -6845,4 +6851,92 @@ body {
   font-size: 16px !important;
   font-weight: 700 !important;
   padding: 14px 14px !important;
+}
+
+/* ============================================================
+   AXEL EN EL ENCABEZADO DE PUBLICAR
+
+   Archivo esperado: public/axel/axel-publicar.png
+   Fondo transparente, figura recortada, mínimo 840px de ancho para
+   que se vea nítido en pantallas de alta densidad.
+
+   Si el archivo no existe, la imagen simplemente no aparece y el
+   encabezado se ve como antes. Nada se rompe.
+   ============================================================ */
+
+.pub-hero--axel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "texto axel"
+    "notas notas";
+  gap: 0 clamp(16px, 3vw, 40px);
+  align-items: center;
+}
+
+.pub-hero-copy {
+  grid-area: texto;
+  min-width: 0;
+}
+
+.pub-hero-notes {
+  grid-area: notas;
+}
+
+.pub-hero-axel {
+  grid-area: axel;
+  margin: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  align-self: end;
+}
+
+.pub-hero-axel img {
+  width: clamp(150px, 22vw, 260px);
+  height: auto;
+
+  /* contain, no la deformación por omisión: así puedes cambiar la
+     imagen por otra de distinta proporción sin que se aplaste. */
+  object-fit: contain;
+
+  /* Sombra ámbar en vez de gris: la despega del fondo oscuro sin
+     ensuciarlo. */
+  filter: drop-shadow(0 16px 30px rgba(216, 138, 0, 0.28));
+}
+
+/*
+ * En móvil Axel pasa DEBAJO del texto, no al lado.
+ *
+ * A un ancho de teléfono, dos columnas dejarían el título en cuatro
+ * palabras por renglón. Ahí el título manda y Axel acompaña —al
+ * revés que en escritorio, donde hay sitio para los dos.
+ */
+@media (max-width: 720px) {
+  .pub-hero--axel {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "texto"
+      "axel"
+      "notas";
+  }
+
+  .pub-hero-axel {
+    justify-content: flex-end;
+    margin-top: 4px;
+    margin-bottom: -8px;
+  }
+
+  .pub-hero-axel img {
+    width: clamp(120px, 38vw, 180px);
+  }
+}
+
+/* En pantallas muy angostas se oculta: ahí cada píxel de alto es un
+   píxel menos de formulario visible, y el formulario es a lo que
+   viene la persona. */
+@media (max-width: 400px) {
+  .pub-hero-axel {
+    display: none;
+  }
 }
