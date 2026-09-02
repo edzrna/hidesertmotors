@@ -3,30 +3,34 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Medidor tipo velocímetro para una categoría.
+ * Medidor de categoría, estilo tablero de auto.
  *
- * Semicírculo en vez de anillo completo, a propósito: el anillo es la
- * calificación general y debe seguir siendo la figura dominante. Los
- * medidores son su desglose, y se leen distinto de un vistazo.
+ * Geometría: arco de 220° con extremos redondeados, del que se revela
+ * la porción correspondiente al valor. Lo que falta queda en azul
+ * oscuro.
  *
- * El arco va de 0 a 100 sobre 180 grados, con la aguja apuntando al
- * valor. Se anima al entrar en pantalla.
+ * El gradiente está fijo A LO LARGO DEL ARCO, no depende del valor.
+ * Eso significa que un 40 sólo alcanza a mostrar el rojo del arranque,
+ * mientras que un 95 llega hasta el ámbar del final. El color sale del
+ * recorrido, no de una regla aparte — y así nunca contradice al
+ * número.
  */
 
-const R = 42;
-const CX = 50;
-const CY = 52;
-/** Media circunferencia: πr */
-const ARC = Math.PI * R;
+const CX = 130;
+const CY = 132;
+const R = 96;
+const INICIO = 200;
+const BARRIDO = 220;
+const LARGO = (BARRIDO * Math.PI * R) / 180;
 
-function polar(value: number) {
-  // 0 → 180° (izquierda), 100 → 0° (derecha)
-  const angle = Math.PI * (1 - value / 100);
-  return {
-    x: CX + R * Math.cos(angle),
-    y: CY - R * Math.sin(angle),
-  };
+function punto(grados: number, radio = R) {
+  const a = (grados * Math.PI) / 180;
+  return { x: CX + radio * Math.cos(a), y: CY - radio * Math.sin(a) };
 }
+
+const A = punto(INICIO);
+const B = punto(INICIO - BARRIDO);
+const ARCO = `M ${A.x.toFixed(1)} ${A.y.toFixed(1)} A ${R} ${R} 0 1 1 ${B.x.toFixed(1)} ${B.y.toFixed(1)}`;
 
 export default function CategoryGauge({
   value,
@@ -36,7 +40,6 @@ export default function CategoryGauge({
 }: {
   value: number;
   label: string;
-  /** Icono propio del sitio. Se dibuja dentro del arco. */
   Icon: (props: { className?: string }) => React.JSX.Element;
   caption?: string;
 }) {
@@ -60,70 +63,58 @@ export default function CategoryGauge({
     return () => observer.disconnect();
   }, []);
 
-  const needle = polar(value);
+  const acotado = Math.max(0, Math.min(100, value));
+  const anguloAguja = INICIO - (acotado / 100) * BARRIDO;
+  const punta = punto(anguloAguja, R * 0.6);
 
-  /**
-   * El arco va en la gama de la marca: naranja profundo abajo, ámbar
-   * claro arriba. El verde desentonaba con todo lo demás.
-   *
-   * El tono sigue diciendo algo: un 95 se ve dorado y un 60 se ve
-   * naranja quemado, así que el valor se lee sin leer el número. Y el
-   * rojo se conserva sólo para lo grave —debajo de 50— porque un auto
-   * con la transmisión patinando debe alarmar, no combinar.
-   */
-  const tone = value < 50 ? "bad" : "brand";
-
-  /** Cada medidor necesita su propio id o comparten el gradiente. */
-  const gradientId = `gauge-${label.replace(/\W+/g, "")}-${value}`;
+  /** Cada medidor necesita su gradiente propio o se pisan entre sí. */
+  const id = `g-${label.replace(/\W+/g, "")}`;
 
   return (
-    <figure className={`gauge gauge--${tone}`}>
+    <figure className="gauge">
       <svg
         ref={ref}
-        viewBox="0 0 100 64"
+        viewBox="0 0 260 200"
         role="img"
         aria-label={`${label}: ${value} de 100`}
         className="gauge-svg"
-        style={{ "--value": value } as React.CSSProperties}
+        style={
+          {
+            "--largo": LARGO.toFixed(1),
+            "--relleno": ((LARGO * acotado) / 100).toFixed(1),
+            "--giro": `${INICIO - anguloAguja}deg`,
+          } as React.CSSProperties
+        }
       >
-        {/* Fondo del arco */}
-        <path
-          d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`}
-          className="gauge-track"
-        />
-
         <defs>
-          {/* El gradiente se inclina con el valor: mientras más alto,
-              más peso tiene el ámbar claro. */}
-          <linearGradient id={gradientId} x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0%" stopColor="var(--gauge-from)" />
-            <stop
-              offset={`${Math.max(30, Math.min(95, value))}%`}
-              stopColor="var(--gauge-to)"
-            />
+          <linearGradient id={id} x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0%" stopColor="#e8392a" />
+            <stop offset="42%" stopColor="#f58a1e" />
+            <stop offset="100%" stopColor="#f7c948" />
           </linearGradient>
         </defs>
 
-        {/* Arco relleno hasta el valor */}
-        <path
-          d={`M ${CX - R} ${CY} A ${R} ${R} 0 0 1 ${CX + R} ${CY}`}
-          className="gauge-fill"
-          stroke={`url(#${gradientId})`}
-          strokeDasharray={ARC}
-        />
+        {/* Lo que falta para 100 */}
+        <path d={ARCO} className="gauge-track" />
 
-        {/* Aguja */}
-        <line
-          x1={CX}
-          y1={CY}
-          x2={needle.x}
-          y2={needle.y}
-          className="gauge-needle"
-        />
-        <circle cx={CX} cy={CY} r="4" className="gauge-pin" />
+        {/* Lo alcanzado */}
+        <path d={ARCO} className="gauge-fill" stroke={`url(#${id})`} />
 
-        {/* El icono va dentro del arco, escalado al viewBox del medidor. */}
-        <g transform="translate(38 14) scale(1)" className="gauge-icon">
+        {/* Aguja: gira desde el pivote, como en un tablero */}
+        <g className="gauge-needle-group">
+          <line
+            x1={CX}
+            y1={CY}
+            x2={punta.x.toFixed(1)}
+            y2={punta.y.toFixed(1)}
+            className="gauge-needle"
+          />
+        </g>
+        <circle cx={CX} cy={CY} r="11" className="gauge-pin" />
+
+        {/* El icono va al final del arco, fuera de él: identifica la
+            categoría sin competir con la aguja ni con el número. */}
+        <g className="gauge-icon" transform="translate(208 18) scale(1.9)">
           <Icon />
         </g>
       </svg>
