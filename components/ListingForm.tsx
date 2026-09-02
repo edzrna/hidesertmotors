@@ -300,7 +300,20 @@ export default function ListingForm({
     if (!form.year) found.year = t.fields.year;
     if (!resolvedMake) found.make = t.fields.make;
     if (!form.model.trim()) found.model = t.fields.model;
-    if (!form.miles) found.miles = t.fields.miles;
+    /**
+     * Las millas sólo se exigen donde existen.
+     *
+     * Antes eran obligatorias siempre: una lancha no podía publicarse
+     * porque el formulario pedía un dato que esa lancha no tiene, y
+     * el error señalaba un campo que ni siquiera estaba en pantalla.
+     */
+    if (unidadUso === "miles" || unidadUso === "both") {
+      if (!form.miles) found.miles = t.fields.miles;
+    }
+
+    if (unidadUso === "hours" && !form.engineHours) {
+      found.engineHours = t.fields.engineHours;
+    }
     if (!form.knownIssues.trim()) found.knownIssues = t.fields.knownIssues;
     if (!form.description.trim()) found.description = t.fields.description;
     if (photos.length < MIN_PHOTOS) found.photos = t.fields.photos;
@@ -791,7 +804,7 @@ export default function ListingForm({
             {/* Millas u horas: lo que corresponda a la familia. Un
                 comprador de lancha pregunta las horas antes que nada,
                 y ponerle "millas" delata que el sitio no sabe de eso. */}
-            {unidadUso === "miles" && (
+            {(unidadUso === "miles" || unidadUso === "both") && (
               <Field
                 label={t.fields.miles}
                 help={t.fields.milesHelp}
@@ -809,7 +822,7 @@ export default function ListingForm({
               </Field>
             )}
 
-            {unidadUso === "hours" && (
+            {(unidadUso === "hours" || unidadUso === "both") && (
               <Field
                 label={t.fields.engineHours}
                 help={t.fields.engineHoursHelp}

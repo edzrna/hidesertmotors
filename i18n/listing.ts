@@ -10,11 +10,11 @@ import type { Locale } from "@/lib/hdm";
 
 const es = {
   page: {
-    kicker: "Publica tu auto",
-    title: "Publica tu auto y recibe su calificación HDM",
+    kicker: "Publica tu vehículo",
+    title: "Publica tu vehículo y recibe su calificación HDM",
     lede: "Llena los datos con honestidad. La calificación se calcula sola con lo que declares, y la ves cambiar mientras escribes.",
     duration:
-      "Tu anuncio queda publicado 30 días. Al vencer deja de aparecer y, si el auto sigue a la venta, puedes publicarlo de nuevo.",
+      "Tu anuncio queda publicado 30 días. Al vencer deja de aparecer y, si sigue a la venta, puedes publicarlo de nuevo.",
     disclaimer:
       "Hi Desert Motors es un tablero de anuncios. No compramos, vendemos ni intermediamos: el comprador trata directamente contigo. No inspeccionamos los vehículos, y la calificación se basa únicamente en lo que tú declaras aquí.",
   },
@@ -53,13 +53,13 @@ const es = {
     interiorColor: "Color interior",
     engineHours: "Horas de motor",
     engineHoursHelp:
-      "Lo que marca el horómetro. Es el dato que todo comprador pregunta primero en una lancha o una moto de agua.",
+      "Lo que marca el horómetro. Si tu cuatrimoto trae las dos medidas, pon ambas: las horas dicen cómo está el motor y las millas cuánto se ha usado.",
     isClassic: "Es un clásico o de colección",
     isClassicHelp:
       "Márcalo sólo si lo vendes como pieza de colección, no como transporte diario. Cambia cómo se calcula la calificación: en un clásico la antigüedad deja de contar en contra.",
     fuelType: "Combustible",
     transmission: "Transmisión",
-    city: "¿Dónde está el auto?",
+    city: "¿Dónde está?",
     cityHelp:
       "Sólo la ciudad, no tu dirección. El comprador necesita saber si le queda cerca.",
     otherCity: "Otra ciudad",
@@ -112,7 +112,7 @@ const es = {
     hasDents: "Tiene golpes o rayones visibles",
     glassCracked: "Algún cristal está estrellado",
     interiorTorn: "El interior está roto o muy manchado",
-    smokedIn: "Se fumaba dentro del auto",
+    smokedIn: "Se fumaba adentro",
   },
 
   docs: {
@@ -127,7 +127,7 @@ const es = {
     outOf: "sobre 100",
     confidence: "Nivel de respaldo",
     confidenceHelp:
-      "Mide cuánto de lo que declaras se puede comprobar. No cambia la calificación del auto, pero sí la confianza del comprador.",
+      "Mide cuánto de lo que declaras se puede comprobar. No cambia la calificación, pero sí la confianza del comprador.",
     low: "Bajo",
     medium: "Medio",
     high: "Alto",
@@ -198,7 +198,7 @@ const es = {
     miles_high: "Millas muy por arriba del promedio",
     accidents_one: "Un accidente reportado",
     accidents_many: "Varios accidentes reportados",
-    major_mechanical: "Falla mecánica de fondo: saca al auto del mercado normal",
+    major_mechanical: "Falla mecánica de fondo: lo saca del mercado normal",
     check_engine: "Check engine encendido",
     rust: "Óxido declarado",
     no_ac: "Aire acondicionado no enfría",
@@ -273,7 +273,7 @@ const es = {
       markSold: "Ya lo vendí",
       markSoldHelp:
         "Tu anuncio se queda visible, marcado como vendido, y deja de recibir contactos.",
-      markSoldConfirm: "¿Ya vendiste este auto?",
+      markSoldConfirm: "¿Ya lo vendiste?",
       soldTitle: "Marcado como vendido",
       soldBody: "Felicidades por la venta. Tu anuncio ya aparece como vendido.",
       alreadySold: "Este anuncio ya está marcado como vendido.",
@@ -287,7 +287,7 @@ const es = {
         "Este enlace no corresponde a ningún anuncio activo. Revisa que lo hayas copiado completo.",
       expiresOn: "Tu anuncio vence el {date}",
       expiredNotice:
-        "Este anuncio ya venció y no aparece en el sitio. Si el auto sigue a la venta, publícalo de nuevo.",
+        "Este anuncio ya venció y no aparece en el sitio. Si sigue a la venta, publícalo de nuevo.",
       pendingNotice:
         "Tu anuncio todavía está en revisión. Los cambios que hagas aquí se verán cuando lo publiquemos.",
     },
@@ -345,13 +345,13 @@ const en: Dict = {
     interiorColor: "Interior color",
     engineHours: "Engine hours",
     engineHoursHelp:
-      "What the hour meter shows. It is the first thing any buyer asks about a boat or jet ski.",
+      "What the hour meter shows. If your ATV has both, enter both: hours tell how the engine is, miles tell how much it has been used.",
     isClassic: "It is a classic or collector vehicle",
     isClassicHelp:
       "Check this only if you are selling it as a collector piece, not as daily transport. It changes how the rating is calculated: on a classic, age stops counting against it.",
     fuelType: "Fuel",
     transmission: "Transmission",
-    city: "Where is the car?",
+    city: "Where is it?",
     cityHelp:
       "City only, not your address. Buyers need to know if it is close to them.",
     otherCity: "Other city",
@@ -565,7 +565,7 @@ const en: Dict = {
       markSold: "I sold it",
       markSoldHelp:
         "Your listing stays visible, marked as sold, and stops receiving contacts.",
-      markSoldConfirm: "Did you sell this car?",
+      markSoldConfirm: "Did you sell it?",
       soldTitle: "Marked as sold",
       soldBody: "Congratulations on the sale. Your listing now shows as sold.",
       alreadySold: "This listing is already marked as sold.",

@@ -53,10 +53,38 @@ export function getVehicleClass(bodyType: BodyType): VehicleClass {
  * Un comprador de lancha pregunta las horas antes que nada, y ponerle
  * "millas" a una jetski delata que el sitio no entiende de eso.
  */
-export function getUsageUnit(vehicleClass: VehicleClass): "miles" | "hours" | "none" {
-  if (vehicleClass === "marine" || vehicleClass === "powersports") return "hours";
+export function getUsageUnit(
+  vehicleClass: VehicleClass
+): "miles" | "hours" | "both" | "none" {
+  /**
+   * Sólo horas: una lancha o una jetski no tienen odómetro.
+   */
+  if (vehicleClass === "marine") return "hours";
+
+  /**
+   * Las dos: casi toda cuatrimoto y UTV trae horómetro Y odómetro.
+   * El comprador pregunta las horas para el desgaste del motor y las
+   * millas para el uso general. Pedir sólo una deja corto el anuncio.
+   */
+  if (vehicleClass === "powersports") return "both";
+
+  /** Un remolque no tiene motor ni odómetro. */
   if (vehicleClass === "trailer") return "none";
+
   return "miles";
+}
+
+/**
+ * Cuál manda para calcular el desgaste cuando hay dos.
+ *
+ * En una cuatrimoto las horas describen mejor el estado del motor que
+ * las millas: cien horas a bajas revoluciones desgastan distinto que
+ * cien millas de arena. Si el vendedor sólo puso millas, se usan esas.
+ */
+export function getPrimaryUsage(vehicleClass: VehicleClass) {
+  return vehicleClass === "marine" || vehicleClass === "powersports"
+    ? "hours"
+    : "miles";
 }
 
 /**

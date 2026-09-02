@@ -20,6 +20,7 @@
  */
 
 import {
+  getPrimaryUsage,
   getUsageUnit,
   getVehicleClass,
   needsSmog,
@@ -297,12 +298,20 @@ function mechanicalScore(listing: Listing) {
   const clase = getVehicleClass(listing.bodyType);
   const unidad = getUsageUnit(clase);
 
+  /**
+   * Cuando hay dos medidas —cuatrimotos y UTV— mandan las horas, que
+   * describen mejor el desgaste del motor. Si el vendedor sólo puso
+   * millas, se usan esas en vez de castigarlo por el campo vacío.
+   */
+  const prefiereHoras = getPrimaryUsage(clase) === "hours";
+  const horas = listing.engineHours ?? 0;
+
   const desgaste =
-    unidad === "hours"
-      ? hoursPenalty(listing.engineHours ?? 0)
-      : unidad === "miles"
-      ? milesPenalty(listing.miles)
-      : 0;
+    unidad === "none"
+      ? 0
+      : prefiereHoras && horas > 0
+      ? hoursPenalty(horas)
+      : milesPenalty(listing.miles);
 
   score -= listing.isClassic ? Math.round(desgaste / 3) : desgaste;
 
