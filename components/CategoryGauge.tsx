@@ -112,16 +112,20 @@ export default function CategoryGauge({
         </g>
         <circle cx={CX} cy={CY} r="11" className="gauge-pin" />
 
-        {/* El icono va al final del arco, fuera de él: identifica la
-            categoría sin competir con la aguja ni con el número. */}
-        <g className="gauge-icon" transform="translate(208 18) scale(1.9)">
-          <Icon />
-        </g>
       </svg>
 
       <figcaption>
         <span className="gauge-value">{value}</span>
-        <span className="gauge-label">{label}</span>
+
+        {/* El icono junto al nombre, no dentro del arco.
+            Escalado por SVG salía desproporcionado —dependía del
+            viewBox del medidor, no de su propio tamaño— y ahí compite
+            con la aguja. Al lado del texto tiene una medida fija y
+            además explica qué mide el número. */}
+        <span className="gauge-label">
+          <Icon className="gauge-label-icon" />
+          {label}
+        </span>
         {caption && <span className="gauge-caption">{caption}</span>}
       </figcaption>
     </figure>
