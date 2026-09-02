@@ -6940,3 +6940,96 @@ body {
     display: none;
   }
 }
+
+/* ============================================================
+   PANELES SOBRE LAS LÍNEAS
+
+   Rectángulos del MISMO color del fondo (#080f16). No se distinguen
+   por color: se distinguen porque tapan las líneas horizontales.
+   El contraste lo da la textura, no el tono.
+
+   Es más sutil que un recuadro de otro color, y aprovecha la trama
+   que ya existe en vez de agregar un elemento nuevo.
+   ============================================================ */
+
+.hdm-lang-group,
+.foot-brand,
+.foot-col {
+  position: relative;
+  background: #080f16;
+  border-radius: 16px;
+
+  /* Un borde apenas perceptible: sin él, el panel se confunde con el
+     fondo en las zonas donde las líneas quedan más tenues. */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- Encabezado ---------- */
+
+.hdm-lang-group {
+  padding: 8px 14px;
+  border-radius: 999px;
+}
+
+/* La marca del encabezado también, para que el logo y el eslogan
+   descansen sobre una superficie limpia. */
+.hdm-brand {
+  position: relative;
+  background: #080f16;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 16px 8px 10px;
+}
+
+/* Sin eslogan, el panel se ajusta al logo. */
+.hdm-header.is-scrolled .hdm-brand {
+  padding: 6px 12px;
+}
+
+@media (max-width: 560px) {
+  .hdm-brand {
+    padding: 6px 10px;
+  }
+  .hdm-lang-group {
+    padding: 7px 11px;
+  }
+}
+
+/* ---------- Pie ---------- */
+
+.foot-brand,
+.foot-col {
+  padding: 20px 22px;
+}
+
+/* La rejilla alinea los paneles arriba en vez de estirarlos: un panel
+   de tres enlaces y otro de dos no tienen por qué medir igual. */
+.foot-grid {
+  align-items: start;
+}
+
+.foot-col {
+  gap: 12px;
+}
+
+/* El título de cada columna pega con el borde superior del panel si
+   no se separa. */
+.foot-col h3 {
+  margin-bottom: 5px;
+}
+
+/* Los enlaces del pie ya no necesitan su sombra hundida: ese efecto
+   requería las líneas detrás para leerse como grabado, y sobre el
+   panel liso sólo ensucia el texto. */
+.foot-col a,
+.foot-tagline {
+  text-shadow: none;
+}
+
+@media (max-width: 560px) {
+  .foot-brand,
+  .foot-col {
+    padding: 16px 18px;
+  }
+}
+
