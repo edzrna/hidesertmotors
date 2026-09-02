@@ -45,10 +45,33 @@ export default async function PublishPage({ params }: { params: Params }) {
       {/* Encabezado oscuro con el mismo lenguaje que "Encuentra el
           auto correcto": píldora ámbar, título grande, segunda línea
           en acento. El formulario sigue claro debajo. */}
-      <header className="pub-hero">
-        <span className="pub-hero-pill">{t.page.kicker}</span>
-        <h1 className="pub-hero-title">{t.page.title}</h1>
-        <p className="pub-hero-lead">{t.page.lede}</p>
+      <header className="pub-hero pub-hero--axel">
+        <div className="pub-hero-copy">
+          <span className="pub-hero-pill">{t.page.kicker}</span>
+          <h1 className="pub-hero-title">{t.page.title}</h1>
+          <p className="pub-hero-lead">{t.page.lede}</p>
+        </div>
+
+        {/*
+          Axel con una llanta a sus pies.
+
+          Archivo esperado: public/axel/axel-publicar.png
+
+          Fondo transparente y figura recortada — aquí va sobre el
+          resplandor ámbar del encabezado, así que cualquier fondo
+          propio se vería como un recuadro pegado encima.
+
+          Si el archivo no existe todavía, la imagen no se muestra y
+          el encabezado se ve igual que antes: nada se rompe.
+        */}
+        <figure className="pub-hero-axel" aria-hidden>
+          <img
+            src="/axel/axel-publicar.png"
+            alt=""
+            width={420}
+            height={420}
+          />
+        </figure>
 
         {/* Va arriba y a la vista, no escondido en el pie: es lo que
             deja claro que el sitio no es parte de la venta. */}
