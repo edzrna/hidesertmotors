@@ -96,6 +96,43 @@ export function needsSmog(vehicleClass: VehicleClass) {
   return vehicleClass === "car" || vehicleClass === "rv";
 }
 
+/**
+ * Qué papeles se le pueden pedir a cada familia.
+ *
+ * El smog sólo lo exige California a autos y casas rodantes. Ofrecerle
+ * la casilla a una moto de agua es peor que inútil: quien la publica
+ * se pregunta si debería tenerla, y algunos van a marcarla sin tener
+ * nada, lo que sube su nivel de respaldo con un papel inexistente.
+ *
+ * El VIN también cambia de nombre según la familia: las embarcaciones
+ * llevan HIN, no VIN. Es el mismo campo pero el vendedor busca la
+ * palabra que trae su casco.
+ */
+export function getDocsForClass(vehicleClass: VehicleClass): string[] {
+  const docs = ["hasServiceRecords", "registrationCurrent"];
+
+  if (needsSmog(vehicleClass)) docs.push("smogCurrent");
+
+  /**
+   * Los reportes de historial —Carfax y similares— sólo existen para
+   * vehículos de carretera. No hay Carfax de una jetski.
+   */
+  if (
+    vehicleClass === "car" ||
+    vehicleClass === "motorcycle" ||
+    vehicleClass === "rv"
+  ) {
+    docs.push("hasVehicleHistoryReport");
+  }
+
+  return docs;
+}
+
+/** Las embarcaciones llevan HIN en el casco, no VIN. */
+export function getVinLabel(vehicleClass: VehicleClass): "vin" | "hin" {
+  return vehicleClass === "marine" ? "hin" : "vin";
+}
+
 /** Un remolque no tiene motor: la categoría mecánica no aplica. */
 export function hasEngine(vehicleClass: VehicleClass) {
   return vehicleClass !== "trailer";
