@@ -70,6 +70,9 @@ const es = {
     milesOver: "o más",
     tires: "Estado de las llantas",
     vin: "VIN (17 caracteres)",
+    hin: "HIN del casco (12 caracteres)",
+    hinHelp:
+      "El número grabado en el espejo de popa, del lado derecho. Es el equivalente al VIN de un auto y permite verificar que la embarcación no tenga reporte de robo.",
     vinHelp:
       "Lo más valioso que puedes dar. Permite al comprador verificar todo lo demás y sube tu nivel de respaldo 30 puntos.",
     photos: "Fotos",
@@ -362,6 +365,9 @@ const en: Dict = {
     milesOver: "or more",
     tires: "Tire condition",
     vin: "VIN (17 characters)",
+    hin: "Hull HIN (12 characters)",
+    hinHelp:
+      "The number stamped on the transom, starboard side. It is the equivalent of a car VIN and lets buyers check the vessel is not reported stolen.",
     vinHelp:
       "The most valuable thing you can provide. It lets the buyer verify everything else and adds 30 points to your backing level.",
     photos: "Photos",
