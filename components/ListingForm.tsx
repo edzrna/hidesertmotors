@@ -59,6 +59,8 @@ import {
   DEFECTS_BY_CLASS,
   getUsageUnit,
   getVehicleClass,
+  getDocsForClass,
+  getVinLabel,
   hasInterior,
   hasTires,
   needsSmog,
@@ -1044,8 +1046,14 @@ export default function ListingForm({
           <legend>{t.steps.docs}</legend>
 
           <Field
-            label={t.fields.vin}
-            help={t.fields.vinHelp}
+            label={
+              getVinLabel(clase) === "hin" ? t.fields.hin : t.fields.vin
+            }
+            help={
+              getVinLabel(clase) === "hin"
+                ? t.fields.hinHelp
+                : t.fields.vinHelp
+            }
             error={errors.vin && t.form.invalidVin}
           >
             <input
@@ -1055,19 +1063,21 @@ export default function ListingForm({
             />
           </Field>
 
+          {/*
+            Los papeles también dependen de la familia.
+
+            Estaban fijos: a una moto de agua se le ofrecía "El smog
+            está vigente" cuando California no le exige smog. Eso es
+            peor que un campo de sobra — quien publica se pregunta si
+            debería tenerlo, y algunos lo marcan sin tener nada, lo
+            que sube su nivel de respaldo con un papel inexistente.
+          */}
           <div className="pub-checks">
-            {(
-              [
-                "hasServiceRecords",
-                "smogCurrent",
-                "registrationCurrent",
-                "hasVehicleHistoryReport",
-              ] as const
-            ).map((key) => (
+            {(getDocsForClass(clase) as (keyof typeof t.docs)[]).map((key) => (
               <label className="pub-check" key={key}>
                 <input
                   type="checkbox"
-                  checked={form[key]}
+                  checked={Boolean(form[key as keyof typeof form])}
                   onChange={(e) => set(key, e.target.checked)}
                 />
                 <span>{t.docs[key]}</span>
