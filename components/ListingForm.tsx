@@ -54,6 +54,7 @@ import {
   type Transmission,
   isClassicEligible,
 } from "@/lib/listing-score";
+import { getRequiredFields } from "@/lib/required-fields";
 import {
   DEFECTS_BY_CLASS,
   getUsageUnit,
@@ -258,6 +259,13 @@ export default function ListingForm({
   const unidadUso = getUsageUnit(clase);
   const casillasVisibles = DEFECTS_BY_CLASS[clase];
 
+  /**
+   * La misma lista que usa la validación. Si un campo no está aquí,
+   * ni se muestra ni se exige — y no puede pasar que uno sí y otro no.
+   */
+  const obligatorios = getRequiredFields(clase);
+  const exige = (campo: string) => obligatorios.includes(campo as never);
+
   const draft: Listing = useMemo(
     () => ({
       id: "draft",
@@ -307,14 +315,14 @@ export default function ListingForm({
      * porque el formulario pedía un dato que esa lancha no tiene, y
      * el error señalaba un campo que ni siquiera estaba en pantalla.
      */
-    if (unidadUso === "miles" || unidadUso === "both") {
-      if (!form.miles) found.miles = t.fields.miles;
-    }
+    if (exige("miles") && !form.miles) found.miles = t.fields.miles;
 
-    if (unidadUso === "hours" && !form.engineHours) {
+    if (exige("engineHours") && !form.engineHours) {
       found.engineHours = t.fields.engineHours;
     }
-    if (!form.knownIssues.trim()) found.knownIssues = t.fields.knownIssues;
+    if (exige("knownIssues") && !form.knownIssues.trim()) {
+      found.knownIssues = t.fields.knownIssues;
+    }
     if (!form.description.trim()) found.description = t.fields.description;
     if (photos.length < MIN_PHOTOS) found.photos = t.fields.photos;
     if (!resolvedCity) found.city = t.fields.city;
@@ -804,7 +812,7 @@ export default function ListingForm({
             {/* Millas u horas: lo que corresponda a la familia. Un
                 comprador de lancha pregunta las horas antes que nada,
                 y ponerle "millas" delata que el sitio no sabe de eso. */}
-            {(unidadUso === "miles" || unidadUso === "both") && (
+            {exige("miles") && (
               <Field
                 label={t.fields.miles}
                 help={t.fields.milesHelp}
@@ -822,7 +830,7 @@ export default function ListingForm({
               </Field>
             )}
 
-            {(unidadUso === "hours" || unidadUso === "both") && (
+            {(exige("engineHours") || unidadUso === "both") && (
               <Field
                 label={t.fields.engineHours}
                 help={t.fields.engineHoursHelp}
@@ -939,23 +947,39 @@ export default function ListingForm({
               ))}
             </div>
 
-            {group.key === "mechanical" && hasTires(clase) && (
+            {group.key === "mechanical" && (
               <>
-                <Field label={t.fields.tires}>
-                  <select
-                    value={defects.tires}
-                    onChange={(e) =>
-                      setDefect("tires", e.target.value as TireCondition)
-                    }
-                  >
-                    {TIRE_OPTIONS.map((option) => (
-                      <option key={option} value={option}>
-                        {t.tires[option]}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
+                {/*
+                  Las llantas dependen de la familia: una lancha no
+                  tiene.
+                */}
+                {exige("tires") && (
+                  <Field label={t.fields.tires}>
+                    <select
+                      value={defects.tires}
+                      onChange={(e) =>
+                        setDefect("tires", e.target.value as TireCondition)
+                      }
+                    >
+                      {TIRE_OPTIONS.map((option) => (
+                        <option key={option} value={option}>
+                          {t.tires[option]}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                )}
 
+                {/*
+                  Los problemas conocidos NO dependen de la familia:
+                  toda cosa con motor puede tener algo que declarar.
+
+                  Estaban dentro de la condición de las llantas, así
+                  que en una moto de agua desaparecían — pero la
+                  validación los seguía exigiendo. El formulario pedía
+                  un campo que no estaba en pantalla.
+                */}
+                {exige("knownIssues") && (
                 <Field
                   label={t.fields.knownIssues}
                   help={t.fields.knownIssuesHelp}
@@ -967,6 +991,7 @@ export default function ListingForm({
                     onChange={(e) => set("knownIssues", e.target.value)}
                   />
                 </Field>
+                )}
               </>
             )}
           </fieldset>
